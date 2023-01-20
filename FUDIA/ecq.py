@@ -1,6 +1,6 @@
 import classes as cl
 
-##### qecq: Re-annotating expressions containing "qu'est-ce que/qui"
+##### qecq: Reannotating expressions containing "qu'est-ce que/qui"
 
 ### Root
 qecq_0_0 = cl.Snippet("qecq_0_0")
@@ -44,7 +44,7 @@ del_node CE ; del_node COP ; '''
 # "qu'est-ce que S'"
 qecq_1_1 = cl.Snippet("qecq_1_1")
 
-# Other uses of "qu'est-ce que"
+# Other uses of "qu'est-ce que", complementary case
 qecq_1_2 = cl.Snippet("qecq_1_2")
 qecq_1_2.pattern = '''without { CE [lemma="ce"]; COP [lemma="être"];
 \tQ < CE ; CE < COP }
@@ -70,17 +70,19 @@ qecq_2_1_1.command = '''shift E2 ==> CL_HEAD ;'''
 qecq_3_0_1 = cl.Snippet("qecq_3_0_1")
 qecq_3_0_1.pattern = '''pattern { Q[lemma="que"] }'''
 
+
 # xcomp'ed verb
 qecq_4_0_1 = cl.Snippet("qecq_4_0_1")
-qecq_4_0_1.pattern = '''pattern { CL_HEAD -[xcomp]-> V }'''
+qecq_4_0_1.pattern = '''pattern { CL_HEAD -[xcomp]-> V ; V[upos="VERB"] }'''
 # Adding object relation from the xcomp'ed verb
 qecq_4_0_1.command = '''add_edge V -[obj]-> WH2 ;'''
 
 # No xcomp'ed verb
 qecq_4_1_1 = cl.Snippet("qecq_4_1_1")
-qecq_4_1_1.pattern = '''without { CL_HEAD -[xcomp]-> V }'''
+qecq_4_1_1.pattern = '''without { CL_HEAD -[xcomp]-> V ; V[upos="VERB"] }'''
 # Adding object relation from CL_HEAD
 qecq_4_1_1.command = '''add_edge CL_HEAD -[obj]-> WH2 ;'''
+
 
 # Q = qui (subjet)
 qecq_3_1_1 = cl.Snippet("qecq_3_1_1")
@@ -88,16 +90,17 @@ qecq_3_1_1.pattern = '''pattern { Q[lemma="qui"] }'''
 # Adding subject relation
 qecq_3_1_1.command = '''add_edge CL_HEAD -[nsubj]-> WH2 ;'''
 
-qecq.add_snippets([qecq_1_0, qecq_1_1, qecq_1_1], qecq_0_0)
+qecq.add_snippets([qecq_1_0, qecq_1_1, qecq_1_2], qecq_0_0)
 qecq.add_snippets([qecq_2_0_1, qecq_2_1_1], qecq_1_1)
 qecq.add_snippets([qecq_3_0_1, qecq_3_1_1], qecq_1_1)
 qecq.add_snippets([qecq_4_0_1, qecq_4_1_1], qecq_3_0_1)
-# Note: qecq_1_1 fails to capture cases where WH should be
+# Note1: qecq_1_1 fails to capture cases where WH should be
 # the objet of the xcomp'ed verb
+# Note2: I think that Note1 is not up to date
 
 
 
-##### ecq: Re-annotating expressions containing "est-ce que/qui" (without "que")
+##### ecq: Reannotating expressions containing "est-ce que/qui" (without "que")
 
 ### Root: "est-ce que/qui" trigram
 ecq_0_0 = cl.Snippet("ecq_0_0")
@@ -105,7 +108,8 @@ ecq_0_0.pattern = '''pattern { E[form="est"|"Est"] ; C[form="ce"|"-ce"] ;
 \tQ[lemma="que"|"qui"] ; E < C ; C < Q }
 without { E -[fixed]-> C ; E -[fixed]-> C } % Avoiding looping
 without { WH[form="qu'"] ; WH < E }
-without { E -[1=obj]-> C } % ignoring sent. like L'amour est ce que tu rayonnes.'''
+without { E -[1=obj]-> C } % ignoring sent. like Le ménage est ce que tu es en train de faire.
+without { C -[1=nsubj|expl]-> CE ; CE < E } % ignoring sent. like Le ménage c'est ce que tu es en train de faire.'''
 # Copying and replacing E, C, Q as fixed
 ecq_0_0.command = '''add_node E2 :< E ; add_node C2 :> E2 ; add_node Q2 :> C2 ;
 append_feats E ==> E2 ; E2.ExtPos = "SCONJ" ;

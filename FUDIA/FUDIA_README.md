@@ -113,7 +113,7 @@ When the WH is an adverb, we change the anchoring relation to `advmod` in the sa
 
 Adding `PronType="Rel"` to *WH + que + S[Mood="Sub"]*.
 
-We detect the bigram WH lemma with undefined `PronType`, *que* lemma, and somewhere on the right, a node with `Mood="Sub"`.
+We detect the bigram WH lemma with undefined `PronType`, *que* lemma, and somewhere on the right :construction:, a node with `Mood="Sub"`.
 
 
 
@@ -123,24 +123,108 @@ We detect the bigram WH lemma with undefined `PronType`, *que* lemma, and somewh
 
 Adding some `PronType="Rel"` by listing a reasonable number of relations between CL_HEAD and WH.
 
-We detect *qui*, *que*, *quoi*, *où* or *lequel* lemmas with undefined `PronType`, followed by a CL_HEAD and following an ANCHOR, which are related by a relative clause or cleft relation. We list for possible paths from CL_HEAD to WH:
+We detect *qui*, *que*, *quoi*, *où* or *lequel* lemmas with undefined `PronType`, followed by a CL_HEAD and following an ANCHOR, which are related by a relative clause or cleft relation. We list three possible paths :construction: from CL_HEAD to WH:
  * 1 relation
  * 2 relations, with an intermediary I linearly after ANCHOR (e.g. WH is *quel*, the int. phrase head is not WH, or WH depends on a verbal complement of CL_HEAD)
- * 3 relations, with 2 intermediaries I1 and I2, linearly after ANCHOR, and such that I1 << I2 or both I2 << CL_HEAD and CL_HEAD << I1
+ * 3 relations, with 2 intermediaries I1 and I2, linearly after ANCHOR, and such that `I1 << I2` or both `I2 << CL_HEAD` and `CL_HEAD << I1`
 
 ### `intprontype`
 
-We detect lemma *qui*, *que*, *quoi*, *comment*, *où*, *quand*, *combien*, *pourquoi*, *lequel* or *quel* with undefined `PronType`. We assume the `relprontype` annotation has been performed.
+We detect lemma *qui*, *que*, *quoi*, *comment*, *où*, *quand*, *combien*, *pourquoi*, *lequel* or *quel* with undefined `PronType`. We assume the `relprontype` annotation has been performed and we assume that there is no annotation mistake.
 
-*quel* as adjective, determiner or pronoun is interrogative if we are not in one of the follwoing cases:
+*quel* as adjective, determiner or pronoun is interrogative if we are in no one of the follwoing cases:
  * it precedes lemma *que*
  * it precedes form *n'importe*
- * it succedes form *tel*
- * there is an exclamation mark
+ * it succedes lemma *tel*
+ * there is an exclamation mark :construction:
+
+*comment* and *combien* are always interrogative as adverbs.
+
+*pourquoi* is always interrogative as an adverb, except in the expressions (lemmas) *c'est quoi* and *ce pourquoi*.
+
+*quand* is always interrogative as an adverb, except in expressions *quand même* and *quand bien même*.
+
+*où* is always interrogative as an adverb.
+
+*lequel* is always interrogative as a pronoun. Note that due to French UD guidelines, *au(x)quel(le)(s)* and *duquel* / *desquel(le)s* are decomposed into *à lequel* / *à lesquel(le)s* and *de lequel* / *de lesquel(le)s* respectively.
+
+*qui*, *quoi* and *que* as pronouns are interrogative when we are no one of the follwing cases:
+ * expression *ce que* (lemmas)
+ * discourse marker *quoi*
+ * expression *en ce qui concerne* (lemmas + form *concerne*)
+ * there is an exclamation mark :construction:
 
 ## 3. `ecq`
 
+### `qecq`
+
+Reannotating expression *qu'est-ce que/qui* as fixed. We do not reannotate cases where this expression precedes a NP, identified as a dislocation, e.g. *Qu'est-ce que Angiox*.
+
+We detect the tetragram lemma *que* WH, form *est* E, form *ce* or *-ce* C and lemma *que* or *qui* Q.
+
+We first treat as a special case the expression *qu'est-ce que c'est* (lemmas *ce+être*) as follows: we put *qu'* as head of the sentence, *c'* being its nominal subject and the second *est* being its copula.
+
+We assume that the former head of the expression is on WH or E and that it formerly governed CL_HEAD by a `advcl`, `dislocated` or `ccomp` relation.
+
+If Q is *que*, we add an object relation from CL_HEAD to the new WH (i.e. WH2). If CL_HEAD has a verbal complement (i.e. `xcomp`), we suppose that *qu'est-ce que* is the object of that complement :construction:.
+
+If Q is *qui*, we add a nominal subject relation from CL_HEAD to the new WH.
+
+In the complementary case where there is no `advcl`, `dislocated` or `ccomp` relation from WH or E, we do not add any relation :construction:.
+
+### `ecq`
+
+Reannotating expression *est-ce que/qui* as fixed.
+
+We detect the trigram form *est* E, form *ce* or *-ce* C and lemma *que* or *qui* Q. We filter out cases where C is the object of E  (e.g. *Le ménage est ce que tu es en train de faire*.) or *c'est que ce* expressions.
+
+We decided to try to list all the possible current annotations of est-ce que in the UD corpora in order to not overfit :construction:.
+
+Case 1. there is a clause head CL_HEAD. We have two subcases (more detail is to be found in the source code):
+ * *est* ist the former head, governing CL_HEAD with `advcl` or `ccomp`
+ * CL_HEAD is the former head
+
+Case 2. there is not clause head (*est-ce que* is isolated, e.g. unfinished sentence). We have two subcases (more detail is to be found in the source code):
+ * *que/qui* is the former head
+ * *est* is the former head
+
+
 ## 4. `quoted`
+
+### quoted_a
+
+Identifying a quoted segment using punctuation: case where the anchor is follwed by the clause head.
+
+We detect a relation `ANCHOR -> CL_HEAD` with a punctuation P `:`, `«`, `"` or `-` between them. To be confident that the punctation is really linked to this relation, we add some constraints: :construction:
+ * either ANCHOR or CL_HEAD governs P
+ * P either unambiguously is an opening symbol (`:` or `«`), or CL_HEAD is located bewteen another occurrence of P (`"` or `-`).
+
+### quoted_b
+
+Identifying reported speech: case where the clause head governs and is followed by an inserted clause (relation `parataxis`) headed by a reporting verb D.
+
+We detect a relation `CL_HEAD -> D` with a punctuation P `»` or `"` between them. We use similar constraints as in `quoted_a`:
+ * either CL_HEAD or D governs P
+ * P either unambiguously is an opening symbol (`»`), or CL_HEAD is located bewteen another occurrence of P (`"`), or there is a comma just after P.
+
+### quoted_c
+
+Identifying reported speech: case where the head clause governs and follows an a clause (relation `parataxis`) headed by a reported verb D.
+
+We detect a relation `CL_HEAD -> D` with a comma between them and a dash before D. We use similar constraints as in `quoted_a`:
+ * either CL_HEAD or D governs the comma
+
+### quoted_d
+
+Identifying title heads.
+
+We detect a clause head having `Title="Yes"` or `InTitle="Yes"` anchored by a node having neither of theses fetures.
+
+### quoted_e
+
+Identifying parataxized parenthesized segments.
+
+We detect clause heads governed by `parataxis` and governing a pair of `--` symbols or `(` and `)` around itself.
 
 ## 5. `wh`
 
