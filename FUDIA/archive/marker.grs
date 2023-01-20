@@ -1,0 +1,157 @@
+%%%%%%%%%% 0-0. "Est-ce que" / "est-ce" / "ce que"
+pattern { C[lemma="ce"] ;  }
+
+
+%%%%% 1-0_0-0. fixed "ce que"
+pattern { Q[lemma="que"|"qui"] ; C < Q ;
+    C -[fixed]-> Q }
+
+% 3-0_1-0. Not alone
+pattern { CL_HEAD -[mark]-> C }
+
+% 3-1_1-0. Alone
+without { CL_HEAD -[mark]-> C }
+
+
+%%%%% 1-1_0-0. fixed "est-ce" or "est-ce que"
+pattern { E[lemma="est"] ; E < C ;
+    E -[fixed]-> C }
+
+%%% 2-0_1-1. fixed "est-ce que"
+pattern { Q[lemma="que"|"qui"] ; C < Q ;
+    E -[fixed]-> Q }
+
+%%% 2-0_1-1. fixed "est-ce"
+without { Q[lemma="que"|"qui"] ; C < Q ;
+    E -[fixed]-> Q }
+
+% 3-0_1-1. Not alone
+pattern { CL_HEAD -[mark]-> E }
+
+% 3-1_1-1. Alone
+without { CL_HEAD -[mark]-> E }
+
+
+
+%%%%%%%%%% 0-1. "que" marker
+pattern { Q[lemma="que"] ; CL_HEAD -[mark]-> Q ;
+    PH_HEAD[IntPhrase="Yes"] ; CL_HEAD -> PH_HEAD ;
+    PH_HEAD << Q ; Q << CL_HEAD  }
+% There is a possible "alone" case with a WH phrase
+% "Pourquoi que..."
+% But it is not clear how people would annotated that
+
+
+
+%%%%%%%%%% 0-2. "Si", no SCONJ preceeding
+pattern {a: ANCHOR -[advcl|acl|ccomp|nsubj]-> CL_HEAD ;
+    m: CL_HEAD -[mark]-> S ; S[lemma="si",upos="SCONJ"] }
+without { M[lemma="même"] ; M < S }
+without { Q[upos=SCONJ] ; Q < S ; CL_HEAD -[mark]-> Q }
+
+
+%%%%% 1-0_0-2. Finite verb
+pattern { CL_HEAD[upos="VERB",VerbForm="Fin"] }
+
+%%%%% 1-1_0-2. Finite copula or auxiliary
+pattern { CL_HEAD -[1=aux|cop]-> V ;
+    V[upos="VERB",VerbForm="Fin"] }
+
+%%% 2-0_0-2. ccomp (already taken into account)
+
+%%% 2-1_0-2. acl or advcl with a preposition preceeding (uncertain of the validity of that restriction)
+pattern { ANCHOR -[advcl|acl]-> CL_HEAD ; C[upos="ADP"] ;
+    CL_HEAD -[case]-> C ; C < S }
+
+%%% 2-2_0-2. nsubj and preceeding the verb (may underfilter)
+pattern { a.label = nsubj ; CL_HEAD << ANCHOR }
+
+
+
+%%%%%%%%%% 0-3. "-ti/-tu"
+pattern { CL_HEAD -[mark]-> T ; T[form="tu"|"-tu"|"ti"|"-ti"] }
+
+
+
+%%%%%%%%%% 0-4. Suffixed personnal pronoun
+pattern { S[upos="PRON"] ;
+    S[lemma="ce"|"je"|"tu"|"il"|"elle"|"on"|"nous"|"vous"|"ils"|"elles"] ;
+    s: CL_HEAD -[1=expl|nsubj]-> S ; CL_HEAD < S }
+without { CL_HEAD -[parataxis]-> G ; G[Quoted="Yes"] } % no verb-reporting stylistic inversion
+without { G -[parataxis]-> CL_HEAD ; G[Quoted="Yes"] } % no verb-reporting stylistic inversion
+without { CL_HEAD -[expl:compl]-> S } % no object S
+without { A[upos="ADV", lemma <> "ne"|"pourquoi"|"où"|"comment"|"quand"] ;
+    CL_HEAD -[advmod]-> A ; A < CL_HEAD } % No non-interrogative preceeding adverb
+
+
+%%%%%% 1-0_0-4. Inverted subject wrt. the clause CL_HEAD
+pattern { CL_HEAD[upos="VERB"|"AUX", VerbForm="Fin"] }
+without { CL_HEAD[Mood="Imp"] } % not imperative
+
+%%%%%% 1-1_0-4. Inverted subject wrt. the copula or auxiliary of the clause CL_HEAD
+pattern { CL_HEAD -[1=cop|aux]-> V ;
+    V[upos="VERB"|"AUX", VerbForm="Fin"] }
+without { V[Mood="Imp"] } % not imperative
+
+%%% 2-0_0-4. Presence of an additional subject, or of an (oblique) object, or clausal complement
+pattern { ANCHOR -[parataxis]-> CL_HEAD ;
+    CL_HEAD -[1=nsubj|obj|obl|ccomp]-> U }
+
+%%% 2-1_0-4. Presence of a fronted WH phrase
+pattern { ANCHOR -[parataxis]-> CL_HEAD ;
+    CL_HEAD -> PH_HEAD ; PH_HEAD << CL_HEAD ;
+    PH_HEAD[IntPhrase="Yes"] }
+
+%%% 2-1_0-4. Presence of a verbal complement having an (oblique) object
+pattern { ANCHOR -[parataxis]-> CL_HEAD ;
+    CL_HEAD -[xcomp]-> U ;
+    U -[1=obj|obl|ccomp]-> W }
+
+%%%%%%%%%% 0-4. Disjunctive ?
+
+
+
+%%%%%%%%%% 0-5. Raising intonation ?
+
+
+%%%%%%%%%% Commands
+
+% 3-0.1-0. Adding marker to CL_HEAD
+commands { CL_HEAD.IntClause = "Yes" ;
+    add_edge CL_HEAD -[cue:mark]-> C }
+
+% 3-1.1-0. Adding marker to C
+commands { C.IntClause = "Yes" }
+
+% 3-0.1-0. Adding marker to CL_HEAD
+commands { CL_HEAD.IntClause = "Yes" ;
+    add_edge CL_HEAD -[cue:mark]-> E }
+
+% 3-1.1-0. Adding marker to E
+commands { E.IntClause = "Yes" }
+
+
+%%%%% 0-1 Adding marker to CL_HEAD
+commands { CL_HEAD.IntClause = "Yes" ;
+    add_edge CL_HEAD -[cue:mark]-> Q }
+
+
+%%%%% 0-2. Adding marker to CL_HEAD
+commands { CL_HEAD.IntClause = "Yes" ;
+    add_edge CL_HEAD -[cue:mark]-> S }
+
+
+
+%%%%% 0-3. Adding marker to CL_HEAD
+commands { CL_HEAD.IntClause = "Yes" ;
+    add_edge CL_HEAD -[cue:mark]-> T }
+
+
+
+%%%%%%%%%% 0-4. Adding marker on CL_HEAD
+commands { CL_HEAD.IntClause = "Yes" ;
+    add_edge CL_HEAD -[cue:mark]-> S }
+
+
+
+

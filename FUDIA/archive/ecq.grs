@@ -1,0 +1,146 @@
+%%%%%%%%%% 0-0 Special case of "qu'est-ce que c'est"
+pattern { N1 [lemma="que"]; N2 [form="est"];  N3 [lemma="ce"];
+    N4 [form="que"]; N1 < N2; N2 < N3; N3 < N4 ;
+	N5 [lemma="ce"]; N6 [lemma="être"]; N4 < N5 ; N5 < N6 }
+
+
+%%%%%%%%%% 0-1. Est-ce que trigram
+pattern { E[form="est"] ; C[form="ce"|"-ce"] ; Q[form="que"|"qui"] ; E < C ; C < Q}
+
+
+%%%%% 1-0. Without "que" or "qui"
+without { WH[lemma="que"|"qui",PronType="Int"] ; WH < E }
+
+%%% 2-0_1-0. Root on "est" and CL_HEAD present
+pattern { a : ANCHOR -> E ; s : E -[expl:subj|nsubj]-> C ;
+    d : E -[1=advcl|ccomp]-> CL_HEAD ; m : CL_HEAD -[1=mark|obj|xcomp|nsubj]-> Q }
+
+%%% 2-1_1-0. Root on the clause root
+pattern { c : CL_HEAD -[cop]-> E ; s : CL_HEAD -[expl:subj|nsubj]-> C ;
+    m : CL_HEAD -[1=mark|obj|subj]-> Q }
+
+%%% 2-2_1-0. Alone "est-ce que" anchored on "que" (eg. reparandum)
+pattern { a : ANCHOR -> Q ; s : Q -[expl:subj|nsubj]-> C ;
+    c : Q -[cop]-> E }
+
+%%% 2-3_1-0. Root on "est" with xcomp "que" with CL_HEAD
+pattern { a : ANCHOR -> E ; s : E -[expl:subj|nsubj]-> C ;
+    d : E -[1=advcl|ccomp]-> CL_HEAD ; m : E -[xcomp]-> Q  }
+
+%%% 2-4_1-0. Root on "est" with xcomp "que" alone
+pattern { a : ANCHOR -> E ; s : E -[expl:subj|nsubj]-> C ;
+    m : E -[xcomp]-> Q }
+without { E -[1=advcl|ccomp]-> CL_HEAD }
+
+
+%%%%% 1-1. With "qu'" or "qui"
+pattern {WH[lemma="que"|"qui",PronType="Int"] ; WH < E}
+
+%%% 2-0.1-1. Presence of CL_HEAD, used with a clause
+pattern { WH[lemma="que"|"qui",PronType="Int"] ;
+    a : ANCHOR -> WH ; c : WH -[cop]-> E ;
+    WH -[expl:subj|nsubj]-> C ; m : CL_HEAD -[1=obj|mark|nsubj]-> Q ;
+    d : WH -[advcl:cleft]-> CL_HEAD }
+
+%%% 2-1.1-1. Alone : ???
+
+% 3-0.2-0. obj WH
+pattern { Q.form = "que" }
+
+% 3-1.2-0. nsubj WH
+pattern { Q.form = "qui" }
+
+
+
+%%%%%%%%%% 0-2. Wholly fixed qu'est-ce que
+pattern { E[form="est"] ; C[form="ce"|"-ce"] ; Q[form="que"] ;
+    E < C ; C < Q ; WH < E ;
+    WH[lemma="que",PronType="Int"] ;
+    a : ANCHOR -> WH ; c : WH -[cop]-> E ;
+    WH -[expl:subj|nsubj]-> C ; m : CL_HEAD -[mark|case]-> Q ;
+    d : WH -[dislocated]-> CL_HEAD }
+
+%%%%%%%%%% Commands
+
+%%%%%%%%%% 0-0. All changing, supposing the root is on "que" (N1)
+add_node WH :< N1 ; add_node E2 :> WH ; add_node C2 :> E2 ;
+add_node Q2 :> C2 ; add_node CE :> Q2 ; add_node COP :> CE ;
+append_feats N1 ==> WH ; shift N1 ==> WH ;
+WH.form = N1.form ; WH.lemma = N1.lemma ; WH.upos = N1.upos ;
+append_feats N2 => E2 ; E2.extPos = "SCONJ" ;
+E2.form = N2.form ; E2.lemma = N2.lemma ; E2.upos = N2.upos ;
+append_feats N3 ==> C2 ;
+C2.form = N3.form ; C2.lemma = N3.lemma ; C2.upos = N3.upos ;
+append_feats N4 ==> Q2 ;
+Q2.form = N4.form ; Q2.lemma = N4.lemma ; Q2.upos = N4.upos ;
+append_feats N5 ==> CE ;
+CE.form = N5.form ; CE.lemma = N5.lemma ; CE.upos = N5.upos ;
+append_feats N6 ==> COP ;
+COP.form = N6.form ; COP.lemma = N6.lemma ; COP.upos = N6.upos ;
+add_edge E2 -[fixed]-> C2 ; add_edge E2 -[fixed]-> Q2 ;
+add_edge WH -[mark]-> E2 ; add_edge WH -[nsubj]-> CE ; add_edge WH -[cop]-> COP ;
+del_node N1 ; del_node N2 ; del_node N3 ;
+del_node N4 ; del_node N5 ; del_node N6 ; 
+
+
+%%%%%%%%%% 0-1. Copying and replacing E, C, Q as fixed
+add_node E2 :< E ; add_node C2 :> E2 : add_node Q2 :> C2 ;
+append_feats E ==> E2 ; E2.extPos = "SCONJ" ;
+E2.form = E.form ; E2.lemma = E.lemma ; E2.upos = E.upos ;
+append_feats C ==> C2 ;
+C2.form = C.form ; C2.lemma = C.lemma ; C2.upos = C.upos ;
+append_feats Q ==> Q2 ;
+Q2.form = Q.form ; Q2.lemma = Q.lemma ; Q2.upos = Q.upos ;
+add_edge E2 -[fixed]-> C2 ; add_edge E2 -[fixed]-> Q2 ;
+...
+del_node E ; del_node C ; del_node Q ;
+
+
+%%% 2-0.1-0 Shifting to the clause root
+shift E ==> CL_HEAD ;
+add_edge m2: CL_HEAD -[mark]-> E2 ;
+
+%%% 2-1.1-0 Adding mark relation only
+shift E ==> CL_HEAD ;
+add_edge m2: CL_HEAD -[mark]-> E2 ;
+
+%%% 2-2.1-0 Replacing by E2
+del_edge s ; del_edge c ;
+shift Q ==> E2 ; shift E => E2 ; % supposing some other incident edges might be on E
+
+%%% 2-3.1-0 Shifting to the clause root
+shift E ==> CL_HEAD ;
+add_edge m2: CL_HEAD -[mark]-> E2 ;
+
+%%% 2-4.1-0 Replacing by ECQ
+shift E ==> E2 ;
+
+
+%%% 2-0.1-1. Shifting to the clause root
+del_edge d ;
+shift WH ==> CL_HEAD ;
+add_edge m2: CL_HEAD -[mark]-> E2 ;
+
+%%% 2-0.1-1. Shifting to the clause root and making all fixed
+del_edge d ;
+shift WH ==> CL_HEAD ;
+add_edge m2: CL_HEAD -[mark]-> E2 ;
+
+%%% 3-0.2-0. WH as obj
+add_edge w : CL_HEAD -[obj]-> WH ;
+
+%%% 3-1.2-0. WH as obj
+add_edge w : CL_HEAD -[nsubj]-> WH ;
+
+
+%%%%%%%%%% 0-2. Fixing qu'est-ce que/qui as pronoun
+del_edge c ; del_edge m ; del_edge d ;
+add_edge WH -[fixed]-> E ; add_edge WH -[fixed]-> C ;
+add_edge WH -[fixed]-> Q ; WH.extPos = "PRON"
+del_edge a ; shift WH ==> ANCHOR ;
+add_edge ANCHOR -[nsubj]-> WH 
+
+
+% Remark : by attaching WH to CL_HEAD, we maybe miss
+% that WH actually depends on a lower ccomp'ed or xcomp'ed clause,
+% e.g. Qu'est-ce que tu veux faire ?

@@ -1,0 +1,147 @@
+% Valentin
+
+%%%%% Basics
+% Clause root
+%pattern { CL_ROOT [] ; }
+
+%%%%% A. Clause dependence
+%%% 1. Subordination
+% a. Question
+%pattern { INT [lemma="?"] ; } % CL_CLAUSE -[punct]->> INT (or from a related higher interrogatives clause)
+% a.i Root question, sole clause
+%pattern { * -[root]-> VERB ; } % Default: Cl_ROOT
+% a.i Root question, independent clause (advcl, advmod, parataxis) or reported speech (acl,ccomp)
+%pattern { * -[root]-> INTER ; INTER -[advcl|parataxis|advmod|acl|ccomp]-> CL_ROOT ; } % or even more intermediaries
+% b. Subordinated
+%pattern { CL_GOV [] ; cl_rel: CL_GOV -[1<>root]-> CL_ROOT ; }
+
+%%% 2. Governer pos
+% a. Depending on a verb
+%pattern { CL_GOV [upos="VERB"|"AUX"] ; }
+% b. Depending on a noun
+%pattern { CL_GOV [upos="NOUN"|"PROPN"] ; }
+% c. Depending on other
+%pattern { CL_GOV [upos<>"VERB"|"AUX"|"NOUN"|"PROPN"] ; }
+
+%%% 3. Clause dependence type relation
+% a. (Open) Clausal Complement, object or oblique
+%pattern { CL_GOV -[1=ccomp|xcomp|obj|obl]-> CL_ROOT ; }
+% b. Subject
+%pattern { CL_GOV -[1=nsubj|csubj]-> CL_ROOT ; }
+% c. Modifier : adnominal or adverbial
+%pattern { CL_GOV -[1=acl|advcomp]-> CL_ROOT ; }
+
+%%% 4. Marker presence
+% a. Yes
+%pattern { CL_ROOT -[1=mark]-> * ; }
+% No
+%without { CL_ROOT -[1=mark]-> * ; }
+
+
+%%%%% B. Interrogative structure
+%%% 1. Verb presence
+% a. Verbless
+%pattern { CL_ROOT [upos<>"VERB"|"AUX"] ; } without { CL_ROOT -[1=cop|aux]-> * ; }
+% b. Verbal
+%pattern { VERB [] }
+% b.i Content verb
+%pattern{ VERB [upos="VERB"|"AUX"] ;} without{VERB-[1=cop|aux]-> *} % Need CL_ROOT = VERB
+%pattern{ CL_ROOT[upos="VERB"|"AUX"]; VERB [upos="VERB"|"AUX"] ;} without{VERB-[1=cop|aux]-> *} % Need CL_ROOT = VERB
+% b.ii Copula or auxiliary
+%pattern { CL_ROOT [upos<>"VERB"|"AUX"] ; VERB[] ; CL_ROOT -[1=cop|aux]-> VERB ; } without{VERB -[1=cop|aux]-> *}
+% b.iii 2nd copula or auxiliary
+% TODO
+
+%%% 2. Presence of an interrogative particle / idiom
+% a. -ti or -tu (as additional suffix)
+%pattern { CL_ROOT -[nsubj|csubj]-> SUBJ ; SUBJ < CL_ROOT ; PART [lemma="ti"|"tu"|"-ti"|"-tu"] ; CL_ROOT < PART ;}
+% b.i est-ce que / est-ce qui, si
+% TODO
+% b.ii est-ce
+% TODO
+% c. que (qui /)
+% TODO
+% (d. c'est que / c'est qui)
+% d. No interrogative particle or idiom
+% TODO
+
+%%% 2. Inversion of verb
+% a. Suffixed subject personnal pronoun
+%pattern { SUF[upos="PRON"] ; VERB -[nsubj|expl:subj]-> SUF ; VERB < SUF ; }
+% b. Inverted non-pronominal subject
+%pattern { SUBJ[upos="NOUN"|"PROPN"] ; VERB -[nsubj]-> SUBJ ; VERB << SUBJ ; }
+% c. No inversion
+% c.i No subject
+%without { VERB -[nsubj]-> * ; }
+% c.ii Non inverted subject (with no suffixed pronoun)
+%pattern { VERB -[nsubj]-> SUBJ ; SUBJ << VERB } without {SUF[upos="PRON"] ; VERB -[nsubj|expl:subj]-> SUF ; VERB < SUF ;}
+
+
+%%%%% C. Interrogation type
+%%% 1. Presence of an alternative-raising "ou"
+% a. Yes
+% TODO
+% b. No
+
+%%% 2. Presence of an interrogative word
+% a. Yes
+pattern { WH[PronType="Int"] ; } % CL_ROOT ->> WH, but which still somehow depends closely from CL_ROOT
+% b. No
+%without { WH[PronType="Int"] ; } (or WH in a different clause)
+
+%%% 3. Location of the interrogative phrase
+% a. Fronted
+% TODO
+% b. In situ (namely, subject "qui")
+% TODO
+% c. Clefted
+% TODO
+
+%%% 4. What governs the interrogative phrase ?
+% a. a noun
+% TODO
+% b. an adjective
+% TODO
+% c. a verb
+% TODO
+% d. alone (elliptic)
+% pattern { CL_CLAUSE = WH }
+
+%%% 5. Dependence of the interrogative phrase inside the clause
+% a. Subject or attribute
+% TODO
+% b. Complement
+% TODO
+% c. Modifier
+% TODO
+
+%%% 6. POS of the interrogative word
+% a. Determiner
+%pattern { WH[upos="DET"] }
+% b. Adjective
+%pattern { WH[upos="ADJ"] }
+% c. Adverb
+%pattern { WH[upos="ADV"] }
+% d. Pronoun
+%pattern { WH[upos="PRON"] }
+% e. Préposition
+%pattern { WH[upos="ADP"] }
+
+%%% 7. What is the relation of the interrogative word inside the interrogative phrase
+% a. Specifier of a noun
+%pattern { WH_GOV -[case|det]-> WH ; }
+% b. Propositional "complement"
+%pattern { WH -[case]-> WH_GOV ; }
+% c. Noun complement
+%pattern { WH_GOV -[nmod]-> WH ; }
+% d. Alone (non applicable)
+% d.i Sole phrase
+%pattern { * -[root]-> WH ; }
+% d.ii Interrogative phrase reduced to the interrogative word and its dependencies
+%pattern { WH_GOV -> WH ; CL_CLAUSE = WH_GOV ; }
+
+%%% 8. Does the interrogative word have dependencies ?
+% a. Yes: preprositional phrase, adverb or nominal modifier
+pattern { WH -[obl|nmod|amod|acl]-> DEP }
+% b. No
+%without { WH -> DEP }

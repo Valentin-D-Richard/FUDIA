@@ -1,0 +1,64 @@
+% When can we say that the current node is not the root of the interrogative clause?
+% In particular: when is the WH word is in situ?
+
+%%%%%%%%%% Relation to potentially pull along
+pattern { a: CAND -> CUR ; CUR[IntClause="Yes"] ;
+    w: CUR -[cue:wh]-> WH }
+% Cannot be aux, cop, mark, clf, case, cc, fixed, flat, compound, goeswith, punct
+% Cannot probably be amod or advmod
+% Do not pull when parataxis, list, orphan, discourse, dislocated, or reparandum
+without { CUR[Quoted="Yes"] }
+% e.g. Théo dans Un père pour quoi faire ? nmod(Théo, père) : no pull because Quoted
+% e.g. euh, comment dire discourse(euh, dire) : no pull because discourse
+
+% When CUR[PronType="Int"], we consider, due to the IntClause rule,
+% that CL_HEAD can definitely not be pulled
+
+
+
+%%%%%%%%%% 0-0. Clause relations: csubj, ccomp, xcomp, advcl, acl
+pattern { CAND -[csubj|ccomp|xcomp|advcl|acl]-> CUR }
+
+%%%%% 1-0.0-0. CL_HEAD is participial
+pattern { CUR[upos="VERB",VerbForm="Part"] }
+% e.g. Il a réussi en faisant quoi ? advcl(réussi,faisant)
+
+%%%%% 1-1.0-0. CL_HEAD's copula or auxiliary is participial
+pattern { CUR -[1=aux|cop]-> V ; V[upos="VERB",VerbForm="Part"] }
+
+%%%%% 1-2.0-0. Additionnal marker
+pattern { CUR -[mark]-> Q ; Q[upos="SCONJ"] ; Q << CL_HEAD }
+% e.g. Il sait que/si tu fais quoi ? ccomp(sait,fait)
+
+%%%%% 1-3.0-0. Unfronted sole WH word
+pattern { CL_HEAD << WH }
+without { CL_HEAD -[cue:wh]-> WH2 }
+without { CL_HEAD -[case]-> A ; A[lemma="suivant"|"selon"] }
+% e.g. Suivant qui fait quoi, on peut s'adapter. : no pull because of "suivant"
+% e.g. Il sait faire quoi ? xcomp(sait,faire)
+
+%%%%% 1-4.0-0. Idiomatic "pour quoi faire"
+pattern { CL_HEAD[form="faire"] ; WH[form="quoi"] ;
+    WH < CL_HEAD ; P < WH ; P[form="pour"]}
+
+
+%%%%%%%%%% 0-1. Nominal relations: nsubj, obj, (iobj,) obl, nmod, (det)
+% Cannot be vocative, expl, nummod, iobj
+% Do not pull when dislocated or appos
+pattern { CAND -[nsubj|obj|obl|nmod|det]-> CUR }
+
+% Globally, these relations are rare, and only occur with in-situ WH words,
+% especially when the WH phrase cannot be extracted
+% e.g. T'as acheté un jean avec combien de trous ? obj(acheté,jean)
+
+
+
+%%%%%%%%%% Commands
+commands { del_feat CUR.IntClause ; CAND.IntClause = "Yes" ;
+    del_edge w ; add_edge CAND -[cue:wh]-> WH }
+
+
+
+
+
+		

@@ -1,0 +1,116 @@
+%%%%% 0-0. WH word direct dependent
+pattern { WH [PronType="Int"] ;
+	e : CL_HEAD -[1=nsubj|iobj|obj|obl|advmod|nmod|xcomp|advcl]-> WH }
+without { CL_HEAD -[nmod]-> WH ; CL_HEAD -[case]-> K } % case 1-3_1-0
+without { WH[Quoted="Yes"] } % case 1-1_0-2
+without { % n'importe WH constructions
+	CL_HEAD [form="importe"] ; CL_HEAD < WH ; e.label = nsubj }
+without { CL_HEAD -[1=obl|obj]-> WH ; PT[lemma="?"] } % case 1-2_0-2
+
+%%% 1-0_0-0 No other restriction
+
+%%% 1-1_0-0. Nmod place after
+pattern { e.label = nmod ; WH << CL_HEAD }
+
+%%% 1-2_0-0. Advcl with participial copula
+pattern { e.label = advcl ;
+	WH -[cop]-> E ; E.VerbForm = "Part"}
+
+
+
+%%%%% 0-1_0. WH word indirect dependent : pre
+pattern { WH [PronType="Int"] ; e : PH_HEAD -> WH }
+without { e.label = conj } % not conjuncted WH word
+
+%%% 1-0_0-1_0. Determiner WH
+pattern { e.label = det }
+without { % n'importe quel constructions
+	G2 [form="importe"] ; G2 -[nsubj]-> PH_HEAD ; e.label = det }
+
+%%% 1-1_0-1_0. Fixed WH locution
+pattern { e.label = fixed }
+
+%%% 1-3_0-1_0. Nmod "de ..."
+pattern { PH_HEAD -[nmod]-> WH ; PH_HEAD -[case]-> K }
+
+
+%%%%%%%%%% Pulls PH_HEAD along nmod
+rule ph_root_pull {
+	pattern { R[IntPhrase="Yes"] ;
+		e : R -[cue:wh]-> W ;
+		PH_HEAD -[nmod]->  R ;
+		R -[case]-> D ; D[lemma="de"] ; % only de complements
+		PH_HEAD -[case] -> K ; % Only PP can be non-trivial WH-phrases
+		PH_HEAD << R ;
+	}
+	without { R[Quoted="Yes"] }
+	commands { del_feat R.IntPhrase ;
+		del_edge e ;
+		PH_HEAD.IntPhrase = "Yes" ;
+		add_edge PH_HEAD -[cue:wh]-> W }
+}
+
+
+%%%%% 0-1_2. WH word indirect dependent : post
+pattern { PH_HEAD[IntClause="Yes"] ; PH_HEAD -[whclue]-> C }
+
+%%% 1-0_0-1_2. WH phrase not alone
+pattern { f : CL_HEAD -[1=obl|nmod]-> PH_HEAD }
+
+%%% 1-1_0-1_2. WH phrase is alone
+pattern { R -[root|parataxis|discourse|vocative|reparandum|dislocated|list|orphan]-> PH_HEAD }
+
+%%% 1-2_0-1_2. WH phrase is quoted
+pattern { PH_HEAD[Quoted="Yes"] }
+
+%%% 1-3_0-1_2. Alone object heuristic: yields an interrogative matrix clause
+pattern { CL_HEAD -[1=obl|obj]-> WH ; PT[lemma="?"] }
+
+
+
+%%%%% 0-2. WH word alone
+pattern { WH [PronType="Int"] }
+
+%%% 1-0_0-2. Special relations
+pattern { R -[root|parataxis|discourse|vocative|reparandum|dislocated|list|orphan]-> WH }
+
+%%% 1-1_0-2. Quoted WH clause
+pattern { WH[Quoted="Yes"] }
+
+%%% 1-2_0-2. Alone object heuristic: yields an interrogative matrix clause
+pattern { ANCHOR -[1=obl|obj]-> WH ; PT[lemma="?"] }
+
+
+%%%%% 0-3. Clefted WH phrase
+
+
+
+%%%%%%%%%% Commands
+
+%%% 0-0. Adds IntClause, IntPhrase and cue
+commands { CL_HEAD.IntClause = "Yes" ;
+	WH.IntPhrase = "Yes" ;
+	add_edge CL_HEAD -[cue:wh]-> WH }
+
+
+%%% 1-0_0. Add IntPhrase and cue
+commands { PH_HEAD.IntPhrase = "Yes" ;
+	add_edge PH_HEAD -[cue:wh]-> WH }
+
+%%% 1-0_0-1_2. Add IntClause and cur
+commands { CL_HEAD.IntClause = "Yes" ;
+	add_edge CL_HEAD -[cue:wh]-> WH }
+
+%%% 1-1_0-1_2. Add IntClause
+commands { PH_HEAD.IntClause = "Yes" }
+
+%%% 1-2_0-1_2. Add IntClause
+commands { PH_HEAD.IntClause = "Yes" }
+
+%%% 1-3_0-1_2. Add IntClause
+commands { PH_HEAD.IntClause = "Yes" }
+
+
+%%%%% 0-2. Adding IntClause and IntPhrase
+commands { WH.IntClause = "Yes" ;
+	WH.IntPhrase = "Yes" }

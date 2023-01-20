@@ -1,0 +1,80 @@
+% We go upstream until we find an acl:relcl
+
+%%%%%%%%%% 0-0. Some missed PronType="Rel"
+pattern { WH[lemma="qui"|"que"|"quoi"|"où"|"lequel",!PronType] ;
+    ANCHOR -[acl:relcl]-> CL_HEAD ; WH << CL_HEAD }
+
+%%%%% 1-0_0-0. 1 intermediary
+pattern { CL_HEAD -> WH ;}
+
+%%%%% 1-1_0-0. 2 intermediaries
+pattern { CL_HEAD -> I  ; I -> WH }
+
+%%%%% 2-0_1-1. PH_HEAD preceding
+pattern { I << WH }
+
+%%%%% 2-1_1-1. second verb
+pattern { CL_HEAD << I }
+
+%%%%% 1-2_0-0. PH_HEAD preceding and second verb
+pattern { CL_HEAD -> V ; V -> PH_HEAD ;
+    PH_HEAD -> WH ; PH_HEAD << WH ; CL_HEAD << V }
+
+
+% ----------------------------------------------------------------------------------------
+%%%%%%%%%% 0-1. Missed PronType="Int"
+pattern { WH[lemma="qui"|"que"|"quoi"|"comment"|"où"|"quand"|"combien"|"pourquoi"|"lequel"|"quel",!PronType]}
+
+
+%%%%%% 1-0_0-1. quel
+pattern { WH [lemma="quel",!PronType,upos="ADJ"|"DET"|"PRON"] }
+without { Q [lemma="que"] ; WH < Q }
+without { A [form="n'"] ; B[form="importe"] ; A < B ; B < WH }
+without { T[form="tel"] ; T < WH }
+without { E[lemma="!"] }
+
+
+%%%%% 1-1_0-1. Only interrogative adverbs comment & combien
+pattern { WH[lemma="comment"|"combien", upos="ADV"]}
+
+
+%%%%% 1-2_0-1. pourquoi
+pattern { WH[lemma="pourquoi", upos="ADV"]}
+without { C[lemma="ce"] ; E[lemma="être"] ; C < E ; E < WH ;
+    C -[fixed]-> E ; C -[fixed]-> WH } % not "c'est pourquoi"
+
+
+%%%%% 1-3_0-1. quand
+pattern { WH[lemma="quand", upos="ADV"]}
+without { E[lemma="même"] ; E < WH } % not "quand même"
+without { C[lemma="bien"] ; E[lemma="même"] ; C < E ; E < WH } % not "quand bien même"
+without { G -[mark]-> WH } % bad annotation of "quand" which should be SCONJ
+
+
+%%%%% 1-4_0-1. où
+pattern { WH[lemma="où", upos="ADV"]}
+without { WH -[ccomp]-> V } % badly annotated relative clause
+
+
+%%%%% 1-5_0-1. lequel and other
+pattern { WH[lemma="lequel", upos="PRON"]}
+
+
+%%%%% 1-6_0-1. que/qui/quoi
+pattern { WH[lemma="qui"|"que"|"quoi", upos="PRON"]}
+without { C[lemma="ce"] ; WH[lemma="que"] ; C < WH } % no "ce que"
+without { G -[discourse]-> WH ; WH[lemma="quoi"] } % no interjection "quoi" (should be INTJ)
+without { N1[lemma="que"]; N2[lemma="ce"]; N3[form="soit"]; WH < N1 ; N1 < N2; N2 < N3; } % no "qui/quoi que ce soit"
+without { N1[lemma="en"]; N2[lemma="ce"]; N3[form="concerne"]; N1 < N2; N2 < WH; WH < N3 } % no "en ce qui concerne"
+without { E[lemma="!"] } % Not exclamative
+
+
+
+%%%%%%%%%% Commands
+
+%%%%%%%%%% 0-0. Adding PronType="Rel"
+commands { WH.PronType="Rel" }
+
+
+%%%%%%%%%% 0-1. Adding PronType="Int"
+commands { WH.PronType="Int" }
