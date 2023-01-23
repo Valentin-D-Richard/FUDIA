@@ -68,9 +68,13 @@ Question-raising sentences using intonation raising are not considered syntactic
 ---
 # Rules of the programme
 
-The rules are based on linguistic literature, on personal knowledge or syntactic tests, and on observation of the corpus to see how phenomena have already been annotated. Sometimes, the designed rules are not sufficient to correctly capture a phenomenon. In that case, we resort to approximation rules and heuristics. When this is the case, we mention it using the symbol :construction:.
+The rules are based on linguistic literature, on personal knowledge or syntactic tests, and on observation of the corpus to see how phenomena have already been annotated.
 
-In the order of application, the python classes developped are:
+Except for "quoted segments", we try to not base our rules on punctuation, and especially not on interrogation marks. Moreover, we try to base them only based on closed word class knowledge. In particular, there is not list of verbs embedding interrogatives.
+
+Sometimes, the designed rules are however not sufficient to correctly capture a phenomenon. In that case, we resort to approximation rules and heuristics. When this is the case, we mention it using the symbol :construction:.
+
+In the order of application, the python modules developped are:
 
  1. `constr`
  2. `prontype`
@@ -83,6 +87,8 @@ In the order of application, the python classes developped are:
 
 Each class contains several disjunctive patterns (`DisjPat` object). We describe here the code used in the snippets making up the disjunctive patterns.
 
+Each disjunctive pattern is turned into a `Onf(Seq(...))` strategy. `Onf` (one normal form) means that the disjunctive pattern is repeated until no more rule can be applied.
+
 For reannotation, we create additional "copy" node (`T2`, `Q2`, etc.). We define their form, lemma and upos to be the same as their originals, and we append the resting features of the originals to the copies. We shifht all edges to the copies (usualy, only the head nodes) As said in UD guidelines, the head of the fixed expression is the first word. Some additional shifting may be performed, e.g. to handle consistently punctuation. We add `fixed` relations. Finally, we deleting the originals.
 
 This method has the advantage to automatically erase the original relations between the lements of the expression.
@@ -90,6 +96,8 @@ This method has the advantage to automatically erase the original relations betw
 In the programme, by "anchor" we usually mean the governer of the main head is question.
 
 ## 1. `constr`
+
+The goal of this module is to reannotate some French fixed structures.
 
 ### `telque`
 
@@ -116,8 +124,9 @@ Adding `PronType="Rel"` to *WH + que + S[Mood="Sub"]*.
 We detect the bigram WH lemma with undefined `PronType`, *que* lemma, and somewhere on the right :construction:, a node with `Mood="Sub"`.
 
 
-
 ## 2. `prontype`
+
+The goal of this module is to add missing `PronType` annotations.
 
 ### `relprontype`
 
@@ -154,7 +163,10 @@ We detect lemma *qui*, *que*, *quoi*, *comment*, *où*, *quand*, *combien*, *pou
  * expression *en ce qui concerne* (lemmas + form *concerne*)
  * there is an exclamation mark :construction:
 
+
 ## 3. `ecq`
+
+The goal of this module is to reannotate *qu'est-ce que* and *est-ce que *expressions.
 
 ### `qecq`
 
@@ -191,6 +203,10 @@ Case 2. there is not clause head (*est-ce que* is isolated, e.g. unfinished sent
 
 ## 4. `quoted`
 
+The goal of this module is to identify quoted segments.
+
+In the following, by CL_HEAD we mean the head of the segment in question. It may not always be the head of a clause.
+
 ### quoted_a
 
 Identifying a quoted segment using punctuation: case where the anchor is follwed by the clause head.
@@ -226,9 +242,77 @@ Identifying parataxized parenthesized segments.
 
 We detect clause heads governed by `parataxis` and governing a pair of `--` symbols or `(` and `)` around itself.
 
+
 ## 5. `wh`
 
+The path of zero, one or more relations from the inerrogative clause head CL_HEAD to the interrogative phrase head is called the phrase path `ph_path`. The path from the interrogative phrase head PH_HEAD to the interrogative word WH is called the WH path `wh_path`.
+
+The goal of this module is to identify PH_HEAD and CL_HEAD starting from WH and going up the direction of relations.
+We first identify the first edge of `wh_path`. We then potentially pull the feature `IntPhrase="Yes"` (and the `cue:wh` relation) to find the right interrogative phrase head. We precede similarly wih `ph_phrase`. Pulling the feature `IntClause="Yes"` along relations is done in module 6 (`cl_head_pull`).
+
+Some activations of the `cleft` strategy in between the other ones help handling clefted interrogative words.
+
+### `wh_edge`
+
+Finding the first edge of `wh_path` with PH_HEAD != WH.
+
+We detect a word WH with `PronType="Int"` and a governer (excluding conjuction relation). There are three case were we are sure that the governer is part of the interrogative phrase:
+ * WH is lemma *quel* (but not in *n'importe quel* expression)
+ * the relation is `fixed`, e.g. *à quoi bon* (also excluding *n'importe + WH*)
+ * the relation is a *de* nominal complement and the governer is before WH
+
+We don't ask the governer to have a preposition to account for subject interrogative phrases, e.g. *Le chat de qui est parti ?*
+
+### `ph_head_pull`
+
+Pulling `IntPhrase="Yes"` and the `cue:wh` relation.
+
+We detect a former word R with `IntPhrase="Yes"` and a candidate PH_HEAD governing R. We remove this feature from R and add it to PH_HEAD iff R is a *de* nominal complement following PH_HEAD and
+ * either PH_HEAD has a preposition
+ * or PH_HEAD is a nominal subject
+
+As each disjunctive pattern is repeated until no more rule can be applied, we can handle any WH path length.
+
+### `ph_edge_b`
+
+Finding `ph_path` with WH != PH_HEAD, therefore supposing `wh_edge` (and potentially `ph_head_pull`) has been performed on PH_HEAD.
+
+We detect a PH_HEAD with `IntPhrase="Yes"`.
+
+In the first case, there is a governer CL_HEAD. CL_HEAD is part of the same clause iff the relation is oblique, nominal modifier or nominal subject.
+
+Otherwise, CL_HEAD = PH_HEAD. More precisely, the cases where we add `IntPhrase="Yes"` to PH_HEAD are
+ * when PH_HEAD is the root of the sentence, a parataxized segment or a reparendum (and other relations isolating a segment: `discourse`, `vocative`, `dislocated`, `list`, `orphan`)
+ * when PH_HEAD is the head of a quoted segment
+ * when PH_HEAD is the direct or oblique objet of an interrogative-embedding verb (elliptical interrogative clause). To avoid, listing all interrogative-embedding verbs, we choose to just test for one of the most common one in this situation: *savoir* (to know) :construction: :heavy_exclamation_mark:
+
+### `ph_edge_a`
+
+Finding the first edge of `ph_path` with WH = PH_HEAD, therefore supposing `wh_edge` did'nt apply.
+
+We detect a word WH with `PronType="Int"` and a governer CL_HEAD which has no `IntPhrase` feature. We exclude other cases: *n'importe + WH* construction and alone WH (see next section).
+
+We assume that the only relations between WH and a governing word in the same clause (but outside the interrogative phrase) are:
+ * nominal subject, indirect object (certain occurrences of *où*), direct object, oblique object, adverbial modifier and `xcomp` (certain occurrences of *que*)
+ * nominal modifier, supposing it is fronted wrt. CL_HEAD
+ * `advcl` (adverbial clause) for clauses with active or passive participle with a copula (so WH is the head even if it's a clause), e.g. *Ils sont connus comme étant quoi ?*
+
+### `wh_alone`
+
+Identifying isolated WH = PH_HEAD = CL_HEAD.
+
+We detect a word WH with `PronType="Yes"` and no `IntPhrase` feature. We add `IntPhrase="Yes"` and `IntClause="Yes"` iff:
+ * when WH is the root of the sentence, a parataxized segment or a reparendum (and other relations isolating a segment: `discourse`, `vocative`, `dislocated`, `list`, `orphan`)
+ * when WH is the head of a quoted segment
+ * when WH is a direct or oblique objet of an interrogative-embedding verb (elliptical interrogative clause). We identify that with:
+   * WH is an adverb (they are normally not objects)
+   * WH is a pronoun and the governer is interrogative-embedding. To avoid, listing all interrogative-embedding verbs, we choose to just test for one of the most common one in this situation: *savoir* (to know) :construction: :heavy_exclamation_mark:
+
+### `cleft`
+
 ## 6. `cl_head_pull`
+
+As each disjunctive pattern is repeated until no more rule can be applied, we can handle any phrase path length.
 
 ## 7. `conj`
 

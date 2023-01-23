@@ -31,14 +31,12 @@ without { PH_HEAD [lemma="ne"] ; % n'importe WH constructions
 # nmod "de" complement only if PH_HEAD also has a preposition
 wh_edge_1_2 = cl.Snippet("wh_edge_1_2")
 wh_edge_1_2.pattern = '''pattern { PH_HEAD -[nmod]-> WH ;
-\tWH -[case]-> D ; D [lemma="de"] ;
-\t}'''
-
+\tWH -[case]-> D ; D [lemma="de"] ; PH_HEAD << WH }'''
 
 wh_edge.add_snippets([wh_edge_1_0, wh_edge_1_1, wh_edge_1_2], wh_edge_0_0)
 
 
-##### ph_head_pull: Pulling PH_HEAD
+##### ph_head_pull: Pulling IntPhrase="Yes"
 
 # Root
 ph_head_pull_0_0 = cl.Snippet("ph_head_pull_0_0")
@@ -46,7 +44,6 @@ ph_head_pull_0_0.pattern = '''pattern { R[IntPhrase="Yes"] ;
 \te : R -[cue:wh]-> W ;
 \tPH_HEAD -[nmod]->  R ; % maybe obl:mod is ok
 \tR -[case]-> D ; D[lemma="de"] ; % only de complements
-\tPH_HEAD -[case]-> K ; % Only PP can be non-trivial WH-phrases
 \tPH_HEAD << R ; PH_HEAD[!IntPhrase] }
 without { R[Quoted="Yes"] }'''
 ph_head_pull_0_0.command = '''del_feat R.IntPhrase ;
@@ -55,6 +52,17 @@ PH_HEAD.IntPhrase = "Yes" ;
 add_edge PH_HEAD -[cue:wh]-> W'''
 
 ph_head_pull = cl.DisjPat("ph_head_pull", root=ph_head_pull_0_0)
+
+# PH_HEAD is has a preposition
+ph_head_pull_1_0 = cl.Snippet("ph_head_pull_1_0")
+ph_head_pull_1_0.pattern = '''pattern { PH_HEAD -[case]-> K }'''
+# Only PP can be non-trivial WH-phrases
+
+# PH_HEAD is a nominal subject
+ph_head_pull_1_1 = cl.Snippet("ph_head_pull_1_1")
+ph_head_pull_1_1.pattern = '''pattern { ANCHOR -[nsubj]-> PH_HEAD }'''
+
+ph_head_pull.add_snippets([ph_head_pull_1_0, ph_head_pull_1_1], ph_head_pull_0_0)
 
 
 ##### ph_edge_b: Finding ph_path with WH != PH_HEAD
@@ -69,7 +77,7 @@ ph_edge_b = cl.DisjPat("ph_edge_b", root=ph_edge_b_0_0)
 
 # Presence of CL_HEAD
 ph_edge_b_1_0 = cl.Snippet("ph_edge_b_1_0")
-ph_edge_b_1_0.pattern = '''pattern { f : CL_HEAD -[1=obl|nmod]-> PH_HEAD }
+ph_edge_b_1_0.pattern = '''pattern { f : CL_HEAD -[1=obl|nmod|nsubj]-> PH_HEAD }
 without { CL_HEAD[IntClause] }'''
 # Adding IntClause and cue
 ph_edge_b_1_0.command = '''CL_HEAD.IntClause = "Yes" ;
@@ -94,7 +102,7 @@ ph_edge_b_2_2.pattern = '''pattern { PH_HEAD[Quoted="Yes"] }'''
 # Alone: as object or oblique of "savoir"
 ph_edge_b_2_3 = cl.Snippet("ph_edge_b_2_3")
 ph_edge_b_2_3.pattern = '''pattern { ANCHOR -[1=obl|obj]-> PH_HEAD ;
-\tANCHOR[lemma="savoir"] ; WH[lemma<>"quoi"] }'''
+\tANCHOR[lemma="savoir"] }'''
 # Note: we should better take any interrogative-embedding predicate, rather
 # than just "savoir"
 
@@ -111,12 +119,14 @@ ph_edge_b.add_snippets(layer, ph_edge_b_1_1)
 ph_edge_a_0_0 = cl.Snippet("ph_edge_a_0_0")
 ph_edge_a_0_0.pattern = '''pattern { WH [PronType="Int",!IntPhrase] ;
 \te : CL_HEAD -[1=nsubj|iobj|obj|obl|advmod|nmod|xcomp|advcl]-> WH ;
-\tCL_HEAD[!IntClause] }
-without { CL_HEAD -[nmod]-> WH ; CL_HEAD -[case]-> K } %% case wh_edge_1_3
-without { WH[Quoted="Yes"] } % case wh_alone_1_1
+\tCL_HEAD[!IntClause,!IntPhrase] }
 without { N [lemma="ne"] ; N < CL_HEAD ; % n'importe WH constructions
 \tCL_HEAD [form="importe"] ; CL_HEAD < WH }
-without { CL_HEAD -[1=obl|obj]-> WH ; CL_HEAD [lemma="savoir"] } % case wh_alone_1_2'''
+without { WH[Quoted="Yes"] } % case wh_alone_1_1
+without { CL_HEAD -[1=obl|obj]-> WH ;
+\tCL_HEAD << WH ; WH[upos="ADV"] } % case wh_alone_1_3
+without { CL_HEAD -[1=obl|obj]-> WH ; CL_HEAD [lemma="savoir"] ;
+\tCL_HEAD << WH ; WH[upos="PRON"] } % case wh_alone_1_4'''
 # Adds IntClause, IntPhrase and cue
 ph_edge_a_0_0.command = '''CL_HEAD.IntClause = "Yes" ;
 WH.IntPhrase = "Yes" ;
@@ -164,15 +174,20 @@ ANCHOR -[1=root|parataxis|discourse|vocative|reparandum|dislocated|list|orphan]-
 wh_alone_1_2 = cl.Snippet("wh_alone_a_1_2")
 wh_alone_1_2.pattern = '''pattern { WH[Quoted="Yes"] }'''
 
-# Alone: as object or oblique of "savoir"
+# Alone: adverb as object or oblique
 wh_alone_1_3 = cl.Snippet("wh_alone_a_1_3")
 wh_alone_1_3.pattern = '''pattern { ANCHOR -[1=obl|obj]-> WH ;
-\tANCHOR[lemma="savoir"] ; WH[lemma<>"quoi"] }'''
+\tWH[upos="ADV"] ; ANCHOR << WH }'''
+
+# Alone: pronoun as object or oblique of "savoir"
+wh_alone_1_4 = cl.Snippet("wh_alone_a_1_4")
+wh_alone_1_4.pattern = '''pattern { ANCHOR -[1=obl|obj]-> WH ;
+\tANCHOR[lemma="savoir"] ; WH[upos="PRON"] ; ANCHOR << WH }'''
 # Note: we should better take any interrogative-embedding predicate, rather
 # than just "savoir"
 
 
-layer = [wh_alone_1_1, wh_alone_1_2, wh_alone_1_3]
+layer = [wh_alone_1_1, wh_alone_1_2, wh_alone_1_3, wh_alone_1_4]
 wh_alone.add_snippets(layer, wh_alone_0_0)
 
 
