@@ -215,6 +215,11 @@ We detect a relation `ANCHOR -> CL_HEAD` with a punctuation P `:`, `«`, `"` or 
  * either ANCHOR or CL_HEAD governs P
  * P either unambiguously is an opening symbol (`:` or `«`), or CL_HEAD is located bewteen another occurrence of P (`"` or `-`).
 
+#### Note 1.
+These rules take for quoted clauses which could raher be analyses as "free indirect speech". In (a.), the interrogative is syntactically a subordinate, because the *si* surbordination conjunction cannot be used in independent clauses. However, the guillemots indicates the choice of the writer to categorize it as reported speech.
+
+ (a.) Stéphanie Nicot et Eric Vial se posent la question de savoir « si l'uchronie peut faire l'économie de l'événement fondateur [...] ?
+
 ### quoted_b
 
 Identifying reported speech: case where the clause head governs and is followed by an inserted clause (relation `parataxis`) headed by a reporting verb D.
@@ -295,7 +300,7 @@ We detect a word WH with `PronType="Int"` and a governer CL_HEAD which has no `I
 We assume that the only relations between WH and a governing word in the same clause (but outside the interrogative phrase) are:
  * nominal subject, indirect object (certain occurrences of *où*), direct object, oblique object, adverbial modifier and `xcomp` (certain occurrences of *que*)
  * nominal modifier, supposing it is fronted wrt. CL_HEAD
- * `advcl` (adverbial clause) for clauses with active or passive participle with a copula (so WH is the head even if it's a clause), e.g. *Ils sont connus comme étant quoi ?*
+ * `advcl` (adverbial clause) for clauses with a (present or past) participial, gerondival or infinitival copula (so WH is the head even if it's a clause) or auxiliary (but no passé composé) and introduced by a preposition, e.g. *Ils sont connus comme étant quoi ?*
 
 ### `wh_alone`
 
@@ -310,7 +315,30 @@ We detect a word WH with `PronType="Yes"` and no `IntPhrase` feature. We add `In
 
 ### `cleft`
 
-## 6. `cl_head_pull`
+Identifying clefted interrogative words.
+
+We detect the lemma bigramm *ce + être*, followed by a head HEAD, then a subordination conjunction lemma *que*, *qui* or *dont*, and finally (in the linear order), a clause head, such that:
+ * *ce* is the (expletive) subject of HEAD
+ * *être* is the copula of HEAD
+ * CL_HEAD is governed by HEAD as an adverbial clause (cleft is supposed to be annotated with `advcl:cleft`), adnominal clause, subject clause or clausal complement
+
+In the first case, HEAD is a not-yet-annotated word with `PronType="Yes"` --Remember that `cleft` is run once before all disjunctive patterns of this module--. If so, We label HEAD with `IntPhrase="Yes"`, CL_HEAD with `IntClause="Yes"` and we add the edge `CL_HEAD -[cue:wh]-> HEAD`.
+
+In the second case, HEAD is annotated with `IntPhrase="Yes"` --Remember that `cleft` is run just after `wh_edge` and just after `ph_head_pull`--. Similarly, we add `IntClause="Yes"` to CL_HEAD andthe edge `CL_HEAD -[cue:wh]-> HEAD`.
+
+
+## 6. `cl_head_pull` (`chp`)
+
+The goal of this module is to complete the module `wh` by getting the right node to be the clause head of the current interrogative. As explained in the previous module, we procede by going up relations until we can't.
+
+We detect a node CUR currently having the feature `IntClause="Yes"`, relation `CUR -[cue:wh]-> WH` and its governer to be the candidate CAND. HEAD must also not have `Quoted="Yes"`.
+
+Let us first discuss clausal relations between CAND and CUR (`csubj`, `ccomp`, `xcomp`, `advcl` and `acl`). There are three cases where we have to pull along such a relation:
+  * when CUR is (or has a copula or auxiliary being) a (present or past) participle, gerondive or infinitive (but no passé composé) and is introduced by a preposition, e.g. *Ils a réussi en faisant quoi ?* *Il est venu pour faire quoi ?*
+  * when a(nother) subordination conjunction is present bewteen CAND and CUR, e.g. *vous voulez que je fasse quoi*
+  * with a verbal infinitival complement, when WH is fronted before CAND or in situ, e.g. *Que veut-elle faire ? Elle veut faire quoi ?*
+
+Let us now consider the case where the relation between CAND and CUR is nominal (`nsubj`, `obj`, `obl`, `nmod` or `det`). This case is very rare because it only happens when the WH word is in situ, and particularly when it cannot be extracted, e.g. *T'as acheté un jeans avec combien de trous ?* `obj(acheté,jean)`. We assume that we can always pull along those relations. The only exception is when interrogative-embedding verbs have an interrogative phrase alone as complement. To filter out this case, we do as mentionned in `ph_edge_b` (last bullet point).
 
 As each disjunctive pattern is repeated until no more rule can be applied, we can handle any phrase path length.
 

@@ -120,6 +120,7 @@ ph_edge_a_0_0 = cl.Snippet("ph_edge_a_0_0")
 ph_edge_a_0_0.pattern = '''pattern { WH [PronType="Int",!IntPhrase] ;
 \te : CL_HEAD -[1=nsubj|iobj|obj|obl|advmod|nmod|xcomp|advcl]-> WH ;
 \tCL_HEAD[!IntClause,!IntPhrase] }
+% Negative clauses:
 without { N [lemma="ne"] ; N < CL_HEAD ; % n'importe WH constructions
 \tCL_HEAD [form="importe"] ; CL_HEAD < WH }
 without { WH[Quoted="Yes"] } % case wh_alone_1_1
@@ -143,10 +144,11 @@ ph_edge_a_1_0.pattern = '''pattern {
 ph_edge_a_1_1 = cl.Snippet("ph_edge_a_1_1")
 ph_edge_a_1_1.pattern = '''pattern { e.label = nmod ; WH << CL_HEAD }'''
 
-# advcl with participial copula
+# advcl with participial or infinitival copula and a preposition
 ph_edge_a_1_2 = cl.Snippet("ph_edge_a_1_2")
 ph_edge_a_1_2.pattern = '''pattern { e.label = advcl ;
-\tWH -[cop]-> E ; E.VerbForm = "Part"}'''
+\ta: WH -[cop|aux]-> E ; E[VerbForm="Part"|"Inf"] ; WH -> P ; P[upos="ADP"] }
+without { WH -[1=aux]-> AUX ; AUX[VerbForm="Fin"] }'''
 # ... comme étant quoi ?
 
 ph_edge_a.add_snippets([ph_edge_a_1_0, ph_edge_a_1_1, ph_edge_a_1_2], ph_edge_a_0_0)

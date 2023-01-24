@@ -18,64 +18,66 @@ chp_0_0.command = '''del_feat CUR.IntClause ; CAND.IntClause = "Yes" ;
 cl_head_pull = cl.DisjPat("cl_head_pull", root = chp_0_0)
 
 ### Clause relations: csubj, ccomp, xcomp, advcl, acl
-chp_1_0_0 = cl.Snippet("chp_1_0_0") 
-chp_1_0_0.pattern = '''pattern { CAND -[csubj|ccomp|xcomp|advcl|acl]-> CUR }'''
+chp_1_0 = cl.Snippet("chp_1_0") 
+chp_1_0.pattern = '''pattern { a: CAND -[csubj|ccomp|xcomp|advcl|acl]-> CUR }'''
 
-# CL_HEAD is participial (except passé composé)
-chp_2_0_0 = cl.Snippet("chp_2_0")
-chp_2_0_0.pattern = '''pattern { CUR[upos="VERB",VerbForm="Part"] }
-without { CUR -[1=aux]-> AUX ; AUX[VerbForm="Fin"] }'''
+# CUR is participial or infinitival + preposition (except passé composé)
+chp_2_0 = cl.Snippet("chp_2_0")
+chp_2_0.pattern = '''pattern { CUR[upos="VERB",VerbForm="Part"|"Inf"] }
+without { CUR -[1=aux]-> AUX ; AUX[VerbForm="Fin"] ; CUR -> P ; P[upos="ADP"] }'''
 # e.g. Il a réussi en faisant quoi ? advcl(réussi,faisant)
 
-# CL_HEAD's copula or auxiliary is participial
-chp_2_1_0 = cl.Snippet("chp_2_1_0")
-chp_2_1_0.pattern = '''pattern { CUR -[1=aux|cop]-> V ;
-\tV[upos="VERB",VerbForm="Part"] }
+# CUR's copula or auxiliary is participial or infinitival + preposition (except passé composé)
+chp_2_1 = cl.Snippet("chp_2_1")
+chp_2_1.pattern = '''pattern { CUR -[1=aux|cop]-> V ;
+\tV[upos="VERB",VerbForm="Part"|"Inf"] ; CUR -> P ; P[upos="ADP"] }
 without { CUR -[1=aux]-> AUX ; AUX[VerbForm="Fin"] }'''
 
 # Additionnal marker
-chp_2_2_0 = cl.Snippet("chp_2_2_0")
-chp_2_2_0.pattern = '''pattern { CUR -[mark]-> Q ; CL_HEAD[] ;
-\tQ[upos="SCONJ"] ; Q << CL_HEAD }'''
+chp_2_2 = cl.Snippet("chp_2_2_0")
+chp_2_2.pattern = '''pattern { CUR -[mark]-> Q ;
+\tQ[upos="SCONJ"] ; CAND << Q ; Q << CUR }'''
 # e.g. Il sait que/si tu fais quoi ? ccomp(sait,fait)
 
-# Unfronted sole WH word
-chp_2_3_0 = cl.Snippet("chp_2_3_0")
-chp_2_3_0.pattern = '''pattern { CUR << WH }
-without { CL_HEAD -[cue:wh]-> WH2 }
-without { CL_HEAD -[case]-> A ; A[lemma="suivant"|"selon"] }'''
+# In situ or fronted WH word with xcomp complement
+chp_2_3 = cl.Snippet("chp_2_3_0")
+chp_2_3.pattern = '''pattern { CAND << CUR ; a.label = xcomp ;
+\tCUR[VerbForm="Inf"] }
+without { CUR -[cue:wh]-> WH2 }
+without { CAND << WH ; WH << CUR }'''
 # e.g. Il sait faire quoi ? xcomp(sait,faire)
-# e.g. Suivant qui fait quoi, on peut s'adapter. : no pull because of "suivant"
+# e.g. Il sait qui fait quoi. : no pull
 
 # Idiomatic "pour quoi faire"
-chp_2_4_0 = cl.Snippet("chp_2_4_0")
-chp_2_4_0.pattern = '''pattern { CUR[form="faire"] ; WH[form="quoi"] ;
-\tWH < CUR ; P < WH ; P[form="pour"] }'''
+# -> falls under chp_2_1 now
+# chp_2_4_0 = cl.Snippet("chp_2_4_0")
+# chp_2_4_0.pattern = '''pattern { CUR[form="faire"] ; WH[form="quoi"] ;
+# \tWH < CUR ; P < WH ; P[form="pour"] }'''
 
 # Fronted WH word dependent on a xcomp'ed verbal infinitive complement
-chp_2_5_0 = cl.Snippet("chp_2_5_0")
-chp_2_5_0.pattern = '''pattern { WH << CAND ; CAND << CUR ;
-\tCAND -[xcomp]-> CUR ; CUR[VerbForm="Inf"] }'''
+# -> falls under chp_2_3 now
+# chp_2_5_0 = cl.Snippet("chp_2_5_0")
+# chp_2_5_0.pattern = '''pattern { WH << CAND ; CAND << CUR ;
+# \tCAND -[xcomp]-> CUR ; CUR[VerbForm="Inf"] }'''
+# e.g. Que veut-elle faire ?
 
 
 
 ### Nominal relations: nsubj, obj, (iobj,) obl, nmod, (det)
-chp_1_1_5 = cl.Snippet("chp_1_1_5") 
-chp_1_1_5.pattern = '''pattern { CAND -[nsubj|obj|obl|nmod|det]-> CUR }
-without { CAND[lemma="savoir"] ; CAND -[obj]-> CUR }'''
+chp_1_1 = cl.Snippet("chp_1_1_5") 
+chp_1_1.pattern = '''pattern { CAND -[nsubj|obj|obl|nmod|det]-> CUR }
+without { CAND[lemma="savoir"] ; CAND -[obj|obl]-> CUR }'''
 # Exceptionnaly taken vocabulary into account
 # cf ph_edge_b_2_3
 
 # Globally, these relations are rare, and only occur with in-situ WH words,
 # especially when the WH phrase cannot be extracted
-# e.g. T'as acheté un jean avec combien de trous ? obj(acheté,jean)
+# e.g. T'as acheté un jeans avec combien de trous ? obj(acheté,jean)
 
 ##### Adding edges
 
-# Layer 1
-cl_head_pull.add_snippets([chp_1_0_0, chp_1_1_5], chp_0_0)
+cl_head_pull.add_snippets([chp_1_0, chp_1_1], chp_0_0)
 
-# Layer 2
-layer = [chp_2_0_0, chp_2_1_0, chp_2_2_0, chp_2_3_0, chp_2_4_0, chp_2_5_0]
-cl_head_pull.add_snippets(layer, chp_1_0_0)
+layer = [chp_2_0, chp_2_1, chp_2_2, chp_2_3]
+cl_head_pull.add_snippets(layer, chp_1_0)
 
