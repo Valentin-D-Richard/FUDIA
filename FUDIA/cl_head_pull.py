@@ -11,9 +11,11 @@ import classes as cl
 chp_0_0 = cl.Snippet("chp_0_0")
 chp_0_0.pattern = '''pattern { a: CAND -> CUR ; CUR[IntClause="Yes"] ;
 \tw: CUR -[cue:wh]-> WH }
+without { CAND -[cue:wh]-> WH } % no loop
 without { CUR[Quoted="Yes"] }'''
 chp_0_0.command = '''del_feat CUR.IntClause ; CAND.IntClause = "Yes" ;
 \tdel_edge w ; add_edge CAND -[cue:wh]-> WH ;'''
+# It handles the case where CAND already has an edge -[cue:wh]-> CUR
 
 cl_head_pull = cl.DisjPat("cl_head_pull", root = chp_0_0)
 
@@ -23,14 +25,14 @@ chp_1_0.pattern = '''pattern { a: CAND -[csubj|ccomp|xcomp|advcl|acl]-> CUR }'''
 
 # CUR is participial or infinitival + preposition (except passé composé)
 chp_2_0 = cl.Snippet("chp_2_0")
-chp_2_0.pattern = '''pattern { CUR[upos="VERB",VerbForm="Part"|"Inf"] }
+chp_2_0.pattern = '''pattern { CUR[VerbForm="Part"|"Inf"] }
 without { CUR -[1=aux]-> AUX ; AUX[VerbForm="Fin"] ; CUR -> P ; P[upos="ADP"] }'''
 # e.g. Il a réussi en faisant quoi ? advcl(réussi,faisant)
 
 # CUR's copula or auxiliary is participial or infinitival + preposition (except passé composé)
 chp_2_1 = cl.Snippet("chp_2_1")
 chp_2_1.pattern = '''pattern { CUR -[1=aux|cop]-> V ;
-\tV[upos="VERB",VerbForm="Part"|"Inf"] ; CUR -> P ; P[upos="ADP"] }
+\tV[VerbForm="Part"|"Inf"] ; CUR -> P ; P[upos="ADP"] }
 without { CUR -[1=aux]-> AUX ; AUX[VerbForm="Fin"] }'''
 
 # Additionnal marker

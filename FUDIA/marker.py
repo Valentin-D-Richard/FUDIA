@@ -1,8 +1,8 @@
 import classes as cl
 
-##### eske: Annotating marker "est-ce que" or alternate forms
+##### eske: Annotating marker "est-ce que" or alternative forms
 # "est-ce" or "ce que", supposed to be well annotated as fixed
-# Alternate graphies are not taken into account
+# Alternative graphies are not taken into account
 
 eske = cl.DisjPat("eske")
 
@@ -51,7 +51,7 @@ que = cl.DisjPat("que", root=que_0_0)
 # Presence of CL_HEAD
 que_1_0 = cl.Snippet("que_1_0")
 que_1_0.pattern = '''pattern { CL_HEAD -[mark|xcomp]-> Q ;
-\tPH_HEAD[IntPhrase="Yes"] ; CL_HEAD -[cue:wh]-> WH ;
+\tCL_HEAD -[cue:wh]-> WH ;
 \tQ << CL_HEAD }
 without { CL_HEAD -[cue:mark]-> Q } % no loop'''
 # Adding cur relation
@@ -72,10 +72,13 @@ que.add_snippets([que_0_0, que_1_1], que_0_0)
 
 # Root
 si_0_0 = cl.Snippet("si_0_0")
-si_0_0.pattern = '''pattern {a: ANCHOR -[advcl|acl|ccomp|nsubj]-> CL_HEAD ;
+si_0_0.pattern = '''pattern {a: ANCHOR -[advcl|acl|ccomp|csubj]-> CL_HEAD ;
 \tm: CL_HEAD -[mark]-> S ; S[lemma="si",upos="SCONJ"] ; CL_HEAD[!IntClause] }
 without { M[lemma="même"] ; M < S }
-without { Q[upos=SCONJ] ; Q < S ; CL_HEAD -[mark]-> Q }
+without { Q[upos=SCONJ] ; Q << S ; CL_HEAD -[mark]-> Q }
+without { Q[upos=SCONJ] ; Q << S ; ANCHOR -[mark]-> Q }
+without { Q[ExtPos=SCONJ] ; Q << S ; CL_HEAD -[mark]-> Q }
+without { Q[ExtPos=SCONJ] ; Q << S ; ANCHOR -[mark]-> Q }
 without { CL_HEAD -[cue:mark]-> S  } % no loop'''
 # Adding IntClause= "Yes" and cue relation
 si_0_0.command = '''CL_HEAD.IntClause = "Yes" ;
@@ -90,7 +93,7 @@ si_1_0.pattern = '''pattern { CL_HEAD[upos="VERB",VerbForm="Fin"] }'''
 # Finite copula or auxiliary
 si_1_1 = cl.Snippet("si_1_1")
 si_1_1.pattern = '''pattern { CL_HEAD -[1=aux|cop]-> V ;
-\tV[upos="VERB",VerbForm="Fin"] }'''
+\tV[VerbForm="Fin"] }'''
 
 # ccomp
 si_2_0 = cl.Snippet("si_2_0")
@@ -99,30 +102,14 @@ si_2_0.pattern = '''pattern { ANCHOR -[ccomp]-> CL_HEAD }'''
 # acl or advcl with a preposition preceding
 si_2_1 = cl.Snippet("si_2_1")
 si_2_1.pattern = '''pattern { ANCHOR -[advcl|acl]-> CL_HEAD ; C[upos="ADP"] ;
-\tCL_HEAD -[case]-> C ; C < S }'''
+\tCL_HEAD -[case|mark]-> C ; C < S }'''
 
-# nsubj and the si-subclause precedes the matrix clause
+# csubj
 si_2_2 = cl.Snippet("si_2_2")
-si_2_2.pattern = '''pattern { a.label = nsubj ; CL_HEAD << ANCHOR }'''
-
+si_2_2.pattern = '''pattern { a.label = csubj }'''
 
 si.add_snippets([si_1_0, si_1_1], si_0_0)
 si.add_snippets([si_2_0, si_2_1, si_2_2], si_0_0)
-
-
-
-##### titu: Annotating "-ti"/"-tu" marker
-
-titu_0_0 = cl.Snippet("titu_0_0")
-titu_0_0.pattern = '''pattern { CL_HEAD -[mark]-> T ;
-\tT[form="tu"|"-tu"|"ti"|"-ti"] ; CL_HEAD[!IntClause] }
-without { CL_HEAD -[cue:mark]-> T } % no loop'''
-# Adding IntClause= "Yes" and cue relation
-titu_0_0.command = '''CL_HEAD.IntClause = "Yes" ;
-    add_edge CL_HEAD -[cue:mark]-> T'''
-
-titu = cl.DisjPat("titu", root=titu_0_0)
-
 
 
 ##### spp: Annotating suffixed personal pronoun + ce
@@ -130,20 +117,21 @@ titu = cl.DisjPat("titu", root=titu_0_0)
 # Root
 spp_0_0 = cl.Snippet("spp_0_0")
 spp_0_0.pattern = '''pattern { S[upos="PRON"] ;
-    S[lemma="ce"|"je"|"tu"|"il"|"elle"|"on"|"nous"|"vous"|"ils"|"elles"] ;
-    s: CL_HEAD -[1=expl|nsubj]-> S ; }
+\tS[lemma="ce"|"je"|"tu"|"il"|"elle"|"on"|"nous"|"vous"|"ils"|"elles"] ;
+\ts: CL_HEAD -[1=expl|nsubj]-> S ; }
+% Negative patterns
 without { CL_HEAD -[1=parataxis]-> G ; G[Quoted="Yes"] } % no verb-reporting stylistic inversion
 without { G -[1=parataxis]-> CL_HEAD ; G[Quoted="Yes"] } % no verb-reporting stylistic inversion
-without { CL_HEAD -[expl:comp]-> S } % no object S
+without { CL_HEAD -[expl:comp]-> S } % no expletive object S
 without { A[upos="ADV", lemma <> "ne"|"pourquoi"|"où"|"comment"|"quand"] ;
-    CL_HEAD -[advmod]-> A ; A << CL_HEAD } % No non-interrogative preceding adverb
+\tCL_HEAD -[advmod]-> A ; A << CL_HEAD } % No non-interrogative preceding adverb
 without { A[ExtPos="ADV", lemma <> "ne"|"pourquoi"|"où"|"comment"|"quand"] ;
-    CL_HEAD -[advmod]-> A ; A << CL_HEAD } % No non-interrogative preceding adverbial phrase
-without { CL_HEAD -[cue:mark]-> S } % avoid looping
+\tCL_HEAD -[advmod]-> A ; A << CL_HEAD } % No non-interrogative preceding adverbial phrase
+without { CL_HEAD -[cue:mark]-> S } % no loop
 '''
 # Adding IntClause=Yes and cue relation
 spp_0_0.command = '''CL_HEAD.IntClause = "Yes" ;
-    add_edge CL_HEAD -[cue:mark]-> S ;'''
+add_edge CL_HEAD -[cue:mark]-> S ;'''
 
 spp = cl.DisjPat("spp", root=spp_0_0)
 
@@ -169,7 +157,8 @@ spp_2_0.pattern = '''without { ANCHOR -[1=parataxis]-> CL_HEAD }'''
 # or clausal complement
 spp_2_1 = cl.Snippet("spp_2_1")
 spp_2_1.pattern = '''pattern { ANCHOR -[1=parataxis]-> CL_HEAD ;
-\tCL_HEAD -[1=nsubj|obj|obl|ccomp]-> U }'''
+\tCL_HEAD -[1=nsubj|obj|obl|ccomp]-> U }
+without { CL_HEAD -[obl:mod]-> U }'''
 
 # Paraxtaxis + presence of a fronted WH phrase
 spp_2_2 = cl.Snippet("spp_2_2")
@@ -182,9 +171,33 @@ spp_2_3.pattern = '''pattern { ANCHOR -[1=parataxis]-> CL_HEAD ;
 \tCL_HEAD -[xcomp]-> U ;
 \tU -[1=obj|obl|ccomp]-> W }'''
 
-
 spp.add_snippets([spp_1_0, spp_1_1], spp_0_0)
 spp.add_snippets([spp_2_0, spp_2_1, spp_2_2, spp_2_3], spp_0_0)
+
+
+
+##### titu: Annotating "-ti"/"-tu" markers
+
+titu_0_0 = cl.Snippet("titu_0_0")
+titu_0_0.pattern = '''pattern { CL_HEAD -[1=mark|nsubj|expl]-> T ;
+\tT[form="tu"|"-tu"|"ti"|"-ti"] }
+without { CL_HEAD -[cue:mark]-> T } % no loop'''
+# Adding IntClause= "Yes" and cue relation
+titu_0_0.command = '''CL_HEAD.IntClause = "Yes" ;
+add_edge CL_HEAD -[cue:mark]-> T'''
+
+titu = cl.DisjPat("titu", root=titu_0_0)
+
+# Expected marker relation
+titu_1_0 = cl.Snippet("titu_1_0")
+titu_1_0.pattern = '''pattern { CL_HEAD -[1=mark]-> T }'''
+
+# subject relation with -ti
+titu_1_1 = cl.Snippet("titu_1_1")
+titu_1_1.pattern = '''pattern { CL_HEAD -[1=nsubj|expl]-> T ;
+\tT[form="ti"|"-ti"] }'''
+
+titu.add_snippets([titu_1_0, titu_1_1], titu_0_0)
 
 
 

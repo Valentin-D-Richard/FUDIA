@@ -24,6 +24,12 @@ Take a French interrogatives like (1.).
 
 We can identify the **interrogative word** (aka. WH word) *quelle*, the **head of the interrogative clause** *vient*, and the **head of** fronted **interrogative phrase** *[À quelle heure]* : *heure*. Moreover, the subject-verb inversion also indicates the interrogativeness of that clause.
 
+#### Note that, following the Grande Grammaire du Français, we do not consider sentences with final raising contour (2.) or similar disjunctive questions (3.) as syntactic interrogatives, but as question-raising declaratives.
+
+(2.) Il vient quand-↑ ?
+
+(3.) Vous voulez du thé-↑ ou du café-→ ?
+
 FUDIA adds/changes the follwing annotations:
 
 ### Added features :
@@ -39,9 +45,9 @@ By "quoted segments", we mean segments which do not integrate nor get subordinat
  * reported speech
  * complete independent sentences used as nominal blocks, which would typically be written using colons, e.g. 
 
-(2.) La question suivante est : Peut-on y prendre épouse ? 
+(4.) La question suivante est : Peut-on y prendre épouse ? 
 
-(3.) vous allez peut-être probablement avoir un débat en cette fin d'année avec vos amis ou votre famille sur [pause] faut-il séparer l'œuvre de l'artiste
+(5.) vous allez peut-être probablement avoir un débat en cette fin d'année avec vos amis ou votre famille sur [pause] faut-il séparer l'œuvre de l'artiste
 
 ### Added edges
  * `cue:wh` from the interrogative clause head to the interrogative word
@@ -93,7 +99,7 @@ For reannotation, we create additional "copy" node (`T2`, `Q2`, etc.). We define
 
 This method has the advantage to automatically erase the original relations between the lements of the expression.
 
-In the programme, by "anchor" we usually mean the governer of the main head is question.
+In the programme, by "anchor" we usually mean the governer of the main head is question. In this description, by "follows", "after" and "before" we are talking about linear order of words. We employ the term "precede" to specify immediate follwing.
 
 ## 1. `constr`
 
@@ -230,7 +236,7 @@ We detect a relation `CL_HEAD -> D` with a punctuation P `»` or `"` between the
 
 ### quoted_c
 
-Identifying reported speech: case where the head clause governs and follows an a clause (relation `parataxis`) headed by a reported verb D.
+Identifying reported speech: case where the head clause governs and follows a clause (relation `parataxis`) headed by a reported verb D.
 
 We detect a relation `CL_HEAD -> D` with a comma between them and a dash before D. We use similar constraints as in `quoted_a`:
  * either CL_HEAD or D governs the comma
@@ -272,7 +278,7 @@ We don't ask the governer to have a preposition to account for subject interroga
 
 Pulling `IntPhrase="Yes"` and the `cue:wh` relation.
 
-We detect a former word R with `IntPhrase="Yes"` and a candidate PH_HEAD governing R. We remove this feature from R and add it to PH_HEAD iff R is a *de* nominal complement following PH_HEAD and
+We detect a current word CUR with `IntPhrase="Yes"` and a candidate PH_HEAD governing CUR. We remove this feature from CUR and add it to PH_HEAD iff CUR is a *de* nominal complement following PH_HEAD and
  * either PH_HEAD has a preposition
  * or PH_HEAD is a nominal subject
 
@@ -327,9 +333,11 @@ In the first case, HEAD is a not-yet-annotated word with `PronType="Yes"` --Reme
 In the second case, HEAD is annotated with `IntPhrase="Yes"` --Remember that `cleft` is run just after `wh_edge` and just after `ph_head_pull`--. Similarly, we add `IntClause="Yes"` to CL_HEAD andthe edge `CL_HEAD -[cue:wh]-> HEAD`.
 
 
-## 6. `cl_head_pull` (`chp`)
+## 6. `cl_head_pull`
 
 The goal of this module is to complete the module `wh` by getting the right node to be the clause head of the current interrogative. As explained in the previous module, we procede by going up relations until we can't.
+
+### `chp`
 
 We detect a node CUR currently having the feature `IntClause="Yes"`, relation `CUR -[cue:wh]-> WH` and its governer to be the candidate CAND. HEAD must also not have `Quoted="Yes"`.
 
@@ -342,6 +350,103 @@ Let us now consider the case where the relation between CAND and CUR is nominal 
 
 As each disjunctive pattern is repeated until no more rule can be applied, we can handle any phrase path length.
 
+
 ## 7. `conj`
 
+The goal of this module is to handle interrogative clauses with multiple WH words.
+
+The conditions established in modules `wh` and `cl_head_pull` are supposed to make sure that whenever there are multiple WH words having the same interrogative clause head (resp. interrgoative phrase head), they all get an edge `cue:wh` from the latter. The remaining case is with conjoined WH words.
+
+### `conj`
+
+We detect two conjuncts P1 and P2 and a node CL_HEAD with `IntClause="Yes"`.
+
+There are four cases depending on whether P1 (resp. P2) is a sole WH word or a PH_HEAD with a distinct WH word. We assume that CL_HEAD already has a `cue:wh` relation with P1 or its Wh word. We add a relation from CL_HEAD to P2 or its WH word.
+
+
 ## 8. `mark`
+
+The goal of this module is to identify interrogative markers by adding an edge `CL_HEAD -[cue:mark]->` to them.
+
+### `eske`
+
+Annotating marker *est-ce que* or alternative forms *est-ce* or *ce que*.
+
+Note that alternative non-standard garphies (e.g. *Ousque tu vas ?* *Kess tu fais ?*) are not taken into account :construction:. We only assume transcriptions using standard spelling and fixed analysis (e.g. *Où ce que tu vas ? Qu'est-ce tu fais ?*).
+
+We detect fixed bi- or trigram forms *est-ce que*, *ce que* or *est-ce*. If it has a governer, we add `IntClause="Yes"` and the cue relation. If not, we simply add `IntClause="Yes"` to the first element of the bi or trigram.
+
+### `que`
+
+Annotating *que* marker.
+
+*que* can also act like *est-ce que*, but only following a WH word, e.g. *Où qu'il va ?*
+
+We detect a lemma *que* following a WH word.
+
+If *que* is before its governer CL_HEAD as marker or `xcomp` and CL_HEAD has Wh as cue, we add `CL_HEAD -[cue:mark]-> Q`.
+
+In the other case, *que* is alone, and we expect it to be governed by WH as marker or `xcomp`. We also add a cue edge.
+
+### `si`
+
+Annotating *si* marker.
+
+There is no feature in UD which distinguished interrogative-*si* from conditional-*si*.
+
+We detect a subordination conjunction lemma *si* marking a clause head CL_HEAD subordinated by a governer ANCHOR. We also include other constraints based on syntactic tests to **filter out conidtional-*si***:
+ * interrogative *si* clauses must have a finite verb (or copula or auxiliary), e.g. *\**
+ * as a consequence, interrogative *si* clauses cannot be infinitival, and so, cannot be `xcomp`'ed, e.g. *\*Elle sait si gagner.*
+ * they cannot have a WH word, e.g. *\*Elle sait si combien elle peut gagner. \*Elle sait si elle peut gagner combien.*
+ * they cannot be after another subordination conjunction in the same clause or parent clause, e.g. *\*Elle sait que si tu viens, elle part.* is conditional
+ * if they are modifiers (`advcl` or `acl`), they only come with a preposition, e.g. (6.) and (7.) exhibit interrogatives, whereas (8.) and (9.) have conditional clauses instead.
+ * mainly interrogative *si* clauses seem to be allowed as verb subjects :construction:, e.g. *S'il faut tout abandonner (ou pas) n'est pas la question.*
+ * fixed expression *même si* (lemmas) is excluded
+
+(6.) Suivant si elle vient (ou pas), on sera 3 ou 4.
+
+(7.) C'est une vidéo sur si c'est une bonne idée ou pas de prendre l'avion.
+
+(8.) Si elle vient *(ou pas), on sera 4.
+
+(9.) C'est une belle vidéo si tu aimes le fantastique *(ou pas).
+
+There seem to be some rare cases of *si* (with a similar use as *que*) in a declarative clausal subject, like in (10.). We do not know how to filter them out.
+
+(10.) Ce n'est pas un hasard si le sensible Jean Anouilh, dans L'alouette, imagine une Jeanne qui ne meurt pas. [GSD]
+
+### `spp`
+
+Annotating suffixed personal pronoun (+ *ce*), also called interrogative subject-verb inversion or retrograde versational construction.
+
+We detect a personal pronoun or *ce* lemma governed as subject or expletive subject by CL_HEAD such that it follows:
+ * it is preceded by its finite verbal governer (except imperative mood)
+ * it is preceded by a finite copula or auxiliary of its governer (except imperative mood)
+
+The very difficult task is to **distinguish interrogative inversion from stylistic inversion**. We develop here several heuristics to filter out stylistic inversion :construction: :heavy_exclamation_mark: :
+ * when CL_HEAD governs or is governed with parataxis by a quoted segment
+ * when CL_HEAD is after an adverb (or adverbial locution) which is non-interrogative and not *ne*
+
+If CL_HEAD is not governed with a parataxis relation, we can be quite confident the inversion is not stylistic. When it is, we have the following heuristics: the inversion is interrogative when:
+ * CL_HEAD has an additional subject, object, oblique complement or clausal complement,
+ * or CL_HEAD has a fronted WH word,
+ * or CL_HEAD has a `xcomp` complement having an (oblique) object or clausal complement
+
+In other words, we expect stylistic inversion, and more precisely speech reporting inversion, to be very short, contrary to interrogatives.
+
+Unfortunately, some examples fail to be correctly annotated with these heuristics.
+
+
+### `titu`
+
+Annotating *-ti* / *-tu* markers.
+
+As no example of regional *-ti* or québecois *-tu* is present in the current UD corpus, we have to imagine how people would annotate it.
+
+We detect a form *-ti* or *-tu* (or without dash) and its governer. Either:
+ * the relation between them is the expected `mark`
+ * or the relation is (expletive) subject. In this case, we only add an edge if the form is *ti* or *-ti* because the *tu* / *-tu* form should have already been annotated by `spp`.
+
+
+
+

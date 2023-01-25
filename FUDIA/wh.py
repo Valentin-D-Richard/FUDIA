@@ -7,8 +7,8 @@ import classes as cl
 
 # Root :
 wh_edge_0_0 = cl.Snippet("wh_edge_0_0")
-wh_edge_0_0.pattern = '''pattern { WH [PronType="Int"] ; e : PH_HEAD -> WH ;
-\tPH_HEAD[!IntPhrase] }
+wh_edge_0_0.pattern = '''pattern { WH [PronType="Int"] ; e : PH_HEAD -> WH }
+without { PH_HEAD -[cue:wh]-> WH } % no loop
 without { e.label = conj } % not conjuncted WH word'''
 # Add IntPhrase=Yes to PH_HEAD and cue:wh
 wh_edge_0_0.command = '''PH_HEAD.IntPhrase = "Yes" ;
@@ -40,22 +40,22 @@ wh_edge.add_snippets([wh_edge_1_0, wh_edge_1_1, wh_edge_1_2], wh_edge_0_0)
 
 # Root
 ph_head_pull_0_0 = cl.Snippet("ph_head_pull_0_0")
-ph_head_pull_0_0.pattern = '''pattern { R[IntPhrase="Yes"] ;
-\te : R -[cue:wh]-> W ;
-\tPH_HEAD -[nmod]->  R ; % maybe obl:mod is ok
-\tR -[case]-> D ; D[lemma="de"] ; % only de complements
-\tPH_HEAD << R ; PH_HEAD[!IntPhrase] }
-without { R[Quoted="Yes"] }'''
-ph_head_pull_0_0.command = '''del_feat R.IntPhrase ;
+ph_head_pull_0_0.pattern = '''pattern { CUR[IntPhrase="Yes"] ;
+\te : CUR -[cue:wh]-> WH ; PH_HEAD << CUR ;
+\tPH_HEAD -[nmod]->  CUR ; % maybe obl:mod is ok
+\tCUR -[case]-> D ; D[lemma="de"] } % only de complements
+without { PH_HEAD -[cue:wh]-> WH } % no loop
+without { CUR[Quoted="Yes"] }'''
+ph_head_pull_0_0.command = '''del_feat CUR.IntPhrase ;
 del_edge e ;
 PH_HEAD.IntPhrase = "Yes" ;
-add_edge PH_HEAD -[cue:wh]-> W'''
+add_edge PH_HEAD -[cue:wh]-> WH'''
 
 ph_head_pull = cl.DisjPat("ph_head_pull", root=ph_head_pull_0_0)
 
 # PH_HEAD is has a preposition
 ph_head_pull_1_0 = cl.Snippet("ph_head_pull_1_0")
-ph_head_pull_1_0.pattern = '''pattern { PH_HEAD -[case]-> K }'''
+ph_head_pull_1_0.pattern = '''pattern { PH_HEAD -[case]-> P }'''
 # Only PP can be non-trivial WH-phrases
 
 # PH_HEAD is a nominal subject
@@ -78,7 +78,7 @@ ph_edge_b = cl.DisjPat("ph_edge_b", root=ph_edge_b_0_0)
 # Presence of CL_HEAD
 ph_edge_b_1_0 = cl.Snippet("ph_edge_b_1_0")
 ph_edge_b_1_0.pattern = '''pattern { f : CL_HEAD -[1=obl|nmod|nsubj]-> PH_HEAD }
-without { CL_HEAD[IntClause] }'''
+without { CL_HEAD -[cue:wh]-> WH } % no loop'''
 # Adding IntClause and cue
 ph_edge_b_1_0.command = '''CL_HEAD.IntClause = "Yes" ;
 \tadd_edge CL_HEAD -[cue:wh]-> WH'''
@@ -86,7 +86,7 @@ ph_edge_b_1_0.command = '''CL_HEAD.IntClause = "Yes" ;
 
 ### Alone: CL_HEAD = PH_HEAD
 ph_edge_b_1_1 = cl.Snippet("ph_edge_b_1_1")
-ph_edge_b_1_1.pattern = '''without { PH_HEAD[IntClause] }'''
+ph_edge_b_1_1.pattern = '''without { PH_HEAD[IntClause="Yes"] } % no loop'''
 # Adding IntClause
 ph_edge_b_1_1.command = '''PH_HEAD.IntClause = "Yes"'''
 
@@ -117,10 +117,10 @@ ph_edge_b.add_snippets(layer, ph_edge_b_1_1)
 
 # Root:
 ph_edge_a_0_0 = cl.Snippet("ph_edge_a_0_0")
-ph_edge_a_0_0.pattern = '''pattern { WH [PronType="Int",!IntPhrase] ;
-\te : CL_HEAD -[1=nsubj|iobj|obj|obl|advmod|nmod|xcomp|advcl]-> WH ;
-\tCL_HEAD[!IntClause,!IntPhrase] }
+ph_edge_a_0_0.pattern = '''pattern { WH[PronType="Int",!IntPhrase] ;
+\te : CL_HEAD -[1=nsubj|iobj|obj|obl|advmod|nmod|xcomp|advcl]-> WH }
 % Negative clauses:
+without { CL_HEAD -[cue:wh]-> WH }
 without { N [lemma="ne"] ; N < CL_HEAD ; % n'importe WH constructions
 \tCL_HEAD [form="importe"] ; CL_HEAD < WH }
 without { WH[Quoted="Yes"] } % case wh_alone_1_1
@@ -200,23 +200,22 @@ cleft_0_0.pattern = '''pattern { C[lemma="ce"] ; E[lemma="être"] ;
 \tQ[lemma="que"|"qui"|"dont", upos="SCONJ"] ; 
 \tHEAD -[1=advcl|acl|csubj|ccomp]-> CL_HEAD ;
 \tHEAD -[cop]-> E ; HEAD -[1=expl|nsubj]-> C ;
-\tC < E ; E << HEAD ; HEAD << Q ; Q << CL_HEAD }'''
+\tC < E ; E << HEAD ; HEAD << Q ; Q << CL_HEAD }
+without { CL_HEAD -[cue:wh]-> HEAD } % no loop'''
 
 cleft = cl.DisjPat("cleft", root=cleft_0_0)
 
 
 # HEAD is a wh word
 cleft_1_0 = cl.Snippet("cleft_1_0")
-cleft_1_0.pattern = '''pattern { HEAD[PronType="Int",!IntPhrase] ;
-\tCL_HEAD[!IntClause] }'''
+cleft_1_0.pattern = '''pattern { HEAD[PronType="Int",!IntPhrase] }'''
 # Adding IntPhrase, IntClause and cue relation
 cleft_1_0.command = '''HEAD.IntPhrase = "Yes" ;
 CL_HEAD.IntClause = "Yes" ; add_edge CL_HEAD -[cue:wh]-> HEAD ;'''
 
 # HEAD is PH_HEAD
 cleft_1_1 = cl.Snippet("cleft_1_1")
-cleft_1_1.pattern = '''pattern { HEAD[IntClause="Yes"] ;
-\tCL_HEAD[!IntClause] }'''
+cleft_1_1.pattern = '''pattern { HEAD[IntClause="Yes"] }'''
 # Adding IntClause and cue relation
 cleft_1_1.command = '''CL_HEAD.IntClause = "Yes" ;
 add_edge CL_HEAD -[cue:wh]-> HEAD ;'''
