@@ -71,15 +71,15 @@ qecq_3_0_1 = cl.Snippet("qecq_3_0_1")
 qecq_3_0_1.pattern = '''pattern { Q[lemma="que"] }'''
 
 
-# xcomp'ed verb
+# xcomp'ed verb (heuristics)
 qecq_4_0_1 = cl.Snippet("qecq_4_0_1")
-qecq_4_0_1.pattern = '''pattern { CL_HEAD -[xcomp]-> V ; V[upos="VERB"] }'''
+qecq_4_0_1.pattern = '''pattern { CL_HEAD -[xcomp]-> V ; V[upos="VERB"|"AUX"] }'''
 # Adding object relation from the xcomp'ed verb
 qecq_4_0_1.command = '''add_edge V -[obj]-> WH2 ;'''
 
 # No xcomp'ed verb
 qecq_4_1_1 = cl.Snippet("qecq_4_1_1")
-qecq_4_1_1.pattern = '''without { CL_HEAD -[xcomp]-> V ; V[upos="VERB"] }'''
+qecq_4_1_1.pattern = '''without { CL_HEAD -[xcomp]-> V ; V[upos="VERB"|"AUX"] }'''
 # Adding object relation from CL_HEAD
 qecq_4_1_1.command = '''add_edge CL_HEAD -[obj]-> WH2 ;'''
 

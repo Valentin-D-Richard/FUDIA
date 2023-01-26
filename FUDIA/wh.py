@@ -27,6 +27,7 @@ wh_edge_1_1 = cl.Snippet("wh_edge_1_1")
 wh_edge_1_1.pattern = '''pattern { e.label = fixed }
 without { PH_HEAD [lemma="ne"] ; % n'importe WH constructions
 \tG2 [form="importe"] ; PH_HEAD < G2 ; G2 < WH }'''
+# e.g. À quoi bon
 
 # nmod "de" complement only if PH_HEAD also has a preposition
 wh_edge_1_2 = cl.Snippet("wh_edge_1_2")
@@ -151,7 +152,15 @@ ph_edge_a_1_2.pattern = '''pattern { e.label = advcl ;
 without { WH -[1=aux]-> AUX ; AUX[VerbForm="Fin"] }'''
 # ... comme étant quoi ?
 
-ph_edge_a.add_snippets([ph_edge_a_1_0, ph_edge_a_1_1, ph_edge_a_1_2], ph_edge_a_0_0)
+# advcl with participial or infinitival copula and a prepositional locution
+ph_edge_a_1_3 = cl.Snippet("ph_edge_a_1_3")
+ph_edge_a_1_3.pattern = '''pattern { e.label = advcl ;
+\ta: WH -[cop|aux]-> E ; E[VerbForm="Part"|"Inf"] ; WH -> P ; P[ExtPos="ADP"] }
+without { WH -[1=aux]-> AUX ; AUX[VerbForm="Fin"] }'''
+# ... comme étant quoi ?
+
+layer = [ph_edge_a_1_0, ph_edge_a_1_1, ph_edge_a_1_2, ph_edge_a_1_3]
+ph_edge_a.add_snippets(layer, ph_edge_a_0_0)
 
 
 # Case with WH word isolated by conj : no IntPhrase="Yes" added

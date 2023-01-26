@@ -76,7 +76,9 @@ si_0_0.pattern = '''pattern {a: ANCHOR -[advcl|acl|ccomp|csubj]-> CL_HEAD ;
 \tm: CL_HEAD -[mark]-> S ; S[lemma="si",upos="SCONJ"] ; CL_HEAD[!IntClause] }
 without { M[lemma="même"] ; M < S }
 without { Q[upos=SCONJ] ; Q << S ; CL_HEAD -[mark]-> Q }
+without { Q[ExtPos=SCONJ] ; Q << S ; CL_HEAD -[mark]-> Q }
 without { Q[upos=SCONJ] ; Q << S ; ANCHOR -[mark]-> Q }
+without { Q[ExtPos=SCONJ] ; Q << S ; ANCHOR -[mark]-> Q }
 without { Q[ExtPos=SCONJ] ; Q << S ; CL_HEAD -[mark]-> Q }
 without { Q[ExtPos=SCONJ] ; Q << S ; ANCHOR -[mark]-> Q }
 without { CL_HEAD -[cue:mark]-> S  } % no loop'''
@@ -88,7 +90,7 @@ si = cl.DisjPat("si", root=si_0_0)
 
 # Finite verb
 si_1_0 = cl.Snippet("si_1_0")
-si_1_0.pattern = '''pattern { CL_HEAD[upos="VERB",VerbForm="Fin"] }'''
+si_1_0.pattern = '''pattern { CL_HEAD[upos="VERB"|"AUX",VerbForm="Fin"] }'''
 
 # Finite copula or auxiliary
 si_1_1 = cl.Snippet("si_1_1")
@@ -104,12 +106,17 @@ si_2_1 = cl.Snippet("si_2_1")
 si_2_1.pattern = '''pattern { ANCHOR -[advcl|acl]-> CL_HEAD ; C[upos="ADP"] ;
 \tCL_HEAD -[case|mark]-> C ; C < S }'''
 
-# csubj
+# acl or advcl with a prepositional locution preceding
 si_2_2 = cl.Snippet("si_2_2")
-si_2_2.pattern = '''pattern { a.label = csubj }'''
+si_2_2.pattern = '''pattern { ANCHOR -[advcl|acl]-> CL_HEAD ; C[ExtPos="ADP"] ;
+\tCL_HEAD -[case|mark]-> C ; C < S }'''
+
+# csubj
+si_2_3 = cl.Snippet("si_2_3")
+si_2_3.pattern = '''pattern { a.label = csubj }'''
 
 si.add_snippets([si_1_0, si_1_1], si_0_0)
-si.add_snippets([si_2_0, si_2_1, si_2_2], si_0_0)
+si.add_snippets([si_2_0, si_2_1, si_2_2, si_2_3], si_0_0)
 
 
 ##### spp: Annotating suffixed personal pronoun + ce
@@ -182,7 +189,7 @@ spp_3_2.pattern = '''pattern { ANCHOR -[1=parataxis]-> CL_HEAD ;
 # Paraxtaxis + presence of a verbal complement having an (oblique) object
 spp_3_3 = cl.Snippet("spp_3_3")
 spp_3_3.pattern = '''pattern { ANCHOR -[1=parataxis]-> CL_HEAD ;
-\tCL_HEAD -[xcomp]-> U ;
+\tCL_HEAD -[xcomp]-> U ; U[upos="VERB"|"AUX"] ;
 \tU -[1=obj|obl|ccomp]-> W }'''
 
 spp.add_snippets([spp_1_0, spp_1_1], spp_0_0)

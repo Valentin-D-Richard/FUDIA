@@ -88,11 +88,19 @@ nimporte_2_2.pattern = '''pattern { ANCHOR -[1=advcl|ccomp|parataxis]-> I ;
 nimporte_2_2.command = '''add_edge ANCHOR -[obl]-> N2 ;
 add_edge N2 -[case]-> C'''
 
-# PRON + Anchor relation to subject NP
+# PRON + Anchor relation to PP (prep locution)
 nimporte_2_3 = cl.Snippet("nimporte_2_3")
-nimporte_2_3.pattern = '''pattern { ANCHOR -[1=csubj]-> I }'''
+nimporte_2_3.pattern = '''pattern { ANCHOR -[1=advcl|ccomp|parataxis]-> I ;
+\tI -[case|mark]-> C ; C[ExtPos="ADP"] }'''
 # Replacing by obl
-nimporte_2_3.command = '''add_edge ANCHOR -[nsubj]-> N2 '''
+nimporte_2_3.command = '''add_edge ANCHOR -[obl]-> N2 ;
+add_edge N2 -[case]-> C'''
+
+# PRON + Anchor relation to subject NP
+nimporte_2_4 = cl.Snippet("nimporte_2_4")
+nimporte_2_4.pattern = '''pattern { ANCHOR -[1=csubj]-> I }'''
+# Replacing by obl
+nimporte_2_4.command = '''add_edge ANCHOR -[nsubj]-> N2 '''
 
 
 # DET + Anchor relation to object NP 
@@ -110,11 +118,19 @@ nimporte_2_2_3.pattern = '''pattern { ANCHOR -[1=advcl|ccomp|parataxis]-> I ;
 nimporte_2_2_3.command = '''add_edge ANCHOR -[obl]-> S ;
 add_edge S -[case]-> C'''
 
-# DET + Anchor relation to object NP 
+# DET + Anchor relation to PP
 nimporte_2_3_3 = cl.Snippet("nimporte_2_3_3")
-nimporte_2_3_3.pattern = '''pattern { ANCHOR -[1=csubj]-> I }'''
+nimporte_2_3_3.pattern = '''pattern { ANCHOR -[1=advcl|ccomp|parataxis]-> I ;
+\tI -[case|mark]-> C ; C[upos="ADP"] }'''
+# Replacing by obl
+nimporte_2_3_3.command = '''add_edge ANCHOR -[obl]-> S ;
+add_edge S -[case]-> C'''
+
+# DET + Anchor relation to object NP 
+nimporte_2_4_3 = cl.Snippet("nimporte_2_4_3")
+nimporte_2_4_3.pattern = '''pattern { ANCHOR -[1=csubj]-> I }'''
 # Replacing by obj
-nimporte_2_3_3.command = '''add_edge ANCHOR -[nsubj]-> S'''
+nimporte_2_4_3.command = '''add_edge ANCHOR -[nsubj]-> S'''
 
 
 # Anchor relation to ADV
@@ -127,9 +143,9 @@ nimporte_2_1_5.command = '''add_edge ANCHOR -[advmod]-> N2'''
 
 layer = [nimporte_1_0, nimporte_1_1_3, nimporte_1_2_5]
 nimporte.add_snippets(layer, nimporte_0_0)
-layer1 = [nimporte_2_0, nimporte_2_1, nimporte_2_2, nimporte_2_3]
+layer1 = [nimporte_2_0, nimporte_2_1, nimporte_2_2, nimporte_2_3, nimporte_2_4]
 nimporte.add_snippets(layer1, nimporte_1_0)
-layer2 = [nimporte_2_0, nimporte_2_1_3, nimporte_2_2_3]
+layer2 = [nimporte_2_0, nimporte_2_1_3, nimporte_2_2_3, nimporte_2_4_3]
 nimporte.add_snippets(layer2, nimporte_1_1_3)
 nimporte.add_snippets([nimporte_2_0, nimporte_2_1_5], nimporte_1_2_5)
 

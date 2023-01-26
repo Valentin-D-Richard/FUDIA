@@ -348,6 +348,8 @@ Let us first discuss clausal relations between CAND and CUR (`csubj`, `ccomp`, `
 
 Let us now consider the case where the relation between CAND and CUR is nominal (`nsubj`, `obj`, `obl`, `nmod` or `det`). This case is very rare because it only happens when the WH word is in situ, and particularly when it cannot be extracted, e.g. *T'as acheté un jeans avec combien de trous ?* `obj(acheté,jean)`. We assume that we can always pull along those relations. The only exception is when interrogative-embedding verbs have an interrogative phrase alone as complement. To filter out this case, we do as mentionned in `ph_edge_b` (last bullet point).
 
+Note that each time we are searching for a preposition or a subordination conjunction, we also take into account the case of prepositional locutions or subsordination locutions.
+
 As each disjunctive pattern is repeated until no more rule can be applied, we can handle any phrase path length.
 
 

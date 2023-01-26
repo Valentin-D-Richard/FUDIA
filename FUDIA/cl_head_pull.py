@@ -30,25 +30,47 @@ chp_2_0.pattern = '''pattern { CUR[VerbForm="Part"|"Inf"] ;
 without { CUR -[1=aux]-> AUX ; AUX[VerbForm="Fin"] }'''
 # e.g. Il a réussi en faisant quoi ? advcl(réussi,faisant)
 
-# CUR's copula or auxiliary is participial or infinitival + preposition (except passé composé)
+# CUR is participial or infinitival + prepositional locution (except passé composé)
 chp_2_1 = cl.Snippet("chp_2_1")
-chp_2_1.pattern = '''pattern { CUR -[1=aux|cop]-> V ;
+chp_2_1.pattern = '''pattern { CUR[VerbForm="Part"|"Inf"] ;
+\tCUR -> P ; P[ExtPos="ADP"] }
+without { CUR -[1=aux]-> AUX ; AUX[VerbForm="Fin"] }'''
+# e.g. Il a réussi en faisant quoi ? advcl(réussi,faisant)
+
+# CUR's copula or auxiliary is participial or infinitival
+# + preposition (except passé composé)
+chp_2_2 = cl.Snippet("chp_2_2")
+chp_2_2.pattern = '''pattern { CUR -[1=aux|cop]-> V ;
 \tV[VerbForm="Part"|"Inf"] ; CUR -> P ; P[upos="ADP"] }
 without { CUR -[1=aux]-> AUX ; AUX[VerbForm="Fin"] }'''
 
+# CUR's copula or auxiliary is participial or infinitival
+# + prepositional locution (except passé composé)
+chp_2_3 = cl.Snippet("chp_2_3")
+chp_2_3.pattern = '''pattern { CUR -[1=aux|cop]-> V ;
+\tV[VerbForm="Part"|"Inf"] ; CUR -> P ; P[ExtPos="ADP"] }
+without { CUR -[1=aux]-> AUX ; AUX[VerbForm="Fin"] }'''
+
 # Additionnal marker
-chp_2_2 = cl.Snippet("chp_2_2_0")
-chp_2_2.pattern = '''pattern { CUR -[mark]-> Q ;
+chp_2_4 = cl.Snippet("chp_2_4")
+chp_2_4.pattern = '''pattern { CUR -[mark]-> Q ;
 \tQ[upos="SCONJ"] ; CAND << Q ; Q << CUR }'''
 # e.g. Il sait que/si tu fais quoi ? ccomp(sait,fait)
 
+# Additionnal marker locution
+chp_2_5 = cl.Snippet("chp_2_5")
+chp_2_5.pattern = '''pattern { CUR -[mark]-> Q ;
+\tQ[ExtPos="SCONJ"] ; CAND << Q ; Q << CUR }'''
+# e.g. Il sait que/si tu fais quoi ? ccomp(sait,fait)
+
 # In situ or fronted WH word with xcomp complement
-chp_2_3 = cl.Snippet("chp_2_3_0")
-chp_2_3.pattern = '''pattern { CAND << CUR ; a.label = xcomp ;
+chp_2_6 = cl.Snippet("chp_2_6")
+chp_2_6.pattern = '''pattern { CAND << CUR ; a.label = xcomp ;
 \tCUR[VerbForm="Inf"] }
 without { CUR -[cue:wh]-> WH2 }
 without { CAND << WH ; WH << CUR }'''
 # e.g. Il sait faire quoi ? xcomp(sait,faire)
+# e.g. Elle est prête à les rejoindre où ? xcomp(prête, rejoindre)
 # e.g. Il sait qui fait quoi. : no pull
 
 # Idiomatic "pour quoi faire"
@@ -81,6 +103,6 @@ without { CAND[lemma="savoir"] ; CAND -[obj|obl]-> CUR }'''
 
 cl_head_pull.add_snippets([chp_1_0, chp_1_1], chp_0_0)
 
-layer = [chp_2_0, chp_2_1, chp_2_2, chp_2_3]
+layer = [chp_2_0, chp_2_1, chp_2_2, chp_2_3, chp_2_4, chp_2_5, chp_2_6]
 cl_head_pull.add_snippets(layer, chp_1_0)
 
