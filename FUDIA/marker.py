@@ -123,10 +123,6 @@ spp_0_0.pattern = '''pattern { S[upos="PRON"] ;
 without { CL_HEAD -[1=parataxis]-> G ; G[Quoted="Yes"] } % no verb-reporting stylistic inversion
 without { G -[1=parataxis]-> CL_HEAD ; G[Quoted="Yes"] } % no verb-reporting stylistic inversion
 without { CL_HEAD -[expl:comp]-> S } % no expletive object S
-without { A[upos="ADV", lemma <> "ne"|"pourquoi"|"où"|"comment"|"quand"] ;
-\tCL_HEAD -[advmod]-> A ; A << CL_HEAD } % No non-interrogative preceding adverb
-without { A[ExtPos="ADV", lemma <> "ne"|"pourquoi"|"où"|"comment"|"quand"] ;
-\tCL_HEAD -[advmod]-> A ; A << CL_HEAD } % No non-interrogative preceding adverbial phrase
 without { CL_HEAD -[cue:mark]-> S } % no loop
 '''
 # Adding IntClause=Yes and cue relation
@@ -149,30 +145,49 @@ without { V[Mood="Imp"] } % not imperative'''
 
 ### Filtering out extra-short stylistic inversions
 
-# No parataxis
+# Presence of a WH word
 spp_2_0 = cl.Snippet("spp_2_0")
-spp_2_0.pattern = '''without { ANCHOR -[1=parataxis]-> CL_HEAD }'''
+spp_2_0.pattern = '''pattern { CL_HEAD -[cue:wh]-> WH }'''
+
+# Presence of an interrogation point
+spp_2_1 = cl.Snippet("spp_2_1")
+spp_2_1.pattern = '''pattern { CL_HEAD -[punct]-> IP ;
+\tIP[lemma="?"] }'''
+
+# No additional subject or WH word, and no preceding adverb (locution)
+spp_2_2 = cl.Snippet("spp_2_2")
+spp_2_2.pattern = '''without { CL_HEAD -[cue:wh]-> WH }
+without { A[upos="ADV", lemma <> "ne"|"pourquoi"|"où"|"comment"|"quand"] ;
+\tCL_HEAD -[advmod]-> A ; A << CL_HEAD } % No non-interrogative preceding adverb
+without { A[ExtPos="ADV", lemma <> "ne"|"pourquoi"|"où"|"comment"|"quand"] ;
+\tCL_HEAD -[advmod]-> A ; A << CL_HEAD } % No non-interrogative preceding adverbial phrase'''
+
+
+# No parataxis
+spp_3_0 = cl.Snippet("spp_3_0")
+spp_3_0.pattern = '''without { ANCHOR -[1=parataxis]-> CL_HEAD }'''
 
 # Paraxtaxis + presence of an additional subject, or of an (oblique) object,
 # or clausal complement
-spp_2_1 = cl.Snippet("spp_2_1")
-spp_2_1.pattern = '''pattern { ANCHOR -[1=parataxis]-> CL_HEAD ;
+spp_3_1 = cl.Snippet("spp_3_1")
+spp_3_1.pattern = '''pattern { ANCHOR -[1=parataxis]-> CL_HEAD ;
 \tCL_HEAD -[1=nsubj|obj|obl|ccomp]-> U }
 without { CL_HEAD -[obl:mod]-> U }'''
 
 # Paraxtaxis + presence of a fronted WH phrase
-spp_2_2 = cl.Snippet("spp_2_2")
-spp_2_2.pattern = '''pattern { ANCHOR -[1=parataxis]-> CL_HEAD ;
+spp_3_2 = cl.Snippet("spp_3_2")
+spp_3_2.pattern = '''pattern { ANCHOR -[1=parataxis]-> CL_HEAD ;
 \tCL_HEAD -[cue:wh]-> WH ; WH << CL_HEAD }'''
 
 # Paraxtaxis + presence of a verbal complement having an (oblique) object
-spp_2_3 = cl.Snippet("spp_2_3")
-spp_2_3.pattern = '''pattern { ANCHOR -[1=parataxis]-> CL_HEAD ;
+spp_3_3 = cl.Snippet("spp_3_3")
+spp_3_3.pattern = '''pattern { ANCHOR -[1=parataxis]-> CL_HEAD ;
 \tCL_HEAD -[xcomp]-> U ;
 \tU -[1=obj|obl|ccomp]-> W }'''
 
 spp.add_snippets([spp_1_0, spp_1_1], spp_0_0)
-spp.add_snippets([spp_2_0, spp_2_1, spp_2_2, spp_2_3], spp_0_0)
+spp.add_snippets([spp_2_0, spp_2_1, spp_2_2], spp_0_0)
+spp.add_snippets([spp_3_0, spp_3_1, spp_3_2, spp_3_3], spp_2_2)
 
 
 

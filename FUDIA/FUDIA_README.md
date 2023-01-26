@@ -423,7 +423,9 @@ We detect a personal pronoun or *ce* lemma governed as subject or expletive subj
  * it is preceded by its finite verbal governer (except imperative mood)
  * it is preceded by a finite copula or auxiliary of its governer (except imperative mood)
 
-The very difficult task is to **distinguish interrogative inversion from stylistic inversion**. We develop here several heuristics to filter out stylistic inversion :construction: :heavy_exclamation_mark: :
+The very difficult task is to **distinguish interrogative inversion from stylistic inversion**. We develop here several heuristics to filter out stylistic inversion :construction: :heavy_exclamation_mark:
+
+The inversion is interrogative if we know there is already a WH word or there is an interrogation mark governed :heavy_exclamation_mark:. Otherwise, the inversion is most probably stylistic:
  * when CL_HEAD governs or is governed with parataxis by a quoted segment
  * when CL_HEAD is after an adverb (or adverbial locution) which is non-interrogative and not *ne*
 
@@ -434,8 +436,9 @@ If CL_HEAD is not governed with a parataxis relation, we can be quite confident 
 
 In other words, we expect stylistic inversion, and more precisely speech reporting inversion, to be very short, contrary to interrogatives.
 
-Unfortunately, some examples fail to be correctly annotated with these heuristics.
+Unfortunately, some examples fail to be correctly annotated with these heuristics. In (11.), *poursuit* is parataxized and head of a quoted segment, but it is not sufficient to be sure it's not an interrogative.
 
+(11.) c'est-à-dire--poursuit-il son argument--, " avant, le Maroc pensait [...] [GSD]
 
 ### `titu`
 

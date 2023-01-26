@@ -1,5 +1,40 @@
 #!/usr/bin/env python3
 
+import sys
+
+USAGE = '''./generate_grs.py [-o FILENAME]
+Creates a grs file with can be used with grew to annotate French interrogatives.
+To run the annotation, use:
+  grew transform -grs GRS_FILE -i CORPUS -o OUTPUT_FILE -strat main
+
+Options:
+-o FILENAME     Specifies output file name. Default is fudia.grs'''
+
+# Argument handling
+FILENAME = "fudia.grs"
+
+if len(sys.argv) > 1 and sys.argv[1] == "--help":
+    print(USAGE)
+    exit()
+
+elif len(sys.argv) > 1 and sys.argv[1] == "-o": # -o option
+    if len(sys.argv) != 3:
+        message = "Error: missing -o argument or too many parameters. See --help"
+        print(message,file=sys.stderr)
+        exit(2)
+    else:
+        FILENAME = sys.argv[3]
+
+else:
+    if len(sys.argv) != 1:
+        message = "Error: too many parameters. See --help"
+        print(message,file=sys.stderr)
+        exit(1)
+
+
+
+# Importing classes
+
 import classes as cl
 import constr as cs     # Reannotating constructions involving WH proforms
 import prontype as p    # Reannotating some relative and interrogative pronouns
@@ -25,5 +60,6 @@ seq += [co.conj]
 seq += [m.eske, m.que, m.si, m.titu, m.spp]
 
 
-cl.gen_grs(seq, "annotate")
+# Main routine
+cl.gen_grs(seq, FILENAME)
 

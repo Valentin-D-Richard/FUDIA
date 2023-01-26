@@ -137,17 +137,19 @@ class DisjPat(nx.DiGraph):
         plt.show()
 
 
-def gen_grs(seq:list, name:str, output="rule"):
+def gen_grs(seq:list, filename:str, output="rule"):
     """Input:   list 'seq' of DisPat objects,
-                name 'name' of input file (without the '.grs' extension)
+                file name 'filename' of output file
+                'output' must be "rule" or "pattern", see DisjPat.gen_branches
+                /!\\ "pattern" option is not supported yet
         Output: Create a .grs file with
             - a package for all DisPat
             - a Onf(Seq(...)) strategy for all package
             - a Seq(...) stratagy (named 'main') of all these strategies
-        If a DisPat is used several times, its packege will be written
+        If a DisjPat is used several times, its package will be written
         down only once, but taken with multiplicity in the main strategy."""
     all_names = set()
-    with open(name + ".grs","w") as file:
+    with open(filename,"w") as file:
         # Main loop
         main_strat = "strat main { Seq(" # Main strategy
         for dp in seq:  # Assuming seq is not empty

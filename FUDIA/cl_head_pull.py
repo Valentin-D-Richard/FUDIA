@@ -21,12 +21,13 @@ cl_head_pull = cl.DisjPat("cl_head_pull", root = chp_0_0)
 
 ### Clause relations: csubj, ccomp, xcomp, advcl, acl
 chp_1_0 = cl.Snippet("chp_1_0") 
-chp_1_0.pattern = '''pattern { a: CAND -[csubj|ccomp|xcomp|advcl|acl]-> CUR }'''
+chp_1_0.pattern = '''pattern { CAND -[csubj|ccomp|xcomp|advcl|acl]-> CUR }'''
 
 # CUR is participial or infinitival + preposition (except passé composé)
 chp_2_0 = cl.Snippet("chp_2_0")
-chp_2_0.pattern = '''pattern { CUR[VerbForm="Part"|"Inf"] }
-without { CUR -[1=aux]-> AUX ; AUX[VerbForm="Fin"] ; CUR -> P ; P[upos="ADP"] }'''
+chp_2_0.pattern = '''pattern { CUR[VerbForm="Part"|"Inf"] ;
+\tCUR -> P ; P[upos="ADP"] }
+without { CUR -[1=aux]-> AUX ; AUX[VerbForm="Fin"] }'''
 # e.g. Il a réussi en faisant quoi ? advcl(réussi,faisant)
 
 # CUR's copula or auxiliary is participial or infinitival + preposition (except passé composé)

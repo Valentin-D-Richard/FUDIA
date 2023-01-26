@@ -140,7 +140,7 @@ quoted_d.add_snippets([quoted_d_1_0, quoted_d_1_1], quoted_d_0_0)
 # Root
 quoted_e_0_0 = cl.Snippet("quoted_e_0_0")
 quoted_e_0_0.pattern = '''pattern { e : ANCHOR -[1=parataxis]-> CL_HEAD ;
-\tP1[lemma="--"|"("] ; P2[lemma="--"|")"] ; ANCHOR << P1 ;
+\tP1[lemma="--"|"("] ; P2[lemma="--"|")"] ;
 \tP1 << CL_HEAD ; CL_HEAD << P2 ; CL_HEAD[!Quoted] ;
 \tCL_HEAD -> P1 ; CL_HEAD -> P2 }
 without { CL_HEAD[upos="PUNCT"] }'''
