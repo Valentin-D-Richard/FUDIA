@@ -97,7 +97,7 @@ qecq_4_2_1.command = '''add_edge CL_HEAD -[nsubj]-> WH2 ;'''
 qecq_4_3_1 = cl.Snippet("qecq_4_3_1")
 qecq_4_3_1.pattern = '''pattern { CL_HEAD -[xcomp]-> V ; V[upos="VERB"|"AUX"] }'''
 # Addin3 object relation from the xcomp'ed verb
-qecq_4_2_1.command = '''add_edge V -[obj]-> WH2 ;'''
+qecq_4_3_1.command = '''add_edge V -[obj]-> WH2 ;'''
 
 # No xcomp'ed verb and not NP
 qecq_4_4_1 = cl.Snippet("qecq_4_4_1")
