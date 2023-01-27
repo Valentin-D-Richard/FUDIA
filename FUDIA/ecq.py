@@ -4,11 +4,10 @@ import classes as cl
 
 ### Root
 qecq_0_0 = cl.Snippet("qecq_0_0")
-qecq_0_0.pattern = '''pattern { WH[lemma="que"] ; E[form="est"] ;
-\tC[form="ce"|"-ce"] ; Q[lemma="que"|"qui"] ;
+qecq_0_0.pattern = '''pattern { WH[lemma="que"] ; E[form="est"|"EST"] ;
+\tC[form="ce"|"-ce"|"CE"|"-CE"] ; Q[lemma="que"|"qui"] ;
 \tWH < E ; E < C ; C < Q }
-without { WH -[fixed]-> E ; WH -[fixed]-> C ; WH -[fixed]-> Q } % Avoiding looping
-without { WH -[dislocated]-> N }''' # Ignoring e.g. Qu'est-ce que Angiox
+without { WH -[fixed]-> E ; WH -[fixed]-> C ; WH -[fixed]-> Q } % Avoiding looping'''
 # Rearranging by getting the expression as fixed
 qecq_0_0.command = '''add_node WH2 :< WH ; add_node E2 :> WH ;
 add_node C2 :> E2 ; add_node Q2 :> C2 ;
@@ -55,13 +54,15 @@ without { E -[1=advcl|dislocated]-> CL_HEAD }'''
 
 # "qu'est-ce que S'" with head on qu'
 qecq_2_0_1 = cl.Snippet("qecq_2_0_1")
-qecq_2_0_1.pattern = '''pattern { h: WH -[1=advcl|dislocated|ccomp]-> CL_HEAD }'''
+qecq_2_0_1.pattern = '''pattern { h: WH -[1=advcl|dislocated|ccomp]-> CL_HEAD ;
+\tWH << CL_HEAD }'''
 # Deleting h and shifting WH2 to CL_HEAD (except fixed)
 qecq_2_0_1.command = '''shift WH2 =[^fixed]=> CL_HEAD ;'''
 
 # "qu'est-ce que S'" with head on est
 qecq_2_1_1 = cl.Snippet("qecq_2_1_1")
-qecq_2_1_1.pattern = '''pattern { h: E -[1=advcl|dislocated|ccomp]-> CL_HEAD }'''
+qecq_2_1_1.pattern = '''pattern { h: E -[1=advcl|dislocated|ccomp]-> CL_HEAD ;
+\tWH << CL_HEAD }'''
 # Shifting the head from qu' to the head of S'
 qecq_2_1_1.command = '''shift E2 ==> CL_HEAD ;'''
 
@@ -71,17 +72,49 @@ qecq_3_0_1 = cl.Snippet("qecq_3_0_1")
 qecq_3_0_1.pattern = '''pattern { Q[lemma="que"] }'''
 
 
-# xcomp'ed verb (heuristics)
+# CL_HEAD is a nominal group without copula or auxiliary
 qecq_4_0_1 = cl.Snippet("qecq_4_0_1")
-qecq_4_0_1.pattern = '''pattern { CL_HEAD -[xcomp]-> V ; V[upos="VERB"|"AUX"] }'''
-# Adding object relation from the xcomp'ed verb
-qecq_4_0_1.command = '''add_edge V -[obj]-> WH2 ;'''
+qecq_4_0_1.pattern = '''pattern { CL_HEAD[upos="NOUN"|"PRON"|"PROPN",!ExtPos] }
+without { CL_HEAD -[1=cop|aux]-> A }'''
+# Adding nsubj
+qecq_4_0_1.command = '''add_edge CL_HEAD -[nsubj]-> WH2 ;'''
 
-# No xcomp'ed verb
+# CL_HEAD is a nominal locution without copula or auxiliary
 qecq_4_1_1 = cl.Snippet("qecq_4_1_1")
-qecq_4_1_1.pattern = '''without { CL_HEAD -[xcomp]-> V ; V[upos="VERB"|"AUX"] }'''
+qecq_4_1_1.pattern = '''pattern { CL_HEAD[ExtPos="NOUN"|"PRON"|"PROPN"] }
+without { CL_HEAD -[1=cop|aux]-> A }'''
+# Adding nsubj
+qecq_4_1_1.command = '''add_edge CL_HEAD -[nsubj]-> WH2 ;'''
+
+# CL_HEAD is a nominal group (ExtPos) without copula or auxiliary
+qecq_4_2_1 = cl.Snippet("qecq_4_2_1")
+qecq_4_2_1.pattern = '''pattern { CL_HEAD[ExtPos="NOUN"|"PRON"|"PROPN"] }
+without { CL_HEAD -[1=cop|aux]-> A }'''
+# Adding nsubj
+qecq_4_2_1.command = '''add_edge CL_HEAD -[nsubj]-> WH2 ;'''
+
+# xcomp'ed verb (heuristics)
+qecq_4_3_1 = cl.Snippet("qecq_4_3_1")
+qecq_4_3_1.pattern = '''pattern { CL_HEAD -[xcomp]-> V ; V[upos="VERB"|"AUX"] }'''
+# Addin3 object relation from the xcomp'ed verb
+qecq_4_2_1.command = '''add_edge V -[obj]-> WH2 ;'''
+
+# No xcomp'ed verb and not NP
+qecq_4_4_1 = cl.Snippet("qecq_4_4_1")
+qecq_4_4_1.pattern = '''without { CL_HEAD -[xcomp]-> V ; V[upos="VERB"|"AUX"] }
+without { CL_HEAD[upos="NOUN"|"PRON"|"PROPN"] }
+without { CL_HEAD[ExtPos="NOUN"|"PRON"|"PROPN"] }'''
 # Adding object relation from CL_HEAD
-qecq_4_1_1.command = '''add_edge CL_HEAD -[obj]-> WH2 ;'''
+qecq_4_4_1.command = '''add_edge CL_HEAD -[obj]-> WH2 ;'''
+
+# No xcomp'ed verb with copula or auxiliary
+qecq_4_5_1 = cl.Snippet("qecq_4_5_1")
+qecq_4_5_1.pattern = '''pattern { CL_HEAD -[1=cop|aux]-> COP }
+without { CL_HEAD -[xcomp]-> V ; V[upos="VERB"|"AUX"] }
+without { CL_HEAD[ExtPos="NOUN"|"PRON"|"PROPN"] }'''
+# Adding object relation from CL_HEAD
+qecq_4_5_1.command = '''add_edge CL_HEAD -[obj]-> WH2 ;'''
+
 
 
 # Q = qui (subjet)
@@ -93,7 +126,8 @@ qecq_3_1_1.command = '''add_edge CL_HEAD -[nsubj]-> WH2 ;'''
 qecq.add_snippets([qecq_1_0, qecq_1_1, qecq_1_2], qecq_0_0)
 qecq.add_snippets([qecq_2_0_1, qecq_2_1_1], qecq_1_1)
 qecq.add_snippets([qecq_3_0_1, qecq_3_1_1], qecq_1_1)
-qecq.add_snippets([qecq_4_0_1, qecq_4_1_1], qecq_3_0_1)
+layer = [qecq_4_0_1, qecq_4_1_1, qecq_4_2_1, qecq_4_3_1, qecq_4_4_1, qecq_4_5_1]
+qecq.add_snippets(layer, qecq_3_0_1)
 # Note1: qecq_1_1 fails to capture cases where WH should be
 # the objet of the xcomp'ed verb
 # Note2: I think that Note1 is not up to date
@@ -104,10 +138,10 @@ qecq.add_snippets([qecq_4_0_1, qecq_4_1_1], qecq_3_0_1)
 
 ### Root: "est-ce que/qui" trigram
 ecq_0_0 = cl.Snippet("ecq_0_0")
-ecq_0_0.pattern = '''pattern { E[form="est"|"Est"] ; C[form="ce"|"-ce"] ;
+ecq_0_0.pattern = '''pattern { E[form="est"|"Est"|"EST"] ; C[form="ce"|"-ce"|"CE"|"-CE"] ;
 \tQ[lemma="que"|"qui"] ; E < C ; C < Q }
 without { E -[fixed]-> C ; E -[fixed]-> C } % Avoiding looping
-without { WH[form="qu'"] ; WH < E }
+without { WH[form="qu'"|"Qu'"|"QU'"] ; WH < E }
 without { E -[1=obj]-> C } % ignoring sent. like Le ménage est ce que tu es en train de faire.
 without { C -[1=nsubj|expl]-> CE ; CE < E } % ignoring sent. like Le ménage c'est ce que tu es en train de faire.'''
 # Copying and replacing E, C, Q as fixed

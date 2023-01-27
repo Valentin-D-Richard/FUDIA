@@ -23,7 +23,7 @@ elif len(sys.argv) > 1 and sys.argv[1] == "-o": # -o option
         print(message,file=sys.stderr)
         exit(2)
     else:
-        FILENAME = sys.argv[3]
+        FILENAME = sys.argv[2]
 
 else:
     if len(sys.argv) != 1:

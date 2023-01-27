@@ -20,21 +20,28 @@ wh_edge = cl.DisjPat("wh_edge", root=wh_edge_0_0)
 wh_edge_1_0 = cl.Snippet("wh_edge_1_0")
 wh_edge_1_0.pattern = '''pattern { e.label = det }
 without { G1 [lemma="ne"] ; % n'importe quel constructions
-\tG2 [form="importe"] ; G1 < G2 ; G2 < WH }'''
+\tG2 [form="importe"|"IMPORTE"] ; G1 < G2 ; G2 < WH }'''
 
 # Fixed WH locution
 wh_edge_1_1 = cl.Snippet("wh_edge_1_1")
 wh_edge_1_1.pattern = '''pattern { e.label = fixed }
 without { PH_HEAD [lemma="ne"] ; % n'importe WH constructions
-\tG2 [form="importe"] ; PH_HEAD < G2 ; G2 < WH }'''
+\tG2 [form="importe"|"IMPORTE"] ; PH_HEAD < G2 ; G2 < WH }'''
 # e.g. À quoi bon
 
-# nmod "de" complement only if PH_HEAD also has a preposition
+# nmod "de" complement only if PH_HEAD is a subject
 wh_edge_1_2 = cl.Snippet("wh_edge_1_2")
-wh_edge_1_2.pattern = '''pattern { PH_HEAD -[nmod]-> WH ;
-\tWH -[case]-> D ; D [lemma="de"] ; PH_HEAD << WH }'''
+wh_edge_1_2.pattern = '''pattern { PH_HEAD -[nmod|obl|obl:nmod]-> WH ;
+\tWH -[case]-> D ; D [lemma="de"] ; PH_HEAD << WH ; ANCHOR -[nsubj]-> PH_HEAD }'''
 
-wh_edge.add_snippets([wh_edge_1_0, wh_edge_1_1, wh_edge_1_2], wh_edge_0_0)
+# nmod "de" complement only if PH_HEAD also has a preposition
+wh_edge_1_3 = cl.Snippet("wh_edge_1_3")
+wh_edge_1_3.pattern = '''pattern { PH_HEAD -[nmod|obl|obl:nmod]-> WH ;
+\tWH -[case]-> D ; D [lemma="de"] ; PH_HEAD << WH ; PH_HEAD -[case]-> K  }'''
+
+
+layer = [wh_edge_1_0, wh_edge_1_1, wh_edge_1_2, wh_edge_1_3]
+wh_edge.add_snippets(layer, wh_edge_0_0)
 
 
 ##### ph_head_pull: Pulling IntPhrase="Yes"
@@ -42,28 +49,30 @@ wh_edge.add_snippets([wh_edge_1_0, wh_edge_1_1, wh_edge_1_2], wh_edge_0_0)
 # Root
 ph_head_pull_0_0 = cl.Snippet("ph_head_pull_0_0")
 ph_head_pull_0_0.pattern = '''pattern { CUR[IntPhrase="Yes"] ;
-\te : CUR -[cue:wh]-> WH ; PH_HEAD << CUR ;
-\tPH_HEAD -[nmod]->  CUR ; % maybe obl:mod is ok
-\tCUR -[case]-> D ; D[lemma="de"] } % only de complements
-without { PH_HEAD -[cue:wh]-> WH } % no loop
+\te : CUR -[cue:wh]-> WH ; CAND << CUR }
+without { CAND -[cue:wh]-> WH } % no loop
 without { CUR[Quoted="Yes"] }'''
 ph_head_pull_0_0.command = '''del_feat CUR.IntPhrase ;
 del_edge e ;
-PH_HEAD.IntPhrase = "Yes" ;
-add_edge PH_HEAD -[cue:wh]-> WH'''
+CAND.IntPhrase = "Yes" ;
+add_edge CAND -[cue:wh]-> WH'''
 
 ph_head_pull = cl.DisjPat("ph_head_pull", root=ph_head_pull_0_0)
 
-# PH_HEAD is has a preposition
+# CAND is a nominal subject
 ph_head_pull_1_0 = cl.Snippet("ph_head_pull_1_0")
-ph_head_pull_1_0.pattern = '''pattern { PH_HEAD -[case]-> P }'''
-# Only PP can be non-trivial WH-phrases
+ph_head_pull_1_0.pattern = '''pattern { ANCHOR -[1=nsubj]-> CAND ;
+\tCAND -[nmod|obl:mod]->  CUR ;
+\tCUR -[case]-> D ; D[lemma="de"] } % only de complements }'''
 
-# PH_HEAD is a nominal subject
+# CAND has a preposition + de complement
 ph_head_pull_1_1 = cl.Snippet("ph_head_pull_1_1")
-ph_head_pull_1_1.pattern = '''pattern { ANCHOR -[nsubj]-> PH_HEAD }'''
+ph_head_pull_1_1.pattern = '''pattern { CAND -[case]-> P ;
+\tCAND -[nmod|obl:mod]->  CUR ;
+\tCUR -[case]-> D ; D[lemma="de"] } % only de complements }'''
 
-ph_head_pull.add_snippets([ph_head_pull_1_0, ph_head_pull_1_1], ph_head_pull_0_0)
+layer = [ph_head_pull_1_0, ph_head_pull_1_1]
+ph_head_pull.add_snippets(layer, ph_head_pull_0_0)
 
 
 ##### ph_edge_b: Finding ph_path with WH != PH_HEAD
@@ -103,7 +112,7 @@ ph_edge_b_2_2.pattern = '''pattern { PH_HEAD[Quoted="Yes"] }'''
 # Alone: as object or oblique of "savoir"
 ph_edge_b_2_3 = cl.Snippet("ph_edge_b_2_3")
 ph_edge_b_2_3.pattern = '''pattern { ANCHOR -[1=obl|obj]-> PH_HEAD ;
-\tANCHOR[lemma="savoir"] }'''
+\tANCHOR[lemma="savoir"|"demander"] }'''
 # Note: we should better take any interrogative-embedding predicate, rather
 # than just "savoir"
 
@@ -123,12 +132,14 @@ ph_edge_a_0_0.pattern = '''pattern { WH[PronType="Int",!IntPhrase] ;
 % Negative clauses:
 without { CL_HEAD -[cue:wh]-> WH }
 without { N [lemma="ne"] ; N < CL_HEAD ; % n'importe WH constructions
-\tCL_HEAD [form="importe"] ; CL_HEAD < WH }
+\tCL_HEAD [form="importe"|"IMPORTE"] ; CL_HEAD < WH }
 without { WH[Quoted="Yes"] } % case wh_alone_1_1
-without { CL_HEAD -[1=obl|obj]-> WH ;
-\tCL_HEAD << WH ; WH[upos="ADV"] } % case wh_alone_1_3
-without { CL_HEAD -[1=obl|obj]-> WH ; CL_HEAD [lemma="savoir"] ;
-\tCL_HEAD << WH ; WH[upos="PRON"] } % case wh_alone_1_4'''
+without { CL_HEAD -[1=obj]-> WH ; CL_HEAD[lemma<>"appeler"|"aller"] ;
+\tCL_HEAD << WH ; WH[upos="ADV"] ; WH[lemma<>"combien"] } % case wh_alone_1_3
+without { CL_HEAD -[1=obl|obj]-> WH ; CL_HEAD [lemma="savoir"|"demander"] ;
+\tCL_HEAD << WH ; WH[upos="ADV"] } % case wh_alone_1_4
+without { CL_HEAD -[1=obl|obj]-> WH ; CL_HEAD [lemma="savoir"|"demander"] ;
+\tCL_HEAD << WH ; WH[upos="PRON"] } % case wh_alone_1_5'''
 # Adds IntClause, IntPhrase and cue
 ph_edge_a_0_0.command = '''CL_HEAD.IntClause = "Yes" ;
 WH.IntPhrase = "Yes" ;
@@ -148,18 +159,11 @@ ph_edge_a_1_1.pattern = '''pattern { e.label = nmod ; WH << CL_HEAD }'''
 # advcl with participial or infinitival copula and a preposition
 ph_edge_a_1_2 = cl.Snippet("ph_edge_a_1_2")
 ph_edge_a_1_2.pattern = '''pattern { e.label = advcl ;
-\ta: WH -[cop|aux]-> E ; E[VerbForm="Part"|"Inf"] ; WH -> P ; P[upos="ADP"] }
+\ta: WH -[cop|aux]-> E ; E[VerbForm="Part"|"Inf"] ; WH -[case]-> P }
 without { WH -[1=aux]-> AUX ; AUX[VerbForm="Fin"] }'''
 # ... comme étant quoi ?
 
-# advcl with participial or infinitival copula and a prepositional locution
-ph_edge_a_1_3 = cl.Snippet("ph_edge_a_1_3")
-ph_edge_a_1_3.pattern = '''pattern { e.label = advcl ;
-\ta: WH -[cop|aux]-> E ; E[VerbForm="Part"|"Inf"] ; WH -> P ; P[ExtPos="ADP"] }
-without { WH -[1=aux]-> AUX ; AUX[VerbForm="Fin"] }'''
-# ... comme étant quoi ?
-
-layer = [ph_edge_a_1_0, ph_edge_a_1_1, ph_edge_a_1_2, ph_edge_a_1_3]
+layer = [ph_edge_a_1_0, ph_edge_a_1_1, ph_edge_a_1_2]
 ph_edge_a.add_snippets(layer, ph_edge_a_0_0)
 
 
@@ -176,29 +180,39 @@ WH.IntPhrase = "Yes"'''
 
 wh_alone = cl.DisjPat("wh_alone", root=wh_alone_0_0)
 
-# Alone: Special dependency
+# Special dependency
 wh_alone_1_1 = cl.Snippet("wh_alone_1_1")
 wh_alone_1_1.pattern = '''pattern {
 ANCHOR -[1=root|parataxis|discourse|vocative|reparandum|dislocated|list|orphan]-> WH }'''
 
-# Alone: quoted
+# Quoted
 wh_alone_1_2 = cl.Snippet("wh_alone_a_1_2")
 wh_alone_1_2.pattern = '''pattern { WH[Quoted="Yes"] }'''
 
-# Alone: adverb as object or oblique
+# Adverb as object
 wh_alone_1_3 = cl.Snippet("wh_alone_a_1_3")
-wh_alone_1_3.pattern = '''pattern { ANCHOR -[1=obl|obj]-> WH ;
-\tWH[upos="ADV"] ; ANCHOR << WH }'''
+wh_alone_1_3.pattern = '''pattern { ANCHOR -[1=obj]-> WH ;
+\tWH[upos="ADV"] ; ANCHOR << WH }
+without { ANCHOR[lemma="appeler"|"aller"] }
+without { WH[lemma="combien"] }'''
+# e.g. "s'appeler comment", or "aller où" using obj sometimes
+# obliques adverbs are rarely oblique object in a different clause
 
-# Alone: pronoun as object or oblique of "savoir"
+# Adverb as oblique or direct object object of "savoir"
 wh_alone_1_4 = cl.Snippet("wh_alone_a_1_4")
 wh_alone_1_4.pattern = '''pattern { ANCHOR -[1=obl|obj]-> WH ;
-\tANCHOR[lemma="savoir"] ; WH[upos="PRON"] ; ANCHOR << WH }'''
+\tWH[upos="ADV"] ; ANCHOR << WH ; ANCHOR[lemma="savoir"|"demander"] }'''
+# e.g. Ça va s'arrêter mais je sais pas à partir de quand.
+
+# Pronoun as object or oblique of "savoir"
+wh_alone_1_5 = cl.Snippet("wh_alone_a_1_5")
+wh_alone_1_5.pattern = '''pattern { ANCHOR -[1=obl|obj]-> WH ;
+\tANCHOR[lemma="savoir"|"demander"] ; WH[upos="PRON"] ; ANCHOR << WH }'''
 # Note: we should better take any interrogative-embedding predicate, rather
 # than just "savoir"
 
 
-layer = [wh_alone_1_1, wh_alone_1_2, wh_alone_1_3, wh_alone_1_4]
+layer = [wh_alone_1_1, wh_alone_1_2, wh_alone_1_3, wh_alone_1_4, wh_alone_1_5]
 wh_alone.add_snippets(layer, wh_alone_0_0)
 
 

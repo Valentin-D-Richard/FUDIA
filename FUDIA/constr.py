@@ -25,7 +25,7 @@ telquel = cl.DisjPat("telquel", root=telquel_0_0)
 
 # Root
 nimporte_0_0 = cl.Snippet("nimporte_0_0")
-nimporte_0_0.pattern = '''pattern { N[lemma="ne"] ; I[form="importe"] ;
+nimporte_0_0.pattern = '''pattern { N[lemma="ne"] ; I[form="importe"|"IMPORTE"] ;
 \tWH[lemma="qui"|"quoi"|"quel"|"où"|"quand"|"comment"|"lequel"] ;
 \tN < I ; I < WH }
 without { N -[fixed]-> I ;  N -[fixed]-> WH } % no loop'''
@@ -83,7 +83,7 @@ nimporte_2_1.command = '''add_edge ANCHOR -[obj]-> N2'''
 # PRON + Anchor relation to PP
 nimporte_2_2 = cl.Snippet("nimporte_2_2")
 nimporte_2_2.pattern = '''pattern { ANCHOR -[1=advcl|ccomp|parataxis]-> I ;
-\tI -[case|mark]-> C ; C[upos="ADP"] }'''
+\tI -[case|mark]-> C ; C[upos="ADP",!ExtPos] }'''
 # Replacing by obl
 nimporte_2_2.command = '''add_edge ANCHOR -[obl]-> N2 ;
 add_edge N2 -[case]-> C'''
@@ -113,7 +113,7 @@ nimporte_2_1_3.command = '''add_edge ANCHOR -[obj]-> S'''
 # DET + Anchor relation to PP
 nimporte_2_2_3 = cl.Snippet("nimporte_2_2_3")
 nimporte_2_2_3.pattern = '''pattern { ANCHOR -[1=advcl|ccomp|parataxis]-> I ;
-\tI -[case|mark]-> C ; C[upos="ADP"] }'''
+\tI -[case|mark]-> C ; C[upos="ADP",!ExtPos] }'''
 # Replacing by obl
 nimporte_2_2_3.command = '''add_edge ANCHOR -[obl]-> S ;
 add_edge S -[case]-> C'''
@@ -121,7 +121,7 @@ add_edge S -[case]-> C'''
 # DET + Anchor relation to PP
 nimporte_2_3_3 = cl.Snippet("nimporte_2_3_3")
 nimporte_2_3_3.pattern = '''pattern { ANCHOR -[1=advcl|ccomp|parataxis]-> I ;
-\tI -[case|mark]-> C ; C[upos="ADP"] }'''
+\tI -[case|mark]-> C ; C[ExtPos="ADP"] }'''
 # Replacing by obl
 nimporte_2_3_3.command = '''add_edge ANCHOR -[obl]-> S ;
 add_edge S -[case]-> C'''
@@ -145,7 +145,7 @@ layer = [nimporte_1_0, nimporte_1_1_3, nimporte_1_2_5]
 nimporte.add_snippets(layer, nimporte_0_0)
 layer1 = [nimporte_2_0, nimporte_2_1, nimporte_2_2, nimporte_2_3, nimporte_2_4]
 nimporte.add_snippets(layer1, nimporte_1_0)
-layer2 = [nimporte_2_0, nimporte_2_1_3, nimporte_2_2_3, nimporte_2_4_3]
+layer2 = [nimporte_2_0, nimporte_2_1_3, nimporte_2_2_3, nimporte_2_3_3, nimporte_2_4_3]
 nimporte.add_snippets(layer2, nimporte_1_1_3)
 nimporte.add_snippets([nimporte_2_0, nimporte_2_1_5], nimporte_1_2_5)
 

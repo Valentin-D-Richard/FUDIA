@@ -57,7 +57,7 @@ intprontype_1_0 = cl.Snippet("intprontype_1_0")
 intprontype_1_0.pattern = '''pattern {
 \tWH [lemma="quel",upos="ADJ"|"DET"|"PRON"] }
 \twithout { Q [lemma="que"] ; WH < Q }
-\twithout { A [form="n'"] ; B[form="importe"] ; A < B ; B < WH }
+\twithout { A [lemma="ne"] ; B[form="importe"|"IMPORTE"] ; A < B ; B < WH }
 \twithout { T[lemma="tel"] ; T < WH }
 \twithout { E[lemma="!"] }'''
 
@@ -94,7 +94,7 @@ intprontype_1_6.pattern = '''pattern {
 \tWH[lemma="qui"|"que"|"quoi", upos="PRON"]}
 without { C[lemma="ce"] ; WH[lemma="que"] ; C < WH } % no "ce que"
 without { G -[discourse]-> WH ; WH[lemma="quoi"] } % no interjection "quoi" (should be INTJ)
-without { N1[lemma="en"]; N2[lemma="ce"]; N3[form="concerne"];
+without { N1[lemma="en"]; N2[lemma="ce"]; N3[form="concerne"|"CONCERNE"];
 \tN1 < N2; N2 < WH; WH < N3 } % no "en ce qui concerne"
 without { E[lemma="!"] } % Not exclamative'''
 # without { N1[lemma="que"]; N2[lemma="ce"]; N3[form="soit"];
