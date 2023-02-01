@@ -9,7 +9,7 @@ import classes as cl
 ### Root: Relations to potentially pull along
 
 chp_0_0 = cl.Snippet("chp_0_0")
-chp_0_0.pattern = '''pattern { a: CAND -> CUR ; CUR[IntClause="Yes"] ;
+chp_0_0.request = '''pattern { a: CAND -> CUR ; CUR[IntClause="Yes"] ;
 \tw: CUR -[cue:wh]-> WH }
 without { CAND -[cue:wh]-> WH } % no loop
 without { CUR[Quoted="Yes"] }'''
@@ -17,22 +17,22 @@ chp_0_0.command = '''del_feat CUR.IntClause ; CAND.IntClause = "Yes" ;
 \tdel_edge w ; add_edge CAND -[cue:wh]-> WH ;'''
 # It handles the case where CAND already has an edge -[cue:wh]-> CUR
 
-cl_head_pull = cl.DisjPat("cl_head_pull", root = chp_0_0)
+cl_head_pull = cl.DisjRule("cl_head_pull", root = chp_0_0)
 
 ### Clause relations: csubj, ccomp, xcomp, advcl, acl
 chp_1_0 = cl.Snippet("chp_1_0") 
-chp_1_0.pattern = '''pattern { CAND -[csubj|ccomp|xcomp|advcl|acl]-> CUR }'''
+chp_1_0.request = '''pattern { CAND -[csubj|ccomp|xcomp|advcl|acl]-> CUR }'''
 
 # CUR is participial or infinitival + preposition (except passé composé)
 chp_2_0 = cl.Snippet("chp_2_0")
-chp_2_0.pattern = '''pattern { CUR[VerbForm="Part"|"Inf"] ;
+chp_2_0.request = '''pattern { CUR[VerbForm="Part"|"Inf"] ;
 \tCUR -> P ; P[upos="ADP",!ExtPos] }
 without { CUR -[1=aux]-> AUX ; AUX[VerbForm="Fin"] }'''
 # e.g. Il a réussi en faisant quoi ? advcl(réussi,faisant)
 
 # CUR is participial or infinitival + prepositional locution (except passé composé)
 chp_2_1 = cl.Snippet("chp_2_1")
-chp_2_1.pattern = '''pattern { CUR[VerbForm="Part"|"Inf"] ;
+chp_2_1.request = '''pattern { CUR[VerbForm="Part"|"Inf"] ;
 \tCUR -> P ; P[ExtPos="ADP"] }
 without { CUR -[1=aux]-> AUX ; AUX[VerbForm="Fin"] }'''
 # e.g. Il a réussi en faisant quoi ? advcl(réussi,faisant)
@@ -40,38 +40,38 @@ without { CUR -[1=aux]-> AUX ; AUX[VerbForm="Fin"] }'''
 # CUR's copula or auxiliary is participial or infinitival
 # + preposition (except passé composé)
 chp_2_2 = cl.Snippet("chp_2_2")
-chp_2_2.pattern = '''pattern { CUR -[1=aux|cop]-> V ;
+chp_2_2.request = '''pattern { CUR -[1=aux|cop]-> V ;
 \tV[VerbForm="Part"|"Inf"] ; CUR -> P ; P[upos="ADP",!ExtPos] }
 without { CUR -[1=aux]-> AUX ; AUX[VerbForm="Fin"] }'''
 
 # CUR's copula or auxiliary is participial or infinitival
 # + prepositional locution (except passé composé)
 chp_2_3 = cl.Snippet("chp_2_3")
-chp_2_3.pattern = '''pattern { CUR -[1=aux|cop]-> V ;
+chp_2_3.request = '''pattern { CUR -[1=aux|cop]-> V ;
 \tV[VerbForm="Part"|"Inf"] ; CUR -> P ; P[ExtPos="ADP"] }
 without { CUR -[1=aux]-> AUX ; AUX[VerbForm="Fin"] }'''
 
 # Additionnal marker
 chp_2_4 = cl.Snippet("chp_2_4")
-chp_2_4.pattern = '''pattern { CUR -[mark]-> Q ;
+chp_2_4.request = '''pattern { CUR -[mark]-> Q ;
 \tQ[upos="SCONJ",!ExtPos] ; CAND << Q ; Q << CUR }'''
 # e.g. Il sait que/si tu fais quoi ? ccomp(sait,fait)
 
 # Additionnal marker locution
 chp_2_5 = cl.Snippet("chp_2_5")
-chp_2_5.pattern = '''pattern { CUR -[mark]-> Q ;
+chp_2_5.request = '''pattern { CUR -[mark]-> Q ;
 \tQ[ExtPos="SCONJ"] ; CAND << Q ; Q << CUR }'''
 # e.g. Il sait que/si tu fais quoi ? ccomp(sait,fait)
 
 # Additionnal marker locution
 chp_2_6 = cl.Snippet("chp_2_6")
-chp_2_6.pattern = '''pattern { CUR -[mark]-> Q ;
+chp_2_6.request = '''pattern { CUR -[mark]-> Q ;
 \tQ[ExtPos="SCONJ"] ; CAND << Q ; Q << CUR }'''
 # e.g. Il sait que/si tu fais quoi ? ccomp(sait,fait)
 
 # In situ or fronted WH word with xcomp complement
 chp_2_7 = cl.Snippet("chp_2_7")
-chp_2_7.pattern = '''pattern { CAND << CUR ; a.label = xcomp ;
+chp_2_7.request = '''pattern { CAND << CUR ; a.label = xcomp ;
 \tCUR[VerbForm="Inf"] }
 without { CUR -[cue:wh]-> WH2 }
 without { CAND << WH ; WH << CUR }'''
@@ -83,7 +83,7 @@ without { CAND << WH ; WH << CUR }'''
 
 ### Nominal relations: nsubj, obj, (iobj,) obl, nmod, (det)
 chp_1_1 = cl.Snippet("chp_1_1_5") 
-chp_1_1.pattern = '''pattern { CAND -[nsubj|obj|obl|nmod|det]-> CUR }
+chp_1_1.request = '''pattern { CAND -[nsubj|obj|obl|nmod|det]-> CUR }
 without { CAND[lemma="savoir"] ; CAND -[obj|obl]-> CUR }'''
 # Exceptionnaly taken vocabulary into account
 # cf ph_edge_b_2_3

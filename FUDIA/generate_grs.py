@@ -45,7 +45,7 @@ import cl_head_pull as c # Recursive operation on wh clause head
 import conj as co       # Conjuncted wh words
 import marker as m      # Annotating interrogative markers
 
-# The next list provides the sequence of disjunctive patterns (DisjPat)
+# The next list provides the sequence of disjunctive rules (DisjRule)
 # (and their strategy) in orer to annotate French interrogative clauses
 # Default stategy is Onf (One normal form)
 

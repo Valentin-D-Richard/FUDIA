@@ -1,0 +1,3 @@
+pattern { CL_HEAD[IntPhrase="Yes"] }
+without { CL_HEAD[IntClause="Yes"] }
+without { OTHER[IntClause="Yes"] }

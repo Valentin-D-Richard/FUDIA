@@ -257,7 +257,7 @@ We detect a clause head having `Title="Yes"` or `InTitle="Yes"` anchored by a no
 
 ### `quoted_e`
 
-Identifying parataxized parenthesized segments, e.g. *Appuyez sur le bouton (pas trop fort).*
+Identifying paratactic parenthesized segments, e.g. *Appuyez sur le bouton (pas trop fort).*
 
 We detect clause heads governed by `parataxis` and governing a pair of `--` symbols or `(` and `)` around itself.
 
@@ -300,7 +300,7 @@ We detect a PH_HEAD with `IntPhrase="Yes"`.
 In the first case, there is a governer CL_HEAD. CL_HEAD is part of the same clause iff the relation is oblique, nominal modifier or nominal subject.
 
 Otherwise, CL_HEAD = PH_HEAD. More precisely, the cases where we add `IntClause="Yes"` to PH_HEAD are
- * when PH_HEAD is the root of the sentence, a parataxized segment or a reparendum (and other relations isolating a segment: `discourse`, `vocative`, `dislocated`, `list`, `orphan`*)
+ * when PH_HEAD is the root of the sentence, a paratactic segment or a reparendum (and other relations isolating a segment: `discourse`, `vocative`, `dislocated`, `list`, `orphan`*)
  * when PH_HEAD is the head of a quoted segment
  * when PH_HEAD is the object or oblique of an interrogative-embedding verb (elliptical interrogative clause). To avoid listing all interrogative-embedding verbs, we choose to just test for two of the most common ones in this situation: *savoir* (to know) and *(se) demander* (to ask / wonder) :construction: :heavy_exclamation_mark:
 
@@ -322,7 +322,7 @@ We assume that the only relations between WH and a governing word in the same cl
 Identifying isolated WH = PH_HEAD = CL_HEAD.
 
 We detect a word WH with `PronType="Yes"` and no `IntPhrase` feature. We add `IntPhrase="Yes"` and `IntClause="Yes"`:
- * when WH is the root of the sentence, a parataxized segment or a reparendum (and other relations isolating a segment: `discourse`, `vocative`, `dislocated`, `list`, `orphan`)
+ * when WH is the root of the sentence, a paratactic segment or a reparendum (and other relations isolating a segment: `discourse`, `vocative`, `dislocated`, `list`, `orphan`)
  * when WH is the head of a quoted segment
  * when WH is a direct or oblique of an interrogative-embedding verb (elliptical interrogative clause). We identify that with:
    * WH is an adverb (except *combien*): they are normally not direct objects, except *s'appeler comment* or *aller où* for some annotators :construction: :heavy_exclamation_mark:
@@ -448,7 +448,7 @@ If CL_HEAD is not governed with a parataxis relation, we can be quite confident 
 
 In other words, we expect stylistic inversion, and more precisely speech reporting inversion, to be very short, contrary to interrogatives.
 
-Unfortunately, some examples fail to be correctly annotated with these heuristics. In (11.), *poursuit* is parataxized and head of a quoted segment, but it is not sufficient to be prove with our heuristics that it's not an interrogative.
+Unfortunately, some examples fail to be correctly annotated with these heuristics. In (11.), *poursuit* is paratactic and head of a quoted segment, but it is not sufficient to be prove with our heuristics that it's not an interrogative.
 
 (11.) c'est-à-dire--poursuit-il son argument--, " avant, le Maroc pensait [...] [GSD]
 

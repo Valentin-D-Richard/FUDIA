@@ -1,5 +1,5 @@
 # Classes used to express synchronized disjuction
-# of patterns and command
+# of requests and command
 
 # Current error number : 2
 
@@ -29,16 +29,16 @@ def snippet_name_to_indices(name:str):
             return i, j
     return 0, 0
 
-##### Disjunctive pattern
+##### Disjunctive rule
 
 class Snippet():
-    """ Coupled pattern excerp and command excep
-    The pattern excerp has to be embedded by the 'pattern' bracketing
+    """ Coupled request excerp and command excep
+    The request excerp has to be embedded by the 'request' bracketing
     and can contain NAP ('without')
-    The command excetp does not have to contain the 'commands' bracketing"""
+    The command except does not have to contain the 'commands' bracketing"""
     def __init__(self, name:str):
         self.name    = name
-        self.pattern = ""
+        self.request = ""
         self.command = ""
 
     def __str__(self):
@@ -49,7 +49,7 @@ class Snippet():
 
     def print(self):
         string = self.name + ":\n\t"
-        string += tabulate(self.pattern) + "\n\t"
+        string += tabulate(self.request) + "\n\t"
         string += "commands { " + tabulate(self.command) + " }"
         return string 
 
@@ -57,8 +57,8 @@ class Snippet():
 ROOT = Snippet("__ROOT__") # Default root
 
 
-class DisjPat(nx.DiGraph):
-    """ Structure to express a dsjunction of patterns (and
+class DisjRule(nx.DiGraph):
+    """ Structure to express a dsjunction of requests (and
     coupled commands) in a dependent way
     At any moment, self is a DAG"""
     def __init__(self, name:str, root=ROOT):
@@ -90,9 +90,9 @@ class DisjPat(nx.DiGraph):
 
     def gen_branches(self, output="rule"):
         """Generates all rules corresponding to the concatenation
-        of the patterns and command excerps of all branches of self.
+        of the requests and command excerps of all branches of self.
         If output = rule, returns rules as strings
-        If output = pattern, return patterns only"""
+        If output = request, return requests only"""
         result = []
         
         # Error if self is empty
@@ -109,23 +109,23 @@ class DisjPat(nx.DiGraph):
             branches = [[self.root]]
 
         for i, branch in enumerate(branches):
-            patterns = ""
+            requests = ""
             commands = ""
-            # Concatenating pattern and command snippets
+            # Concatenating request and command snippets
             for node in branch:
-                p = "\n" if len(node.pattern.strip()) > 0 else ""
+                p = "\n" if len(node.request.strip()) > 0 else ""
                 c = "\n" if len(node.command.strip()) > 0 else ""
-                patterns += node.pattern + p
+                requests += node.request + p
                 commands += node.command + c
 
-            if output == "pattern":
-                # Only resturn the pattern snippet concatenation
-                result.append(patterns)
+            if output == "request":
+                # Only resturn the request snippet concatenation
+                result.append(requests)
 
             else:
-                # Rule construction: patterns + commands
+                # Rule construction: requests + commands
                 rule = "rule "+self.rule_name+"_"+str(i)+" { \n" # Rule name
-                rule += "\t" + tabulate(patterns)
+                rule += "\t" + tabulate(requests)
                 rule += "commands {\n\t\t" + tabulate(tabulate(commands))
                 result.append(rule + "}\n\t}")
 
@@ -140,13 +140,13 @@ class DisjPat(nx.DiGraph):
 def gen_grs(seq:list, filename:str, output="rule"):
     """Input:   list 'seq' of DisPat objects,
                 file name 'filename' of output file
-                'output' must be "rule" or "pattern", see DisjPat.gen_branches
-                /!\\ "pattern" option is not supported yet
+                'output' must be "rule" or "request", see DisjRule.gen_branches
+                /!\\ "request" option is not supported yet
         Output: Create a .grs file with
             - a package for all DisPat
             - a Onf(Seq(...)) strategy for all package
             - a Seq(...) stratagy (named 'main') of all these strategies
-        If a DisjPat is used several times, its package will be written
+        If a DisjRule is used several times, its package will be written
         down only once, but taken with multiplicity in the main strategy."""
     all_names = set()
     with open(filename,"w") as file:
