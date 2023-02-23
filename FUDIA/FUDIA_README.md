@@ -35,8 +35,8 @@ FUDIA adds/changes the follwing annotations:
 ### Added features :
  * some missing `PronType="Rel"`
  * some missing `PronType="Int"`
- * `IntClause="Yes"` on interrogative clause heads
- * `IntPhrase="Yes"` on interrogative phrase heads
+ * `ClauseType="Int"` on interrogative clause heads
+ * `PhraseType="Int"` on interrogative phrase heads
  * `Quoted="Yes"` on "quoted segments"
 
 By "quoted segments", we mean segments which do not integrate nor get subordinated in the sentence. It could be
@@ -107,6 +107,8 @@ This method has the advantage to automatically erase the original relations betw
 Note that when we detect words with the feature `form`, we also make sure to detect all-caps forms.
 
 In the programme, by "anchor" we usually mean the governer of the main head in question. We also use CL_HEAD to talk about a node which is potentially, but not certainly, a clause head. In the following description, by "follows", "after" and "before" we are talking about linear order of words. We employ the term "precede" to specify immediate follwing.
+
+Note that, considering that the features `ClauseType` and `PhraseType` might be used in the future for a wider purpose, we try not to mess with it when trying to figure out what the limit of the clause is. To do so, we define working features `IntClause="Yes"` and `IntPhrase="Yes"` that we transform to `ClauseType="Int"` and `PhraseType="Int"` only at the end.
 
 ## 1. `constr`
 
@@ -462,6 +464,10 @@ We detect a form *-ti* or *-tu* (or without dash) and its governer. Either:
  * the relation between them is the expected `mark`
  * or the relation is (expletive) subject. In this case, we only add an edge if the form is *ti* or *-ti* because the *tu* / *-tu* form should have already been annotated by `spp`.
 
+### final
 
+Finishing the programme.
+
+Finally, we transform feature `IntPhrase="Yes"` and `IntClause="Yes"` into `PhraseType="Int"` and `ClauseType="Int"` respectively.
 
 

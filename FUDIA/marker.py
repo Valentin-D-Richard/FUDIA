@@ -131,7 +131,9 @@ si.add_snippets([si_2_0, si_2_1, si_2_2, si_2_3], si_0_0)
 # Root
 spp_0_0 = cl.Snippet("spp_0_0")
 spp_0_0.request = '''pattern { S[upos="PRON"] ;
-\tS[lemma="ce"|"je"|"tu"|"il"|"elle"|"on"|"nous"|"vous"|"ils"|"elles"] ;
+\tS[lemma="ce"|"je"|"tu"|"il"|"elle"|"on"|"nous"|"vous"|"ils"|"elles"|
+\t"-ce"|"-je"|"-tu"|"-il"|"-elle"|"-on"|"-nous"|"-vous"|"-ils"|"-elles"|
+\t"t-il"|"t-elle"|"t-ils"|"t-elles"|"-t-il"|"-t-elle"|"-t-ils"|"-t-elles"] ;
 \ts: CL_HEAD -[1=expl|nsubj]-> S ; }
 % Negative filtering
 without { CL_HEAD -[1=parataxis]-> G ; G[Quoted="Yes"] } % no verb-reporting stylistic inversion
@@ -226,6 +228,17 @@ titu.add_snippets([titu_1_0, titu_1_1], titu_0_0)
 
 
 
-##### Disjunctive ?
+##### final: finishing touch
+final = cl.DisjRule("final")
 
-##### Raising intonation ?
+final_1_0 = cl.Snippet("final_1_0")
+final_1_0.request = '''pattern { PH_HEAD[IntPhrase="Yes"] }'''
+final_1_0.command = '''del_feat PH_HEAD.IntPhrase ;
+PH_HEAD.PhraseType = "Int"'''
+
+final_1_1 = cl.Snippet("final_1_1")
+final_1_1.request = '''pattern { CL_HEAD[IntClause="Yes"] }'''
+final_1_1.command = '''del_feat CL_HEAD.IntClause ;
+CL_HEAD.ClauseType = "Int"'''
+
+final.add_snippets([final_1_0, final_1_1], final.root)

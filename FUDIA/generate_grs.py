@@ -57,7 +57,7 @@ seq += [w.cleft, w.wh_edge, w.cleft, w.ph_head_pull, w.cleft]
 seq += [w.ph_edge_b, w.ph_edge_a, w.wh_alone]
 seq += [c.cl_head_pull]
 seq += [co.conj]
-seq += [m.eske, m.que, m.si, m.titu, m.spp]
+seq += [m.eske, m.que, m.si, m.titu, m.spp, m.final]
 
 
 # Main routine
