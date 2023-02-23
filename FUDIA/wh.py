@@ -87,39 +87,49 @@ ph_edge_b = cl.DisjRule("ph_edge_b", root=ph_edge_b_0_0)
 
 # Presence of CL_HEAD
 ph_edge_b_1_0 = cl.Snippet("ph_edge_b_1_0")
-ph_edge_b_1_0.request = '''pattern { f : CL_HEAD -[1=obl|nmod|nsubj]-> PH_HEAD }
+ph_edge_b_1_0.request = '''pattern { f : CL_HEAD -[1=obl|nmod|nsubj|obj]-> PH_HEAD }
 without { CL_HEAD -[cue:wh]-> WH } % no loop'''
 # Adding IntClause and cue
 ph_edge_b_1_0.command = '''CL_HEAD.IntClause = "Yes" ;
 \tadd_edge CL_HEAD -[cue:wh]-> WH'''
 
+# oblique, modifier or subject
+ph_edge_b_2_0 = cl.Snippet("ph_edge_b_2_0")
+ph_edge_b_2_0.request = '''pattern { CL_HEAD -[1=obl|nmod|nsubj]-> PH_HEAD }'''
+
+# with determiner "quel"
+ph_edge_b_2_1 = cl.Snippet("ph_edge_b_2_1")
+ph_edge_b_2_1.request = '''pattern { WH[lemma="quel"] }'''
+
 
 ### Alone: CL_HEAD = PH_HEAD
-ph_edge_b_1_1 = cl.Snippet("ph_edge_b_1_1")
-ph_edge_b_1_1.request = '''without { PH_HEAD[IntClause="Yes"] } % no loop'''
+ph_edge_b_1_1_2 = cl.Snippet("ph_edge_b_1_1_2")
+ph_edge_b_1_1_2.request = '''without { PH_HEAD[IntClause="Yes"] } % no loop'''
 # Adding IntClause
-ph_edge_b_1_1.command = '''PH_HEAD.IntClause = "Yes"'''
+ph_edge_b_1_1_2.command = '''PH_HEAD.IntClause = "Yes"'''
 
 # Alone: Special dependency
-ph_edge_b_2_1 = cl.Snippet("ph_edge_b_2_1")
-ph_edge_b_2_1.request = '''pattern {
+ph_edge_b_2_1_2 = cl.Snippet("ph_edge_b_2_1_2")
+ph_edge_b_2_1_2.request = '''pattern {
 ANCHOR -[1=root|parataxis|discourse|vocative|reparandum|dislocated|list|orphan]-> PH_HEAD }'''
 
 # Alone: quoted
-ph_edge_b_2_2 = cl.Snippet("ph_edge_b_2_2")
-ph_edge_b_2_2.request = '''pattern { PH_HEAD[Quoted="Yes"] }'''
+ph_edge_b_2_2_2 = cl.Snippet("ph_edge_b_2_2_2")
+ph_edge_b_2_2_2.request = '''pattern { PH_HEAD[Quoted="Yes"] }'''
 
 # Alone: as object or oblique of "savoir"
-ph_edge_b_2_3 = cl.Snippet("ph_edge_b_2_3")
-ph_edge_b_2_3.request = '''pattern { ANCHOR -[1=obl|obj]-> PH_HEAD ;
+ph_edge_b_2_3_2 = cl.Snippet("ph_edge_b_2_3_2")
+ph_edge_b_2_3_2.request = '''pattern { ANCHOR -[1=obl|obj]-> PH_HEAD ;
 \tANCHOR[lemma="savoir"|"demander"] }'''
 # Note: we should better take any interrogative-embedding predicate, rather
 # than just "savoir"
 
 
-ph_edge_b.add_snippets([ph_edge_b_1_0, ph_edge_b_1_1], ph_edge_b_0_0)
-layer = [ph_edge_b_2_1, ph_edge_b_2_2, ph_edge_b_2_3]
-ph_edge_b.add_snippets(layer, ph_edge_b_1_1)
+ph_edge_b.add_snippets([ph_edge_b_1_0, ph_edge_b_1_1_2], ph_edge_b_0_0)
+layer = [ph_edge_b_2_0, ph_edge_b_2_1]
+ph_edge_b.add_snippets(layer, ph_edge_b_1_0)
+layer = [ph_edge_b_2_1_2, ph_edge_b_2_2_2, ph_edge_b_2_3_2]
+ph_edge_b.add_snippets(layer, ph_edge_b_1_1_2)
 
 
 
@@ -156,18 +166,33 @@ ph_edge_a_1_0.request = '''pattern {
 ph_edge_a_1_1 = cl.Snippet("ph_edge_a_1_1")
 ph_edge_a_1_1.request = '''pattern { e.label = nmod ; WH << CL_HEAD }'''
 
+# nmod of a NP without preposition
+ph_edge_a_1_1 = cl.Snippet("ph_edge_a_1_1")
+ph_edge_a_1_1.request = '''pattern { e.label = nmod }
+without { CL_HEAD -[case|mark]-> P ; P[upos="ADP"]}
+without { CL_HEAD -[case|mark]-> P ; P[ExtPos="ADP"]}'''
+
 # advcl with participial or infinitival copula and a preposition
-ph_edge_a_1_2 = cl.Snippet("ph_edge_a_1_2")
-ph_edge_a_1_2.request = '''pattern { e.label = advcl ;
-\ta: WH -[cop|aux]-> E ; E[VerbForm="Part"|"Inf"] ; WH -[case]-> P }
+ph_edge_a_1_3 = cl.Snippet("ph_edge_a_1_3")
+ph_edge_a_1_3.request = '''pattern { e.label = advcl ;
+\ta: WH -[cop|aux]-> E ; E[VerbForm="Part"|"Inf"] ; WH -[case|mark]-> P ;
+\tP[upos="ADP"] }
 without { WH -[1=aux]-> AUX ; AUX[VerbForm="Fin"] }'''
 # ... comme étant quoi ?
 
-layer = [ph_edge_a_1_0, ph_edge_a_1_1, ph_edge_a_1_2]
+# advcl with participial or infinitival copula and a prepositional locution
+ph_edge_a_1_4 = cl.Snippet("ph_edge_a_1_4")
+ph_edge_a_1_4.request = '''pattern { e.label = advcl ;
+\ta: WH -[cop|aux]-> E ; E[VerbForm="Part"|"Inf"] ; WH -[case|mark]-> P ;
+\tP[ExtPos="ADP"] }
+without { WH -[1=aux]-> AUX ; AUX[VerbForm="Fin"] }'''
+
+layer = [ph_edge_a_1_0, ph_edge_a_1_1, ph_edge_a_1_3, ph_edge_a_1_4]
 ph_edge_a.add_snippets(layer, ph_edge_a_0_0)
 
 
 # Case with WH word isolated by conj : no IntPhrase="Yes" added
+
 
 ##### wh_alone: Isolated WH = PH_HEAD = CL_HEAD
 
@@ -179,6 +204,12 @@ wh_alone_0_0.command = '''WH.IntClause = "Yes" ;
 WH.IntPhrase = "Yes"'''
 
 wh_alone = cl.DisjRule("wh_alone", root=wh_alone_0_0)
+
+
+# adjectival "quel" with copula
+wh_alone_1_0 = cl.Snippet("wh_alone_1_0")
+wh_alone_1_0.request = '''pattern { WH[lemma="quel",upos="ADJ"] ;
+\tWH -[cop]-> C }'''
 
 # Special dependency
 wh_alone_1_1 = cl.Snippet("wh_alone_1_1")
@@ -211,8 +242,8 @@ wh_alone_1_5.request = '''pattern { ANCHOR -[1=obl|obj]-> WH ;
 # Note: we should better take any interrogative-embedding predicate, rather
 # than just "savoir"
 
-
-layer = [wh_alone_1_1, wh_alone_1_2, wh_alone_1_3, wh_alone_1_4, wh_alone_1_5]
+layer =  [wh_alone_1_0, wh_alone_1_1, wh_alone_1_2, wh_alone_1_3]
+layer += [wh_alone_1_4, wh_alone_1_5]
 wh_alone.add_snippets(layer, wh_alone_0_0)
 
 

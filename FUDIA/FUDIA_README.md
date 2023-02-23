@@ -324,6 +324,7 @@ We assume that the only relations between WH and a governing word in the same cl
 Identifying isolated WH = PH_HEAD = CL_HEAD.
 
 We detect a word WH with `PronType="Yes"` and no `IntPhrase` feature. We add `IntPhrase="Yes"` and `IntClause="Yes"`:
+ * when WH is *quel* as fronted adjective with a copula
  * when WH is the root of the sentence, a paratactic segment or a reparendum (and other relations isolating a segment: `discourse`, `vocative`, `dislocated`, `list`, `orphan`)
  * when WH is the head of a quoted segment
  * when WH is a direct or oblique of an interrogative-embedding verb (elliptical interrogative clause). We identify that with:
