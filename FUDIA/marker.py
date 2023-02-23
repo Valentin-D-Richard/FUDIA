@@ -83,7 +83,7 @@ que.add_snippets([que_0_0, que_1_1, que_1_2], que_0_0)
 si_0_0 = cl.Snippet("si_0_0")
 si_0_0.request = '''pattern {a: ANCHOR -[advcl|acl|ccomp|csubj]-> CL_HEAD ;
 \tm: CL_HEAD -[mark]-> S ; S[lemma="si",upos="SCONJ"] ; CL_HEAD[!IntClause] }
-without { M[lemma="même"] ; M < S }
+without { M[lemma="même"|"comme"|"sauf"] ; M < S } % sub. locutions
 without { Q[upos=SCONJ,!ExtPos] ; Q << S ; CL_HEAD -[mark]-> Q }
 without { Q[ExtPos=SCONJ] ; Q << S ; CL_HEAD -[mark]-> Q }
 without { Q[upos=SCONJ,!ExtPos] ; Q << S ; ANCHOR -[mark]-> Q }
@@ -138,7 +138,10 @@ spp_0_0.request = '''pattern { S[upos="PRON"] ;
 % Negative filtering
 without { CL_HEAD -[1=parataxis]-> G ; G[Quoted="Yes"] } % no verb-reporting stylistic inversion
 without { G -[1=parataxis]-> CL_HEAD ; G[Quoted="Yes"] } % no verb-reporting stylistic inversion
+without { CL_HEAD -[1=parataxis]-> G ; G << CL_HEAD } % heuristics on verb-reporting
 without { CL_HEAD -[expl:comp]-> S } % no expletive object S
+without { N[lemma="ne"] ; Q[lemma="que"] ; N << CL_HEAD ; CL_HEAD -> N ;
+\tCL_HEAD -[advmod]-> Q ; CL_HEAD << Q } % no graft "ne + V + S + que + ... " graft
 without { CL_HEAD -[cue:mark]-> S } % no loop
 '''
 # Adding IntClause=Yes and cue relation

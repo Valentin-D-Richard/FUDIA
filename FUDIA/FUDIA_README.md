@@ -147,7 +147,7 @@ The goal of this module is to add missing `PronType` annotations.
 
 Adding some `PronType="Rel"` by listing a reasonable number of relations between CL_HEAD and WH.
 
-We detect *qui*, *que*, *quoi*, *où* or *lequel* lemmas with undefined `PronType`, followed by a CL_HEAD and following an ANCHOR, which are related by a relative clause or cleft relation. We list three possible paths :construction: from CL_HEAD to WH:
+We detect *qui*, *que*, *quoi*, *où* or *lequel* lemmas with undefined `PronType`, followed by a CL_HEAD and following an ANCHOR, which are related by a relative clause or cleft relation (or conjuncted to such a clause). We list three possible paths :construction: from CL_HEAD to WH:
  * 1 relation
  * 2 relations, with an intermediary I after ANCHOR (e.g. WH is *quel*, the interrogative phrase head is not WH, or WH depends on a verbal complement of CL_HEAD)
  * 3 relations, with 2 intermediaries I1 and I2, after ANCHOR, and such that `I1 << I2` or both `I2 << CL_HEAD` and `CL_HEAD << I1`
@@ -177,6 +177,8 @@ We detect lemma *qui*, *que*, *quoi*, *comment*, *où*, *quand*, *combien*, *pou
  * discourse marker *quoi*
  * expression *en ce qui concerne* (lemmas + form *concerne*)
  * there is an exclamation mark :construction:
+
+Detected lemmas starting an uncomplete clause (`dep`), being a reparandum or child of a reparandum cannot be labelled easily. By precaution, we exclude them, except when their direct governer already has `PronType="Int"`.
 
 
 ## 3. `ecq`
@@ -299,7 +301,7 @@ Finding `ph_path` with WH != PH_HEAD, therefore supposing `wh_edge` (and potenti
 
 We detect a PH_HEAD with `IntPhrase="Yes"`.
 
-In the first case, there is a governer CL_HEAD. CL_HEAD is part of the same clause iff the relation is oblique, nominal modifier or nominal subject.
+In the first case, there is a governer CL_HEAD. CL_HEAD is part of the same clause iff the relation is oblique, nominal modifier, nominal subject or object (obnly with *quel* as determiner).
 
 Otherwise, CL_HEAD = PH_HEAD. More precisely, the cases where we add `IntClause="Yes"` to PH_HEAD are
  * when PH_HEAD is the root of the sentence, a paratactic segment or a reparendum (and other relations isolating a segment: `discourse`, `vocative`, `dislocated`, `list`, `orphan`*)
@@ -316,7 +318,7 @@ We detect a word WH with `PronType="Int"` and a governer CL_HEAD which has no `I
 
 We assume that the only relations between WH and a governing word in the same clause (but outside the interrogative phrase) are:
  * nominal subject, indirect object (certain occurrences of *où*), direct object, oblique, adverbial modifier and `xcomp` (certain occurrences of *que*)
- * nominal modifier, supposing it is fronted wrt. CL_HEAD
+ * nominal modifier, supposing it is fronted wrt. CL_HEAD or supposing the matrix NP does not have a preposition
  * `advcl` (adverbial clause) for clauses with a (present or past) participial, gerondival or infinitival copula (so WH is the head even if it's a clause) or auxiliary (but no passé composé) and introduced by a preposition, e.g. *Ils sont connus comme étant quoi ?*
 
 ### `wh_alone`
@@ -327,6 +329,7 @@ We detect a word WH with `PronType="Yes"` and no `IntPhrase` feature. We add `In
  * when WH is *quel* as fronted adjective with a copula
  * when WH is the root of the sentence, a paratactic segment or a reparendum (and other relations isolating a segment: `discourse`, `vocative`, `dislocated`, `list`, `orphan`)
  * when WH is the head of a quoted segment
+ * when WH is the head of a (copular) clause
  * when WH is a direct or oblique of an interrogative-embedding verb (elliptical interrogative clause). We identify that with:
    * WH is an adverb (except *combien*): they are normally not direct objects, except *s'appeler comment* or *aller où* for some annotators :construction: :heavy_exclamation_mark:
    * WH is a pronoun and the governer is interrogative-embedding. To avoid, listing all interrogative-embedding verbs, we choose to just test for two of the most common ones in this situation: *savoir* (to know) and *(se) demander* (to ask / to wonder) :construction: :heavy_exclamation_mark:
@@ -442,10 +445,12 @@ We detect a personal pronoun or *ce* lemma governed as subject or expletive subj
 The very difficult task is to **distinguish interrogative inversion from stylistic inversion**. We develop here several heuristics to filter out stylistic inversion :construction: :heavy_exclamation_mark:
 
 The inversion is interrogative if we know there is already a WH word or if there is an interrogation mark governed :heavy_exclamation_mark:. Otherwise, the inversion is most probably stylistic:
- * when CL_HEAD governs or is governed with parataxis by a quoted segment
  * when CL_HEAD is after an adverb (or adverbial locution) which is not interrogative and not *ne*
+ * when CL_HEAD governs or is governed with parataxis by a quoted segment
+ * when CL_HEAD governs a parataxis placed before
+ * with the expression *ne + VP + que + ...* (lemmas) as a graft, e.g. *ne fut-ce que brièvement*
 
-If CL_HEAD is not governed with a parataxis relation, we can be quite confident the inversion is not stylistic. When it is, we have the following heuristics. The inversion is most probably interrogative when:
+If CL_HEAD is not governed with a parataxis relation, we can be quite confident the inversion is not stylistic. When it is governed with a parataxis relation, we have the following heuristics. The inversion is most probably interrogative when:
  * CL_HEAD has an additional subject, object, oblique complement or clausal complement
  * CL_HEAD has a `xcomp` complement having an object, oblique complement or clausal complement
 

@@ -56,7 +56,7 @@ seq += [q.quoted_a, q.quoted_b, q.quoted_c, q.quoted_d, q.quoted_e]
 seq += [w.cleft, w.wh_edge, w.cleft, w.ph_head_pull, w.cleft]
 seq += [w.ph_edge_b, w.ph_edge_a, w.wh_alone]
 seq += [c.cl_head_pull]
-seq += [co.conj]
+seq += [co.conj, co.conju]
 seq += [m.eske, m.que, m.si, m.titu, m.spp, m.final]
 
 

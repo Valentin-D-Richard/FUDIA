@@ -31,6 +31,15 @@ conj.add_snippets([conj_1_0, conj_1_1], conj_0_0)
 conj.add_snippets([conj_2_0, conj_2_1], conj_0_0)
 
 
+##### conju: in other cases, we assume the conjuncted phrase is isolated
+
+conju_0_0 = cl.Snippet("conju_0_0")
+conju_0_0.request = '''pattern { P1 -[conj]-> P2 ; P2[IntPhrase="Yes"] }
+without { P2[IntClause] } % no loop'''
+conju_0_0.command = '''P2.IntClause = "Yes"'''
+
+conju = cl.DisjRule("conju", root=conju_0_0)
+
 
 ##### conjc: Distributing WH phrase over conjuncted sentences
 

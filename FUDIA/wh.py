@@ -220,30 +220,34 @@ ANCHOR -[1=root|parataxis|discourse|vocative|reparandum|dislocated|list|orphan]-
 wh_alone_1_2 = cl.Snippet("wh_alone_a_1_2")
 wh_alone_1_2.request = '''pattern { WH[Quoted="Yes"] }'''
 
-# Adverb as object
+# Adverb as object or ccomp
 wh_alone_1_3 = cl.Snippet("wh_alone_a_1_3")
-wh_alone_1_3.request = '''pattern { ANCHOR -[1=obj]-> WH ;
+wh_alone_1_3.request = '''pattern { ANCHOR -[1=obj|ccomp]-> WH ;
 \tWH[upos="ADV"] ; ANCHOR << WH }
 without { ANCHOR[lemma="appeler"|"aller"] }
-without { WH[lemma="combien"] }'''
+without { ANCHOR -[1=obj]-> WH ; WH[lemma="combien"] }'''
 # e.g. "s'appeler comment", or "aller où" using obj sometimes
 # obliques adverbs are rarely oblique object in a different clause
 
-# Adverb as oblique or direct object object of "savoir"
+# Adverb as oblique or direct object object of "savoir" or "(se) demander"
 wh_alone_1_4 = cl.Snippet("wh_alone_a_1_4")
-wh_alone_1_4.request = '''pattern { ANCHOR -[1=obl|obj]-> WH ;
+wh_alone_1_4.request = '''pattern { ANCHOR -[1=obl|obj|ccomp]-> WH ;
 \tWH[upos="ADV"] ; ANCHOR << WH ; ANCHOR[lemma="savoir"|"demander"] }'''
 # e.g. Ça va s'arrêter mais je sais pas à partir de quand.
 
-# Pronoun as object or oblique of "savoir"
+# Pronoun as object or oblique of "savoir" or "(se) demander"
 wh_alone_1_5 = cl.Snippet("wh_alone_a_1_5")
-wh_alone_1_5.request = '''pattern { ANCHOR -[1=obl|obj]-> WH ;
+wh_alone_1_5.request = '''pattern { ANCHOR -[1=obl|obj|ccomp]-> WH ;
 \tANCHOR[lemma="savoir"|"demander"] ; WH[upos="PRON"] ; ANCHOR << WH }'''
 # Note: we should better take any interrogative-embedding predicate, rather
 # than just "savoir"
 
+# Pronoun as ccomp
+wh_alone_1_6 = cl.Snippet("wh_alone_1_6")
+wh_alone_1_6.request = '''pattern { ANCHOR -[1=ccomp]-> WH ; WH[upos="PRON"] }'''
+
 layer =  [wh_alone_1_0, wh_alone_1_1, wh_alone_1_2, wh_alone_1_3]
-layer += [wh_alone_1_4, wh_alone_1_5]
+layer += [wh_alone_1_4, wh_alone_1_5, wh_alone_1_6]
 wh_alone.add_snippets(layer, wh_alone_0_0)
 
 
