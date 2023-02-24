@@ -83,7 +83,7 @@ que.add_snippets([que_0_0, que_1_1, que_1_2], que_0_0)
 si_0_0 = cl.Snippet("si_0_0")
 si_0_0.request = '''pattern {a: ANCHOR -[advcl|acl|ccomp|csubj]-> CL_HEAD ;
 \tm: CL_HEAD -[mark]-> S ; S[lemma="si",upos="SCONJ"] ; CL_HEAD[!IntClause] }
-without { M[lemma="même"|"comme"|"sauf"] ; M < S } % sub. locutions
+without { M[lemma="même"|"comme"|"sauf"] ; M < S } % subordination locutions
 without { Q[upos=SCONJ,!ExtPos] ; Q << S ; CL_HEAD -[mark]-> Q }
 without { Q[ExtPos=SCONJ] ; Q << S ; CL_HEAD -[mark]-> Q }
 without { Q[upos=SCONJ,!ExtPos] ; Q << S ; ANCHOR -[mark]-> Q }
@@ -111,7 +111,8 @@ si_2_0.request = '''pattern { ANCHOR -[ccomp]-> CL_HEAD }'''
 # acl or advcl with a preposition preceding
 si_2_1 = cl.Snippet("si_2_1")
 si_2_1.request = '''pattern { ANCHOR -[advcl|acl]-> CL_HEAD ; C[upos="ADP",!ExtPos] ;
-\tCL_HEAD -[case|mark]-> C ; C < S }'''
+\tCL_HEAD -[case|mark]-> C ; C < S }
+without { C[lemma="même"|"comme"|"sauf"] }'''
 
 # acl or advcl with a prepositional locution preceding
 si_2_2 = cl.Snippet("si_2_2")

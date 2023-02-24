@@ -202,6 +202,18 @@ If Q is *qui*, we add a nominal subject relation from CL_HEAD to the new WH.
 
 In the complementary case where there is no `advcl`, `dislocated` or `ccomp` relation from WH or E, the expression is asumed to be "alone" or isolated :construction:, so we do not add any relation.
 
+### qec
+
+Reannotating *qu'est-ce + S* as fixed
+
+We detect the trigram *que* WH, form *est* E and form *ce* or *-ce* C, heading CL_HEAD with `advcl`, `ccomp` or `parataxis`.
+
+As above, we consider two cases about the head of the expression:
+ * *qu'* is the head
+ * *est* is the head
+
+And as above, we consider the case of a potential verbal complement of CL_HEAD.
+
 ### `ecq`
 
 Reannotating expression *est-ce que/qui* as fixed.
@@ -265,6 +277,14 @@ Identifying paratactic parenthesized segments, e.g. *Appuyez sur le bouton (pas 
 
 We detect clause heads governed by `parataxis` and governing a pair of `--` symbols or `(` and `)` around itself.
 
+### `quoted_f`
+
+Identifying (parenthesized) exemples, often appositions, parataxis or conjunction.
+
+We detect a clause head governed by an anchor, and in between, the lemma locution *par exemple*, governed by the clause head. In the corpus, there are two cases:
+ * the expression syntactically analyzed, with its head *exemple* being a nominal or oblique modifier
+ * the expression is fixed, acting like an adverbial modifier
+
 
 ## 5. `wh`
 
@@ -301,14 +321,12 @@ Finding `ph_path` with WH != PH_HEAD, therefore supposing `wh_edge` (and potenti
 
 We detect a PH_HEAD with `IntPhrase="Yes"`.
 
-In the first case, there is a governer CL_HEAD. CL_HEAD is part of the same clause iff the relation is oblique, nominal modifier, nominal subject or object (obnly with *quel* as determiner).
+In the first case, there is a governer CL_HEAD. CL_HEAD is part of the same clause iff the relation is oblique, nominal modifier, nominal subject, object (only with *quel* as determiner), or adverbial modifier (only with fixed WH expression like *à quoi bon*).
 
 Otherwise, CL_HEAD = PH_HEAD. More precisely, the cases where we add `IntClause="Yes"` to PH_HEAD are
- * when PH_HEAD is the root of the sentence, a paratactic segment or a reparendum (and other relations isolating a segment: `discourse`, `vocative`, `dislocated`, `list`, `orphan`*)
+ * when PH_HEAD is the root of the sentence, a paratactic segment or a reparendum (and other relations isolating a segment: `discourse`, `dislocated`, `appos`, `reparandum`)
  * when PH_HEAD is the head of a quoted segment
  * when PH_HEAD is the object or oblique of an interrogative-embedding verb (elliptical interrogative clause). To avoid listing all interrogative-embedding verbs, we choose to just test for two of the most common ones in this situation: *savoir* (to know) and *(se) demander* (to ask / wonder) :construction: :heavy_exclamation_mark:
-
-*The list given is speculative, it is unsure whether there can be a situation with `vocative`, `list` or `orphan`.
 
 ### `ph_edge_a`
 
@@ -327,7 +345,7 @@ Identifying isolated WH = PH_HEAD = CL_HEAD.
 
 We detect a word WH with `PronType="Yes"` and no `IntPhrase` feature. We add `IntPhrase="Yes"` and `IntClause="Yes"`:
  * when WH is *quel* as fronted adjective with a copula
- * when WH is the root of the sentence, a paratactic segment or a reparendum (and other relations isolating a segment: `discourse`, `vocative`, `dislocated`, `list`, `orphan`)
+ * when WH is the root of the sentence, a paratactic segment or a reparendum (and other relations isolating a segment: `discourse`, `dislocated`, `appos`, `reparandum`)
  * when WH is the head of a quoted segment
  * when WH is the head of a (copular) clause
  * when WH is a direct or oblique of an interrogative-embedding verb (elliptical interrogative clause). We identify that with:
@@ -381,6 +399,12 @@ The conditions established in modules `wh` and `cl_head_pull` are supposed to ma
 We detect two conjuncts P1 and P2 and a node CL_HEAD with `IntClause="Yes"`.
 
 There are four cases depending on whether P1 (resp. P2) is a sole WH word or a PH_HEAD with a distinct WH word. We assume that CL_HEAD already has a `cue:wh` relation with P1 or its WH word. We add a relation from CL_HEAD to P2 or its WH word.
+
+### `conju`
+
+In the remaining cases of conjuncted interrogative phrase, we assume that it should be analyzed as isolated.
+
+We detect a conjuncted node with `IntPhrase="Yes"` and no `IntClause`. We add the latter.
 
 
 ## 8. `mark`

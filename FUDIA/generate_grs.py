@@ -51,8 +51,8 @@ import marker as m      # Annotating interrogative markers
 
 seq =  [cs.telquel, cs.nimporte, cs.whque]
 seq += [p.relprontype, p.intprontype]
-seq += [e.qecq, e.ecq]
-seq += [q.quoted_a, q.quoted_b, q.quoted_c, q.quoted_d, q.quoted_e]
+seq += [e.qecq, e.qec, e.ecq]
+seq += [q.quoted_a, q.quoted_b, q.quoted_c, q.quoted_d, q.quoted_e, q.quoted_f]
 seq += [w.cleft, w.wh_edge, w.cleft, w.ph_head_pull, w.cleft]
 seq += [w.ph_edge_b, w.ph_edge_a, w.wh_alone]
 seq += [c.cl_head_pull]

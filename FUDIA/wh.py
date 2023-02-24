@@ -16,9 +16,9 @@ add_edge PH_HEAD -[cue:wh]-> WH'''
 
 wh_edge = cl.DisjRule("wh_edge", root=wh_edge_0_0)
 
-# Determiner WH
+# Determiner or adjectival WH
 wh_edge_1_0 = cl.Snippet("wh_edge_1_0")
-wh_edge_1_0.request = '''pattern { e.label = det }
+wh_edge_1_0.request = '''pattern { PH_HEAD -[det|amod]-> WH }
 without { G1 [lemma="ne"] ; % n'importe quel constructions
 \tG2 [form="importe"|"IMPORTE"] ; G1 < G2 ; G2 < WH }'''
 
@@ -87,7 +87,7 @@ ph_edge_b = cl.DisjRule("ph_edge_b", root=ph_edge_b_0_0)
 
 # Presence of CL_HEAD
 ph_edge_b_1_0 = cl.Snippet("ph_edge_b_1_0")
-ph_edge_b_1_0.request = '''pattern { f : CL_HEAD -[1=obl|nmod|nsubj|obj]-> PH_HEAD }
+ph_edge_b_1_0.request = '''pattern { f : CL_HEAD -[1=obl|nmod|nsubj|obj|advmod]-> PH_HEAD }
 without { CL_HEAD -[cue:wh]-> WH } % no loop'''
 # Adding IntClause and cue
 ph_edge_b_1_0.command = '''CL_HEAD.IntClause = "Yes" ;
@@ -101,6 +101,10 @@ ph_edge_b_2_0.request = '''pattern { CL_HEAD -[1=obl|nmod|nsubj]-> PH_HEAD }'''
 ph_edge_b_2_1 = cl.Snippet("ph_edge_b_2_1")
 ph_edge_b_2_1.request = '''pattern { WH[lemma="quel"] }'''
 
+# fixed WH expression
+ph_edge_b_2_2 = cl.Snippet("ph_edge_b_2_2")
+ph_edge_b_2_2.request = '''pattern { PH_HEAD -[fixed]-> WH }'''
+
 
 ### Alone: CL_HEAD = PH_HEAD
 ph_edge_b_1_1_2 = cl.Snippet("ph_edge_b_1_1_2")
@@ -111,7 +115,7 @@ ph_edge_b_1_1_2.command = '''PH_HEAD.IntClause = "Yes"'''
 # Alone: Special dependency
 ph_edge_b_2_1_2 = cl.Snippet("ph_edge_b_2_1_2")
 ph_edge_b_2_1_2.request = '''pattern {
-ANCHOR -[1=root|parataxis|discourse|vocative|reparandum|dislocated|list|orphan]-> PH_HEAD }'''
+ANCHOR -[1=root|parataxis|discourse|reparandum|dislocated|appos]-> PH_HEAD }'''
 
 # Alone: quoted
 ph_edge_b_2_2_2 = cl.Snippet("ph_edge_b_2_2_2")
@@ -126,7 +130,7 @@ ph_edge_b_2_3_2.request = '''pattern { ANCHOR -[1=obl|obj]-> PH_HEAD ;
 
 
 ph_edge_b.add_snippets([ph_edge_b_1_0, ph_edge_b_1_1_2], ph_edge_b_0_0)
-layer = [ph_edge_b_2_0, ph_edge_b_2_1]
+layer = [ph_edge_b_2_0, ph_edge_b_2_1, ph_edge_b_2_2]
 ph_edge_b.add_snippets(layer, ph_edge_b_1_0)
 layer = [ph_edge_b_2_1_2, ph_edge_b_2_2_2, ph_edge_b_2_3_2]
 ph_edge_b.add_snippets(layer, ph_edge_b_1_1_2)
@@ -214,7 +218,7 @@ wh_alone_1_0.request = '''pattern { WH[lemma="quel",upos="ADJ"] ;
 # Special dependency
 wh_alone_1_1 = cl.Snippet("wh_alone_1_1")
 wh_alone_1_1.request = '''pattern {
-ANCHOR -[1=root|parataxis|discourse|vocative|reparandum|dislocated|list|orphan]-> WH }'''
+ANCHOR -[1=root|parataxis|discourse|reparandum|dislocated|appos]-> WH }'''
 
 # Quoted
 wh_alone_1_2 = cl.Snippet("wh_alone_a_1_2")

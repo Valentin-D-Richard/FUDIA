@@ -135,7 +135,7 @@ quoted_d.add_snippets([quoted_d_1_0, quoted_d_1_1], quoted_d_0_0)
 
 
 
-# quoted_e: parataxed parenthesis with '(' and ')' or '--' and '--'
+##### quoted_e: parataxed parenthesis with '(' and ')' or '--' and '--'
 
 # Root
 quoted_e_0_0 = cl.Snippet("quoted_e_0_0")
@@ -158,3 +158,25 @@ quoted_e_1_1 = cl.Snippet("quoted_c_1_1")
 quoted_e_1_1.request = '''pattern { P1[lemma="--"] ; P2[lemma="--"] }'''
 
 quoted_e.add_snippets([quoted_e_1_0, quoted_e_1_1], quoted_e_0_0)
+
+
+
+##### quoted_f: segments beginning with "par exemple"
+quoted_f_0_0 = cl.Snippet("quoted_f_0_0")
+quoted_f_0_0.request = '''pattern { ANCHOR -> CL_HEAD ; P[lemma="par"] ;
+\tE[lemma="exemple"] ; P < E ; ANCHOR << P ; E << CL_HEAD ; CL_HEAD[!Quoted] }'''
+# Added Quoted=Yes
+quoted_f_0_0.command = '''CL_HEAD.Quoted = "Yes"'''
+
+quoted_f = cl.DisjRule("quoted_f", root=quoted_f_0_0)
+
+
+# nmod or obl on "exemple"
+quoted_f_1_0 = cl.Snippet("quoted_f_1_0")
+quoted_f_1_0.request = '''pattern { CL_HEAD -[1=nmod|obl]-> E }'''
+
+# advmod on "par" (fixed)
+quoted_f_1_1 = cl.Snippet("quoted_f_1_1")
+quoted_f_1_1.request = '''pattern { CL_HEAD -[1=advmod]-> P }'''
+
+quoted_f.add_snippets([quoted_f_1_0, quoted_f_1_1], quoted_f_0_0)

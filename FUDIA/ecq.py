@@ -72,7 +72,7 @@ qecq_3_0_1 = cl.Snippet("qecq_3_0_1")
 qecq_3_0_1.request = '''pattern { Q[lemma="que"] }'''
 
 
-# CL_HEAD is a nominal group without copula or auxiliary
+# CL_HEAD is a nominal phrase without copula or auxiliary
 qecq_4_0_1 = cl.Snippet("qecq_4_0_1")
 qecq_4_0_1.request = '''pattern { CL_HEAD[upos="NOUN"|"PRON"|"PROPN",!ExtPos] }
 without { CL_HEAD -[1=cop|aux]-> A }'''
@@ -85,13 +85,6 @@ qecq_4_1_1.request = '''pattern { CL_HEAD[ExtPos="NOUN"|"PRON"|"PROPN"] }
 without { CL_HEAD -[1=cop|aux]-> A }'''
 # Adding nsubj
 qecq_4_1_1.command = '''add_edge CL_HEAD -[nsubj]-> WH2 ;'''
-
-# CL_HEAD is a nominal group (ExtPos) without copula or auxiliary
-qecq_4_2_1 = cl.Snippet("qecq_4_2_1")
-qecq_4_2_1.request = '''pattern { CL_HEAD[ExtPos="NOUN"|"PRON"|"PROPN"] }
-without { CL_HEAD -[1=cop|aux]-> A }'''
-# Adding nsubj
-qecq_4_2_1.command = '''add_edge CL_HEAD -[nsubj]-> WH2 ;'''
 
 # xcomp'ed verb (heuristics)
 qecq_4_3_1 = cl.Snippet("qecq_4_3_1")
@@ -110,8 +103,7 @@ qecq_4_4_1.command = '''add_edge CL_HEAD -[obj]-> WH2 ;'''
 # No xcomp'ed verb with copula or auxiliary
 qecq_4_5_1 = cl.Snippet("qecq_4_5_1")
 qecq_4_5_1.request = '''pattern { CL_HEAD -[1=cop|aux]-> COP }
-without { CL_HEAD -[xcomp]-> V ; V[upos="VERB"|"AUX"] }
-without { CL_HEAD[ExtPos="NOUN"|"PRON"|"PROPN"] }'''
+without { CL_HEAD -[xcomp]-> V ; V[upos="VERB"|"AUX"] }'''
 # Adding object relation from CL_HEAD
 qecq_4_5_1.command = '''add_edge CL_HEAD -[obj]-> WH2 ;'''
 
@@ -126,11 +118,76 @@ qecq_3_1_1.command = '''add_edge CL_HEAD -[nsubj]-> WH2 ;'''
 qecq.add_snippets([qecq_1_0, qecq_1_1, qecq_1_2], qecq_0_0)
 qecq.add_snippets([qecq_2_0_1, qecq_2_1_1], qecq_1_1)
 qecq.add_snippets([qecq_3_0_1, qecq_3_1_1], qecq_1_1)
-layer = [qecq_4_0_1, qecq_4_1_1, qecq_4_2_1, qecq_4_3_1, qecq_4_4_1, qecq_4_5_1]
+layer = [qecq_4_0_1, qecq_4_1_1, qecq_4_3_1, qecq_4_4_1, qecq_4_5_1]
 qecq.add_snippets(layer, qecq_3_0_1)
-# Note1: qecq_1_1 fails to capture cases where WH should be
-# the objet of the xcomp'ed verb
-# Note2: I think that Note1 is not up to date
+
+
+
+
+##### qec: Reannotating expression "qu'est-ce + S"
+
+### Root, supposing it is object
+qec_0_0 = cl.Snippet("qec_0_0")
+qec_0_0.request = '''pattern { WH[lemma="que"] ; E[form="est"|"EST"] ;
+\tC[form="ce"|"-ce"|"CE"|"-CE"] ; WH < E ; E < C }
+without { Q[lemma="que"|"qui"] ; C < Q }
+without { WH -[fixed]-> E ; WH -[fixed]-> C } % Avoiding looping'''
+# Rearranging by getting the expression as fixed
+qec_0_0.command = '''add_node WH2 :< WH ; add_node E2 :> WH ;
+add_node C2 :> E2 ; add_node Q2 :> C2 ;
+append_feats WH ==> WH2 ; shift WH ==> WH2 ; WH2.ExtPos = "PRON" ;
+shift E ==> E2 ;
+WH2.form = WH.form ; WH2.lemma = WH.lemma ; WH2.upos = WH.upos ;
+append_feats E ==> E2 ;
+E2.form = E.form ; E2.lemma = E.lemma ; E2.upos = E.upos ;
+append_feats C ==> C2 ;
+C2.form = C.form ; C2.lemma = C.lemma ; C2.upos = C.upos ;
+add_edge WH2 -[fixed]-> E2 ; add_edge WH2 -[fixed]-> C2 ;
+del_node WH ; del_node E ; del_node C ;'''
+
+qec = cl.DisjRule("qec", root=qec_0_0)
+
+
+# "qu'est-ce que S'" with head on qu'
+qec_1_0 = cl.Snippet("qec_1_0")
+qec_1_0.request = '''pattern { h: WH -[1=advcl|dislocated|ccomp]-> CL_HEAD ;
+\tWH << CL_HEAD }'''
+# Deleting h and shifting WH2 to CL_HEAD (except fixed)
+qec_1_0.command = '''shift WH2 =[^fixed]=> CL_HEAD ;'''
+
+# "qu'est-ce que S'" with head on est
+qec_1_1 = cl.Snippet("qec_1_1")
+qec_1_1.request = '''pattern { h: E -[1=advcl|dislocated|ccomp]-> CL_HEAD ;
+\tWH << CL_HEAD }'''
+# Shifting the head from qu' to the head of S'
+qec_1_1.command = '''shift E2 ==> CL_HEAD ;'''
+
+
+# xcomp'ed verb (heuristics)
+qec_2_0 = cl.Snippet("qec_2_0")
+qec_2_0.request = '''pattern { CL_HEAD -[xcomp]-> V ; V[upos="VERB"|"AUX"] }'''
+# Addin3 object relation from the xcomp'ed verb
+qec_2_0.command = '''add_edge V -[obj]-> WH2 ;'''
+
+# No xcomp'ed verb and not NP
+qec_2_1 = cl.Snippet("qec_2_1")
+qec_2_1.request = '''without { CL_HEAD -[xcomp]-> V ; V[upos="VERB"|"AUX"] }
+without { CL_HEAD[upos="NOUN"|"PRON"|"PROPN"] }
+without { CL_HEAD[ExtPos="NOUN"|"PRON"|"PROPN"] }'''
+# Adding object relation from CL_HEAD
+qec_2_1.command = '''add_edge CL_HEAD -[obj]-> WH2 ;'''
+
+# No xcomp'ed verb with copula or auxiliary
+qec_2_2 = cl.Snippet("qec_2_2")
+qec_2_2.request = '''pattern { CL_HEAD -[1=cop|aux]-> COP }
+without { CL_HEAD -[xcomp]-> V ; V[upos="VERB"|"AUX"] }'''
+# Adding object relation from CL_HEAD
+qec_2_2.command = '''add_edge CL_HEAD -[obj]-> WH2 ;'''
+
+qec.add_snippets([qec_1_0, qec_1_1], qec_0_0)
+layer = [qec_2_0, qec_2_1, qec_2_2]
+qec.add_snippets(layer, qec_0_0)
+
 
 
 
