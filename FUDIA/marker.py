@@ -86,8 +86,8 @@ si_0_0.request = '''pattern {a: ANCHOR -[advcl|acl|ccomp|csubj]-> CL_HEAD ;
 without { M[lemma="même"|"comme"|"sauf"] ; M < S } % subordination locutions
 without { Q[upos=SCONJ,!ExtPos] ; Q << S ; CL_HEAD -[mark]-> Q }
 without { Q[ExtPos=SCONJ] ; Q << S ; CL_HEAD -[mark]-> Q }
-without { Q[upos=SCONJ,!ExtPos] ; Q << S ; ANCHOR -[mark]-> Q }
-without { Q[ExtPos=SCONJ] ; Q << S ; ANCHOR -[mark]-> Q }
+without { Q[upos=SCONJ,!ExtPos] ; Q << S ; ANCHOR -[mark]-> Q ; ANCHOR << Q }
+without { Q[ExtPos=SCONJ] ; Q << S ; ANCHOR -[mark]-> Q ; ANCHOR << Q }
 without { CL_HEAD -[cue:mark]-> S  } % no loop'''
 # Adding IntClause= "Yes" and cue relation
 si_0_0.command = '''CL_HEAD.IntClause = "Yes" ;

@@ -35,7 +35,9 @@ conj.add_snippets([conj_2_0, conj_2_1], conj_0_0)
 
 conju_0_0 = cl.Snippet("conju_0_0")
 conju_0_0.request = '''pattern { P1 -[conj]-> P2 ;  }
-without { P2[IntClause] } % no loop'''
+without { P2[IntClause] } % no loop
+without { P1 -[cue:wh]-> P2 } % not conj
+without { CL_HEAD -[cue:wh]-> P2 } % not conj'''
 conju_0_0.command = '''P2.IntClause = "Yes" ;'''
 
 conju = cl.DisjRule("conju", root=conju_0_0)

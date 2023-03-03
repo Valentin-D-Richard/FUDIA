@@ -27,8 +27,11 @@ chp_1_0.request = '''pattern { CAND -[csubj|ccomp|xcomp|advcl|acl]-> CUR }'''
 chp_2_0 = cl.Snippet("chp_2_0")
 chp_2_0.request = '''pattern { CUR[VerbForm="Part"|"Inf"] ;
 \tCUR -> P ; P[upos="ADP",!ExtPos] }
-without { CUR -[1=aux]-> AUX ; AUX[VerbForm="Fin"] }'''
+without { CUR -[1=aux]-> AUX ; AUX[VerbForm="Fin"] }
+without { a.label = acl ; P[lemma="à"|"de"|"sur"] } % (*)'''
 # e.g. Il a réussi en faisant quoi ? advcl(réussi,faisant)
+# (*) interrogatives subordinated to an NP
+#   e.g. "nos questions sur comment s'installer"
 
 # CUR is participial or infinitival + prepositional locution (except passé composé)
 chp_2_1 = cl.Snippet("chp_2_1")

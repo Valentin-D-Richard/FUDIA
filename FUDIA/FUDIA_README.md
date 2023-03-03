@@ -321,7 +321,7 @@ Finding `ph_path` with WH != PH_HEAD, therefore supposing `wh_edge` (and potenti
 
 We detect a PH_HEAD with `IntPhrase="Yes"`.
 
-In the first case, there is a governer CL_HEAD. CL_HEAD is part of the same clause iff the relation is oblique, nominal modifier, nominal subject, object (only with *quel* as determiner), or adverbial modifier (only with fixed WH expression like *à quoi bon*).
+In the first case, there is a governer CL_HEAD. CL_HEAD is part of the same clause iff the relation is oblique, nominal modifier, nominal subject, object (only with *quel* as determiner), adverbial modifier (only with fixed WH expression like *à quoi bon*) or `xcomp` (only with verbs like *devenir*).
 
 Otherwise, CL_HEAD = PH_HEAD. More precisely, the cases where we add `IntClause="Yes"` to PH_HEAD are
  * when PH_HEAD is the root of the sentence, a paratactic segment or a reparendum (and other relations isolating a segment: `discourse`, `dislocated`, `appos`, `reparandum`)

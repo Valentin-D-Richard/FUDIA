@@ -96,7 +96,9 @@ qecq_4_3_1.command = '''add_edge V -[obj]-> WH2 ;'''
 qecq_4_4_1 = cl.Snippet("qecq_4_4_1")
 qecq_4_4_1.request = '''without { CL_HEAD -[xcomp]-> V ; V[upos="VERB"|"AUX"] }
 without { CL_HEAD[upos="NOUN"|"PRON"|"PROPN"] }
-without { CL_HEAD[ExtPos="NOUN"|"PRON"|"PROPN"] }'''
+without { CL_HEAD[ExtPos="NOUN"|"PRON"|"PROPN"] }
+without { CL_HEAD -[mark]-> M ; M[upos="SCONJ",!ExtPos] ; h.label = advcl }
+without { CL_HEAD -[mark]-> M ; M[ExtPos="SCONJ"] ; h.label = advcl } % real advcl'''
 # Adding object relation from CL_HEAD
 qecq_4_4_1.command = '''add_edge CL_HEAD -[obj]-> WH2 ;'''
 

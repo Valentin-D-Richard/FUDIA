@@ -1,1 +1,1 @@
-pattern { CL_HEAD[IntClause="Yes"] }
+pattern { CL_HEAD[ClauseType="Int"] }

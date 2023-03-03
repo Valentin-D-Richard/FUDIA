@@ -87,15 +87,16 @@ ph_edge_b = cl.DisjRule("ph_edge_b", root=ph_edge_b_0_0)
 
 # Presence of CL_HEAD
 ph_edge_b_1_0 = cl.Snippet("ph_edge_b_1_0")
-ph_edge_b_1_0.request = '''pattern { f : CL_HEAD -[1=obl|nmod|nsubj|obj|advmod]-> PH_HEAD }
+ph_edge_b_1_0.request = '''pattern {
+\tf : CL_HEAD -[1=obl|nmod|nsubj|obj|advmod|xcomp]-> PH_HEAD }
 without { CL_HEAD -[cue:wh]-> WH } % no loop'''
 # Adding IntClause and cue
 ph_edge_b_1_0.command = '''CL_HEAD.IntClause = "Yes" ;
 \tadd_edge CL_HEAD -[cue:wh]-> WH'''
 
-# oblique, modifier or subject
+# oblique, modifier, subject or xcomp (e.g. "de quelle couleur devient ...")
 ph_edge_b_2_0 = cl.Snippet("ph_edge_b_2_0")
-ph_edge_b_2_0.request = '''pattern { CL_HEAD -[1=obl|nmod|nsubj]-> PH_HEAD }'''
+ph_edge_b_2_0.request = '''pattern { CL_HEAD -[1=obl|nmod|nsubj|xcomp]-> PH_HEAD }'''
 
 # with determiner "quel"
 ph_edge_b_2_1 = cl.Snippet("ph_edge_b_2_1")
@@ -124,7 +125,7 @@ ph_edge_b_2_2_2.request = '''pattern { PH_HEAD[Quoted="Yes"] }'''
 # Alone: as object or oblique of "savoir"
 ph_edge_b_2_3_2 = cl.Snippet("ph_edge_b_2_3_2")
 ph_edge_b_2_3_2.request = '''pattern { ANCHOR -[1=obl|obj]-> PH_HEAD ;
-\tANCHOR[lemma="savoir"|"demander"] }'''
+\tANCHOR[lemma="savoir"|"demander"] ; ANCHOR << PH_HEAD }'''
 # Note: we should better take any interrogative-embedding predicate, rather
 # than just "savoir"
 

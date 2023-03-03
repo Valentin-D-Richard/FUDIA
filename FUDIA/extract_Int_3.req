@@ -1,5 +1,6 @@
 pattern { CL_HEAD[PronType="Int"] }
-without { CL_HEAD[IntClause="Yes"] }
-without { CL_HEAD[IntPhrase="Yes"] }
-without { OTHER[IntClause="Yes"] }
-without { OTHER[IntPhrase="Yes"] }
+without { CL_HEAD[ClauseType="Int"] }
+without { CL_HEAD[PhraseType="Int"] }
+without { OTHER[ClauseType="Int"] }
+without { OTHER[PhraseType="Int"] }
+without { N[lemma="ne"] ; I[form="importe"|"IMPORTE"] ; N < I ; I < CL_HEAD }
