@@ -1,6 +1,6 @@
 # French Universal Dependencies Interrogative Annotator (FUDIA)
 
-FUDIA is a python programme able to add annotations about interrogatives on French UD-annotated corpora. FUDIA is based on [Grew](https://grew.fr/) and uses graph rewriting rules. It uses disjunctive patterns (DisjPat), written as a python class (file `classes.py`, see `DisjPat_README.md`).
+FUDIA is a python programme able to add annotations about interrogatives on French UD-annotated corpora. FUDIA is based on [Grew](https://grew.fr/) (version 1.11 or higher) and uses graph rewriting rules. It uses disjunctive patterns (DisjPat), written as a python class (file `classes.py`, see `DisjPat_README.md`).
 
 ## Use
 
