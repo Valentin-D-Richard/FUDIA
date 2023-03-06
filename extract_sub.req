@@ -1,4 +1,0 @@
-pattern { CL_HEAD[IntClause="Yes"] ;
-    ANCHOR -[1=ccomp|csubj|xcomp|advcl|acl|obj]-> CL_HEAD }
-without { P[lemma="?"] ; CL_HEAD << P }
-without { CL_HEAD[Quoted="Yes"] }
