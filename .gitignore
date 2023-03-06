@@ -1,0 +1,18 @@
+# Python auxiliary files
+__pycache__
+
+# Script buffers and test files
+**/buffer*
+*/errors
+**.grs
+
+# Emacs and VSCode temporary files
+**~*
+**\#*\#
+**.\#*
+
+# Compiles files
+**.pdf
+
+# Private working files
+Private/**
