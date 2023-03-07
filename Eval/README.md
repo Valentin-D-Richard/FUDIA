@@ -9,7 +9,20 @@ For each corpus and each set, we extract, from the FUDIA-annotated corpus, 3 mut
 
 A priori, sentences of type 2 are not considered well-annotated. Except fixed expressions like `n'importe + WH`, sentences of type 3 are not considered well-annotated.
 
-## Mistake categories
+We looked at the sets that ware not part of the development phase to assess whether the sentences of their subsets 1, 2 and 3 were correctly annotated:
+ * FQB (test)
+ * GSD train
+ * ParisStories train
+ * ParTUT train
+ * PUD (test)
+ * Rhapsodie train
+ * Sequoia train
+
+As the French Question Bank (FQB) was designed to train parsers on interrogative, we also collected the list of FQB sentences that does not belong to any subset after FUDIA annotation, and we call it the diff subset.
+
+The file `statistics.ods` lists the sentences of subsets 1, 2 or 3 and the mistake category we assigned them.
+
+## "Mistake" categories
 
 Categories:
 
@@ -67,11 +80,16 @@ Remaining problems du to "quoted" heuristics:
  * fr-ud-train_12149 (2cvi)
  * fr-ud-train_09783 (2cv)
 
+## Results
 
-## Evaluation files
+663 sentnences were detected over all evaluation subsets. We looked at each of them and assigned them a mistake category.
+ * 490 sentences were well-annotated
+ * 16 sentneces were ill-annotated due to an original annotation mistake
+ * 86 sentences were ill-annotated due to a FUDIA mistake
+ * 66 sentences were excluded (mistake category 3)
 
-We created a csv file for each corpus. There is a sheet for each evaluated subset.
+The accurracy of FUDIA before fix is computed as #{sent. of cat. 0} / #{sent. of cat. 0 + 2}, which is 0.8507.
 
- * Column 1: sentence id
- * Column 2: category
- * Column 3: remarks
+Most mistakes of category 2 were actually easily fixable. Only mistakes 2cv, 2cvi and 2cvii were not fixed because they go beyond the limits of our heuristic approach.
+
+The **accurracy of FUDIA** after fix is estimated as #{sent. of cat. 0 + 2a + 2b + 2ci-2civ} / #{sent. of cat. 0 + 2}, which is **0.9948**.

@@ -77,6 +77,27 @@ In French, the **interrogative markers** are:
  * *qu'est-ce que* changed to fixed with `ExtPos="PRON"`, the head shifted to the interrogative clause head CL_HEAD, and the relations changed to `obj`, `obl` or `nsubj` from CL_HEAD to *qu'*, depending on the context (see section 3.`qecq` for more detail)
  * *WH + que + S'* with *que* attached to WH, changed to govern *que* by the head of S'
 
+## Limitations
+
+FUDIA is curated by hand and therefore some biases or oversignths may have been introduced. Annotation mistakes may concern:
+ * Unexpected original annotation, may it be
+   * intentional: either departing from UD 1.11 French annotation uses, or on phenomenon absent from this version (ex. non-European French)
+   * or unintentional (e.g. bad automatic annotation)
+ * Missed phenomena or cases (e.g. *sauf si* conjunctive locution was initially forgotten)
+ * Limitations of the heuristics. As we chose not to rely on interrogation marks and a list of interrogative-embedding predicates, there may be cases that are not well treated with our heuristics. We observed mis-annotations concerning
+   * paratactic speech-reporting subject-verb inversions with oblique argument, e.g. *Le chat, a-t-il décrit à son amie, n'était pas futé.*
+   * parenthesized segments with one parenthesis missing, e.g. *Il parle à la présidente (de quel pays ?*
+   * reported segments with guillemots attached to the first element instead of the head, e.g. *Il répondit « que faire ?* `punct(que,«)`
+
+Moreover, we haven't yet found a reliable heuristics to correctly identify embedded exclamatives. They can be identified by unembedding them and trying to put their WH word in-situ. It shouldn't work, contrary to embedded interrogatives, e.g.
+
+  * C'est fou [ qu'est-ce que c'est beau. ]
+  * Qu'est-ce que c'est beau !
+  * *C'est beau quoi ?
+  * Je sais bien / C'est fou [ combien tu adores le chocolat. ]
+  * *Combien tu adores le chocolat !/?
+  * *Tu adores le chocolat combien ?
+
 ---
 # Rules of the programme
 

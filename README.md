@@ -43,13 +43,17 @@ We used the Grew python wrapper `grewpy` (version 0.2.0) to retrieve matching se
 
 ## Evaluation
 
-Evaluation was performed on the train sets (+ FQB test and PUD test) of our corpora.
+FUDIA was designed using some searches on the online Grew match interface (all French corpora and sets). Then, a developpement phase consisted in checking that the programme performed as expected on a subset of the French corpora:
+ * GSD test and dev
+ * ParisStories test and dev
+ * ParTUT test and dev
+ * Rhapsodie test and dev
+ * Sequoia test and dev
+by extracting all the sentences having `ClauseType="Int"` and verifying that there were correctly annotated. Badly annotated sentences led to fixes on FUDIA.
 
-We 
+Fianlly, an evaluation phase was run to asses the potential flaws and weaknesses of this program. More in `Eval/READMED.md`
 
 === Machine-readable metadata (DO NOT REMOVE!) ================================
-Data available since: Grew 
+Data available since: Grew 1.11, grewpy 0.2.0
 License: CC-BY
-Contributors: Valentin D. Richard
-Contact: valentin.d.richard@gmail.com
 ===============================================================================
