@@ -64,6 +64,7 @@ Categories:
     - v. parenthesized segment with 1 parenthesis missing: pull clause head because missing quoted (subset 1)
     - vi. paratactic speech-reporting subject-verb inversion with oblique argument
     - vii. reported segment with guillemots attached to the first element: quoted feature missed (subset 2)
+    - viii. embedded exclamative pronoun: `PronType="Int"` added (subset 1)
 
  3. Clause not considered as interrogative
   - a. No question-raising clause (FQB diff)
@@ -80,6 +81,9 @@ Remaining problems du to "quoted" heuristics:
  * fr-ud-train_12149 (2cvi)
  * fr-ud-train_09783 (2cv)
 
+Remaining weak heuristics for missing `PronType=Exc`
+ * fr-ud-train_08302
+
 ## Results
 
 663 sentnences were detected over all evaluation subsets. We looked at each of them and assigned them a mistake category.
@@ -88,8 +92,8 @@ Remaining problems du to "quoted" heuristics:
  * 86 sentences were ill-annotated due to a FUDIA mistake
  * 66 sentences were excluded (mistake category 3)
 
-The accurracy of FUDIA before fix is computed as #{sent. of cat. 0} / #{sent. of cat. 0 + 2}, which is 0.8522.
+The accurracy of FUDIA before fix is computed as #{sent. of cat. 0} / #{sent. of cat. 0 + 2}, which is 0.8507.
 
 Most mistakes of category 2 were actually easily fixable. Only mistakes 2cv, 2cvi and 2cvii were not fixed because they go beyond the limits of our heuristic approach.
 
-The **accurracy of FUDIA** after fix is estimated as #{sent. of cat. 0 + 2a + 2b + 2ci-2civ} / #{sent. of cat. 0 + 2}, which is **0.9948**.
+The **accurracy of FUDIA** after fix is estimated as #{sent. of cat. 0 + 2a + 2b + 2ci-2civ} / #{sent. of cat. 0 + 2}, which is **0.9931**.
