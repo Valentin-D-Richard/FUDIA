@@ -472,9 +472,13 @@ We detect a subordination conjunction lemma *si* marking a clause head CL_HEAD s
 
 (9.) C'est une belle vidéo si tu aimes le fantastique *(ou pas).
 
+We consider inital *(et) si* expression as not interrogative but as syntactical declaratives which locutory act is a proposition. As propositions are awaiting a response, this would explain why sentences beginning with *(et) si* often end with a question mark.
+
+(10.) Et si on allait à la mer ?
+
 There seems to be some rare cases of *si* (with a similar use as *que*) in a declarative clausal subject, like in (10.). We do not know how to filter them out.
 
-(10.) Ce n'est pas un hasard si le sensible Jean Anouilh, dans L'alouette, imagine une Jeanne qui ne meurt pas. [GSD]
+(11.) Ce n'est pas un hasard si le sensible Jean Anouilh, dans L'alouette, imagine une Jeanne qui ne meurt pas. [GSD]
 
 ### `spp`
 
@@ -500,7 +504,7 @@ In other words, we expect stylistic inversion, and more precisely speech reporti
 
 Unfortunately, some examples fail to be correctly annotated with these heuristics. In (11.), *poursuit* is paratactic and head of a quoted segment, but it is not sufficient to be prove with our heuristics that it's not an interrogative.
 
-(11.) c'est-à-dire--poursuit-il son argument--, " avant, le Maroc pensait [...] [GSD]
+(12.) c'est-à-dire--poursuit-il son argument--, " avant, le Maroc pensait [...] [GSD]
 
 ### `titu`
 
