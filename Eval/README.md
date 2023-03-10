@@ -10,7 +10,7 @@ For each corpus and each set, we extract, from the FUDIA-annotated corpus, 3 mut
 A priori, sentences of type 2 are not considered well-annotated. Except fixed expressions like `n'importe + WH`, sentences of type 3 are not considered well-annotated.
 
 We looked at the sets that ware not part of the development phase to assess whether the sentences of their subsets 1, 2 and 3 were correctly annotated:
- * FQB (test)
+ * FQB (test, only subsets 2, 3 and diff)
  * GSD train
  * ParisStories train
  * ParTUT train
@@ -88,7 +88,7 @@ Remaining problems du to "quoted" heuristics:
  * 86 sentences were ill-annotated due to a FUDIA mistake
  * 66 sentences were excluded (mistake category 3)
 
-The accurracy of FUDIA before fix is computed as #{sent. of cat. 0} / #{sent. of cat. 0 + 2}, which is 0.8507.
+The accurracy of FUDIA before fix is computed as #{sent. of cat. 0} / #{sent. of cat. 0 + 2}, which is 0.8522.
 
 Most mistakes of category 2 were actually easily fixable. Only mistakes 2cv, 2cvi and 2cvii were not fixed because they go beyond the limits of our heuristic approach.
 

@@ -49,6 +49,8 @@ By "quoted segments", we mean segments which do not integrate nor get subordinat
 
 (5.) vous allez peut-être probablement avoir un débat en cette fin d'année avec vos amis ou votre famille sur [pause] faut-il séparer l'œuvre de l'artiste
 
+Note that we also add `ClauseType="Int"` on heads of phrases which, technically, **may not be clauses**, e.g. interrogative infinitival verbal phrases (*Elle se demande [ que faire ]*) and elliptic interrogative clauses (*Elle se demande [ pourquoi ]*).
+
 ### Added edges
  * `cue:wh` from the interrogative clause head to the interrogative word
  * `cue:wh` from the interrogative phrase head to the interrogative word
@@ -89,14 +91,9 @@ FUDIA is curated by hand and therefore some biases or oversignths may have been 
    * parenthesized segments with one parenthesis missing, e.g. *Il parle à la présidente (de quel pays ?*
    * reported segments with guillemots attached to the first element instead of the head, e.g. *Il répondit « que faire ?* `punct(que,«)`
 
-Moreover, we haven't yet found a reliable heuristics to correctly identify embedded exclamatives. They can be identified by unembedding them and trying to put their WH word in-situ. It shouldn't work, contrary to embedded interrogatives, e.g.
+Some theoretical issues of the heuristics may also include:
+  * undetected missing `PronType=Exc` on *comment*, *combien* and *qu'est-ce que*
 
-  * C'est fou [ qu'est-ce que c'est beau. ]
-  * Qu'est-ce que c'est beau !
-  * *C'est beau quoi ?
-  * Je sais bien / C'est fou [ combien tu adores le chocolat. ]
-  * *Combien tu adores le chocolat !/?
-  * *Tu adores le chocolat combien ?
 
 ---
 # Rules of the programme
@@ -181,9 +178,9 @@ We detect lemma *qui*, *que*, *quoi*, *comment*, *où*, *quand*, *combien*, *pou
  * it precedes lemma *que*
  * it precedes form *n'importe*
  * it succedes lemma *tel*
- * there is an exclamation mark :construction:
+ * there is an exclamation mark (heuristic to try to exclude exclamative *quel* :construction:)
 
-*comment* and *combien* are always interrogative as adverbs.
+*comment* and *combien* are mostly interrogative as adverbs. They could also be exlcamative (ex. *Je sais combien tu aimes dormir.*). But it is rare and using the presence of an enclamation mark was assessed to be a bad heuristic to detect this. :construction:
 
 *pourquoi* is always interrogative as an adverb, except in the expressions (lemmas) *c'est quoi* and *ce pourquoi*.
 
