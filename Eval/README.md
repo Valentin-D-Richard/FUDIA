@@ -2,15 +2,15 @@
 
 ## Evaluation method
 
-For each corpus and each set, we extract, from the FUDIA-annotated corpus, 3 mutually distinct subsets:
- 1. Sentences having a `IntClause="Yes"` feature
- 2. Sentences having a `IntPhrase="Yes"` feature but no `IntClause="Yes"` feature
- 3. Sentences having a `PronType="Int"` feature but no `IntClause="Yes"` or `IntPhrase="Yes"` feature
+For each corpus and each set, we extract, from the FUDIA-annotated corpus, 3 mutually non-intersecting subsets:
+ * Cl: Sentences having a `IntClause="Yes"` feature
+ * Phr: Sentences having a `IntPhrase="Yes"` feature but no `IntClause="Yes"` feature
+ * Pr: Sentences having a `PronType="Int"` feature but no `IntClause="Yes"` or `IntPhrase="Yes"` feature
 
-A priori, sentences of type 2 are not considered well-annotated. Except fixed expressions like `n'importe + WH`, sentences of type 3 are not considered well-annotated.
+A priori, sentences of type Phr are not considered well-annotated. Except fixed expressions like `n'importe + WH`, sentences of type Pr are not considered well-annotated.
 
-We looked at the sets that ware not part of the development phase to assess whether the sentences of their subsets 1, 2 and 3 were correctly annotated:
- * FQB (test, only subsets 2, 3 and diff)
+We looked at the sets that ware not part of the development phase to assess whether the sentences of their subsets Cl, Phr and Pr were correctly annotated:
+ * FQB (test, only subsets Phr, Pr and Diff)
  * GSD train
  * ParisStories train
  * ParTUT train
@@ -20,7 +20,7 @@ We looked at the sets that ware not part of the development phase to assess whet
 
 As the French Question Bank (FQB) was designed to train parsers on interrogative, we also collected the list of FQB sentences that does not belong to any subset after FUDIA annotation, and we call it the diff subset.
 
-The file `statistics.ods` lists the sentences of subsets 1, 2 or 3 and the mistake category we assigned them.
+The file `statistics.ods` lists the sentences of subsets Cl, Phr or Pr and the mistake category we assigned them.
 
 ## "Mistake" categories
 
@@ -29,9 +29,9 @@ Categories:
  0. Well-annotated
 
  1. Original UD annotation mistake
-  a. Wrong PronType (subset 3)
-  b. Wrong analysis as `ANCHOR -[obj]-> PH_HEAD ; PH_HEAD -[acl|advcl]-> CL_HEAD` or similar (subset 1 or 2)
-  c. Grammatically dubious sentence (subset 3)
+  a. Wrong PronType (Pr)
+  b. Wrong analysis as `ANCHOR -[obj]-> PH_HEAD ; PH_HEAD -[acl|advcl]-> CL_HEAD` or similar (Cl or Phr)
+  c. Grammatically dubious sentence (Pr)
   d. Other wrong relation
   e. Missing `(In)Title="Yes"` feature
   f. Missing `relcl` or `cleft` subspecification
@@ -42,34 +42,34 @@ Categories:
     - ii. conjuncted WH phrase with interrogative marker: should be analzed as isolated for simplicity :heavy_check_mark:
 
   - b. Some FUDIA rule does not implement the specification correctly
-    - i. *quel + NP* as `obj` (fronted, in-situ or alone): phrase path not detected (subset 1 or 2) :heavy_check_mark:
-    - ii. *quel* as adjectival head with copula: `IntClause` feature not added (subset 3) :heavy_check_mark: 
-    - iii. adverbial non-finite adjunct: phrase path not detected (subset 3) :heavy_check_mark:
-    - iv. in situ `nmod`: phrase path not detected (subset 3) :heavy_check_mark:
-    - v. copular WH embedded: `IntClause` not added (subset 3) :heavy_check_mark:
-    - vi. *quel + NP* as head with copula (subset 2) :heavy_check_mark:
-    - vii. *comme si* and *sauf si* subordination locution: `IntClause=Yes` added (subset 1) :heavy_check_mark:
-    - viii. pronoun *quel* as head and having a `nsubj`: `IntClause` not added (subset 3) :heavy_check_mark:
-    - ix. *quel* as `amod`: phrase relation not detected (subset 3) :heavy_check_mark:
-    - x. isolated WH phrase with `conj` or `appos`: `IntClause` not added (subset 2) :heavy_check_mark:
-    - xi. fixed WH locution as `advmod`: phrase path not detected (subset 2) :heavy_check_mark:
+    - i. *quel + NP* as `obj` (fronted, in-situ or alone): phrase path not detected (Cl or Phr) :heavy_check_mark:
+    - ii. *quel* as adjectival head with copula: `IntClause` feature not added (Pr) :heavy_check_mark: 
+    - iii. adverbial non-finite adjunct: phrase path not detected (Pr) :heavy_check_mark:
+    - iv. in situ `nmod`: phrase path not detected (Pr) :heavy_check_mark:
+    - v. copular WH embedded: `IntClause` not added (Pr) :heavy_check_mark:
+    - vi. *quel + NP* as head with copula (Phr) :heavy_check_mark:
+    - vii. *comme si* and *sauf si* subordination locution: `IntClause=Yes` added (Cl) :heavy_check_mark:
+    - viii. pronoun *quel* as head and having a `nsubj`: `IntClause` not added (Pr) :heavy_check_mark:
+    - ix. *quel* as `amod`: phrase relation not detected (Pr) :heavy_check_mark:
+    - x. isolated WH phrase with `conj` or `appos`: `IntClause` not added (Phr) :heavy_check_mark:
+    - xi. fixed WH locution as `advmod`: phrase path not detected (Phr) :heavy_check_mark:
     - xii. *qu'est-ce* expression: not reannotated as fixed :heavy_check_mark:
     - xiii. finite adverbial clause: pulled clause head :heavy_check_mark: (It was actually an issue in the heuristics of `cl_head_pull`, which was solved by considering *par exemple* as a cue for quoted segments.)
    
   - c. FUDIA heuristic fail
-    - i. aborted relative construction: PronType="Yes" added (subset 3) :heavy_check_mark:
-    - ii. relative clause: `PronType="Int"` added (subset 1) :heavy_check_mark:
-    - iii. speech-reporting subject-verb inversion: `IntClause` added (subset 1) :heavy_check_mark:
-    - iv. fixed *ne + être + -ce que*: `IntClause` added (subset 1) :heavy_check_mark:
-    - v. parenthesized segment with 1 parenthesis missing: pull clause head because missing quoted (subset 1)
+    - i. aborted relative construction: PronType="Yes" added (Pr) :heavy_check_mark:
+    - ii. relative clause: `PronType="Int"` added (Cl) :heavy_check_mark:
+    - iii. speech-reporting subject-verb inversion: `IntClause` added (Cl) :heavy_check_mark:
+    - iv. fixed *ne + être + -ce que*: `IntClause` added (Cl) :heavy_check_mark:
+    - v. parenthesized segment with 1 parenthesis missing: pull clause head because missing quoted (Cl)
     - vi. paratactic speech-reporting subject-verb inversion with oblique argument
-    - vii. reported segment with guillemots attached to the first element: quoted feature missed (subset 2)
-    - viii. embedded exclamative pronoun: `PronType="Int"` added (subset 1)
+    - vii. reported segment with guillemots attached to the first element: quoted feature missed (Phr)
+    - viii. embedded exclamative pronoun: `PronType="Int"` added (Cl)
 
  3. Clause not considered as interrogative
-  - a. No question-raising clause (FQB diff)
-  - b. Question-raising declarative (FQB diff)
-  - c. Fixed expreession *n'importe + WH* (subset 3)
+  - a. No question-raising clause (FQB Diff)
+  - b. Question-raising declarative (FQB Diff)
+  - c. Fixed expreession *n'importe + WH* (Pr)
 
 Missed clauses:
  * GSD:fr-ud-train_07658 due to `conj`
