@@ -174,13 +174,15 @@ spp_2_1 = cl.Snippet("spp_2_1")
 spp_2_1.request = '''pattern { CL_HEAD -[punct]-> IP ;
 \tIP[lemma="?"] }'''
 
-# No additional subject or WH word, and no preceding adverb (locution)
+# No additional subject or WH word, no preceding adverb (or locution)
+# no special parataxis subrelation (insert, parenthesis)
 spp_2_2 = cl.Snippet("spp_2_2")
 spp_2_2.request = '''without { CL_HEAD -[cue:wh]-> WH }
 without { A[upos="ADV",!ExtPos,lemma <> "ne"|"pourquoi"|"où"|"comment"|"quand"] ;
 \tCL_HEAD -[advmod]-> A ; A << CL_HEAD } % No non-interrogative preceding adverb
 without { A[ExtPos="ADV",lemma <> "ne"|"pourquoi"|"où"|"comment"|"quand"] ;
-\tCL_HEAD -[advmod]-> A ; A << CL_HEAD } % No non-interrogative preceding adverbial phrase'''
+\tCL_HEAD -[advmod]-> A ; A << CL_HEAD } % No non-interrogative preceding adverbial phrase
+without { ANCHOR -[parataxis:insert|parataxis:parenth]-> CL_HEAD }'''
 
 
 # No parataxis

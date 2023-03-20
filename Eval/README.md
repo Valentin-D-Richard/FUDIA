@@ -56,8 +56,8 @@ Categories:
     - xii. *qu'est-ce* expression: not reannotated as fixed :heavy_check_mark:
     - xiii. finite adverbial clause: pulled clause head :heavy_check_mark: (It was actually an issue in the heuristics of `cl_head_pull`, which was solved by considering *par exemple* as a cue for quoted segments.)
    
-  - c. FUDIA heuristic fail
-    - i. aborted relative construction: PronType="Yes" added (Pr) :heavy_check_mark:
+  - c. FUDIA heuristic
+    - i. aborted relative construction: IntClause="Yes" added (Pr) :heavy_check_mark:
     - ii. relative clause: `PronType="Int"` added (Cl) :heavy_check_mark:
     - iii. speech-reporting subject-verb inversion: `IntClause` added (Cl) :heavy_check_mark:
     - iv. fixed *ne + être + -ce que*: `IntClause` added (Cl) :heavy_check_mark:
@@ -83,6 +83,7 @@ Remaining problems du to "quoted" heuristics:
 
 Remaining weak heuristics for missing `PronType=Exc`
  * fr-ud-train_08302
+ * Rhap_M2004-6
 
 ## Results
 
