@@ -496,9 +496,11 @@ The inversion is interrogative if we know there is already a WH word or if there
  * when CL_HEAD governs a parataxis placed before
  * with the expression *ne + VP + que + ...* (lemmas) as a graft, e.g. *ne fut-ce que brièvement*
 
-If CL_HEAD is not governed with a parataxis relation, we can be quite confident the inversion is not stylistic. When it is governed with a parataxis relation, we have the following heuristics. The inversion is most probably interrogative when:
- * CL_HEAD has an additional subject, object, oblique complement or clausal complement
- * CL_HEAD has a `xcomp` complement having an object, oblique complement or clausal complement
+If CL_HEAD is not governed with a parataxis relation, we can be quite confident the inversion is not stylistic. When it is governed with a parataxis relation, we have the following heuristics.
+ * The inversion is mots probably non-interrogative if this is a `parataxis:insert` or `parataxis:parenth` relation
+ * The inversion is most probably interrogative when:
+  * CL_HEAD has an additional subject, object, oblique complement or clausal complement
+  * CL_HEAD has a `xcomp` complement having an object, oblique complement or clausal complement
 
 In other words, we expect stylistic inversion, and more precisely speech reporting inversion, to be very short, contrary to interrogatives.
 
