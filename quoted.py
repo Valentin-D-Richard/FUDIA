@@ -115,8 +115,6 @@ quoted_c.add_snippets([quoted_c_1_0, quoted_c_1_1], quoted_c_0_0)
 # Root
 quoted_d_0_0 = cl.Snippet("quoted_d_0_0")
 quoted_d_0_0.request = '''pattern { e : ANCHOR -> CL_HEAD ; CL_HEAD[!Quoted] }
-without { ANCHOR[InTitle="Yes"] }
-without { ANCHOR[Title="Yes"] }
 without { e.label = reparandum }'''
 # Adding Quoted="Yes"
 quoted_d_0_0.command = '''CL_HEAD.Quoted = "Yes"'''
@@ -125,13 +123,21 @@ quoted_d = cl.DisjRule("quoted_d", root=quoted_d_0_0)
 
 # CL_HEAD annotated Title
 quoted_d_1_0 = cl.Snippet("quoted_d_1_0")
-quoted_d_1_0.request = '''pattern { CL_HEAD[Title="Yes"] }'''
+quoted_d_1_0.request = '''pattern { CL_HEAD[Title="Yes"] }
+without { ANCHOR[InTitle="Yes"] }
+without { ANCHOR[Title="Yes"] }'''
 
 # CL_HEAD annotated InTitle
 quoted_d_1_1 = cl.Snippet("quoted_d_1_1")
-quoted_d_1_1.request = '''pattern { CL_HEAD[InTitle="Yes"] }'''
+quoted_d_1_1.request = '''pattern { CL_HEAD[InTitle="Yes"] }
+without { ANCHOR[InTitle="Yes"] }
+without { ANCHOR[Title="Yes"] }'''
 
-quoted_d.add_snippets([quoted_d_1_0, quoted_d_1_1], quoted_d_0_0)
+# Graft
+quoted_d_1_2 = cl.Snippet("quoted_d_1_2")
+quoted_d_1_2.request = '''pattern { CL_HEAD[Graft="Yes"] }'''
+
+quoted_d.add_snippets([quoted_d_1_0, quoted_d_1_1, quoted_d_1_2], quoted_d_0_0)
 
 
 

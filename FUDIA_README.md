@@ -285,9 +285,9 @@ We detect a relation `CL_HEAD -> D` with a comma between them and a dash before 
 
 ### `quoted_d`
 
-Identifying title heads.
+Identifying title heads or grafts, ex. *il circule on ne sait pas très bien comment.*
 
-We detect a clause head having `Title="Yes"` or `InTitle="Yes"` anchored by a node having neither of theses features.
+We detect a clause head having `Title="Yes"` or `InTitle="Yes"` anchored by a node having neither of theses features, or having `Graft="Yes"`.
 
 ### `quoted_e`
 
