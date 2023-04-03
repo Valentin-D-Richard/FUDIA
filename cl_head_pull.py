@@ -84,9 +84,9 @@ without { CAND << WH ; WH << CUR }'''
 
 
 
-### Nominal relations: nsubj, obj, (iobj,) obl, nmod, (det)
+### Nominal relations: nsubj, obj, (iobj,) obl, nmod, (det), advmod
 chp_1_1 = cl.Snippet("chp_1_1_5") 
-chp_1_1.request = '''pattern { CAND -[nsubj|obj|obl|nmod|det]-> CUR }
+chp_1_1.request = '''pattern { CAND -[nsubj|obj|obl|nmod|det|advmod]-> CUR }
 without { CAND[lemma="savoir"] ; CAND -[obj|obl]-> CUR }'''
 # Exceptionnaly taken vocabulary into account
 # cf ph_edge_b_2_3
