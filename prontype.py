@@ -11,50 +11,62 @@ relprontype_0_0.command = '''WH.PronType="Rel"'''
 
 relprontype = cl.DisjRule("relprontype", root=relprontype_0_0)
 
+# Pronouns
+relprontype_1_0 = cl.Snippet("relprontype_1_0")
+relprontype_1_0.request = '''pattern { WH[lemma="qui"|"que"|"quoi"|"où"|"lequel", upos="PRON"] }'''
+
+# Adverb
+relprontype_1_1 = cl.Snippet("relprontype_1_1")
+relprontype_1_1.request = '''pattern { WH[lemma="où", upos="ADV"] }'''
+
+# Adjective
+relprontype_1_2 = cl.Snippet("relprontype_1_2")
+relprontype_1_2.request = '''pattern { WH[lemma="lequel", upos="ADJ"] }'''
+
 
 # Listing a reasonable number of relations between CL_HEAD
-relprontype_1_0 = cl.Snippet("relprontype_1_0")
+relprontype_2_0 = cl.Snippet("relprontype_2_0")
 
 # In a relative clause: fronted WH
-relprontype_2_0 = cl.Snippet("relprontype_2_0")
-relprontype_2_0.request = '''pattern { WH << CL_HEAD ;
+relprontype_3_0 = cl.Snippet("relprontype_3_0")
+relprontype_3_0.request = '''pattern { WH << CL_HEAD ;
 \tANCHOR -[acl:relcl|advcl:cleft]-> CL_HEAD ; ANCHOR << WH }'''
 
 # Conj of a relative clause
-relprontype_2_1 = cl.Snippet("relprontype_2_1")
-relprontype_2_1.request = '''pattern { C -[conj]-> CL_HEAD ; ANCHOR << C ;
+relprontype_3_1 = cl.Snippet("relprontype_3_1")
+relprontype_3_1.request = '''pattern { C -[conj]-> CL_HEAD ; ANCHOR << C ;
 \tANCHOR -[acl:relcl|advcl:cleft]-> C ; ANCHOR << WH ; ANCHOR << CL_HEAD }'''
 
 # Direct relation (1 intermediary)
-relprontype_3_0 = cl.Snippet("relprontype_3_0")
-relprontype_3_0.request = '''pattern { CL_HEAD -> WH }'''
+relprontype_4_0 = cl.Snippet("relprontype_4_0")
+relprontype_4_0.request = '''pattern { CL_HEAD -> WH }'''
 
 # 2 intermediaries
-relprontype_3_1 = cl.Snippet("relprontype_3_1")
-relprontype_3_1.request = '''pattern { CL_HEAD -> I  ; I -> WH ; ANCHOR << I }'''
+relprontype_4_1 = cl.Snippet("relprontype_4_1")
+relprontype_4_1.request = '''pattern { CL_HEAD -> I  ; I -> WH ; ANCHOR << I }'''
 
 # 3 intermediaries with I1 << I2
-relprontype_3_2 = cl.Snippet("relprontype_3_2")
-relprontype_3_2.request = '''pattern { CL_HEAD -> I1 ; I1 -> I2 ;
+relprontype_4_2 = cl.Snippet("relprontype_4_2")
+relprontype_4_2.request = '''pattern { CL_HEAD -> I1 ; I1 -> I2 ;
 \tI2 -> WH ; ANCHOR << I1 ; ANCHOR << I2 ;
 \tI1 << I2 }'''
 
 # 3 intermediaries with I2 << CL_HEAD and CL_HEAD << I1
-relprontype_3_3 = cl.Snippet("relprontype_3_3")
-relprontype_3_3.request = '''pattern { CL_HEAD -> I1 ; I1 -> I2 ;
+relprontype_4_3 = cl.Snippet("relprontype_4_3")
+relprontype_4_3.request = '''pattern { CL_HEAD -> I1 ; I1 -> I2 ;
 \tI2 -> WH ; ANCHOR << I1 ; ANCHOR << I2 ;
 \tI2 << CL_HEAD ; CL_HEAD << I1 }'''
 
 
 # Reparandum of a PronType="Rel"
-relprontype_1_1 = cl.Snippet("reprontype_1_1")
-relprontype_1_1.request = '''pattern { N -[reparandum]-> WH ; N[PronType="Rel"] }'''
+relprontype_2_1 = cl.Snippet("reprontype_2_1")
+relprontype_2_1.request = '''pattern { N -[reparandum]-> WH ; N[PronType="Rel"] }'''
 
-
-relprontype.add_snippets([relprontype_1_0, relprontype_1_1], relprontype_0_0)
-relprontype.add_snippets([relprontype_2_0, relprontype_2_1], relprontype_1_0)
-layer = [relprontype_3_0, relprontype_3_1, relprontype_3_2, relprontype_3_3]
-relprontype.add_snippets(layer, relprontype_1_0)
+relprontype.add_snippets([relprontype_1_0, relprontype_1_1, relprontype_1_2], relprontype_0_0)
+relprontype.add_snippets([relprontype_2_0, relprontype_2_1], relprontype_0_0)
+relprontype.add_snippets([relprontype_3_0, relprontype_3_1], relprontype_2_0)
+layer = [relprontype_4_0, relprontype_4_1, relprontype_4_2, relprontype_4_3]
+relprontype.add_snippets(layer, relprontype_2_0)
 
 
 
@@ -63,7 +75,7 @@ relprontype.add_snippets(layer, relprontype_1_0)
 # Root
 intprontype_0_0 = cl.Snippet("intprontype_0_0")
 intprontype_0_0.request = '''pattern {
-\tWH[lemma="qui"|"que"|"quoi"|"comment"|"où"|"quand"|"combien"|"pourquoi"|"lequel"|"quel",!PronType]}
+\tWH[lemma="qui"|"que"|"quoi"|"comment"|"où"|"quand"|"combien"|"pourquoi"|"lequel"|"quel"|"quid",!PronType]}
 without { ANCHOR -[reparandum]-> WH ; ANCHOR[PronType<>"Int"] }
 without { ANCHOR -[reparandum]-> WH ; ANCHOR[!PronType] }
 without { ANCHOR -[dep]-> WH } % uncomplete constructions
@@ -86,10 +98,10 @@ intprontype_1_0.request = '''pattern {
 \twithout { T[lemma="tel"] ; T < WH }
 \twithout { E[lemma="!"] }'''
 
-# Only-interrogative adverbs: comment & combien
+# Only-interrogative adverbs: comment,  combien & quid (if not exclamative)
 intprontype_1_1 = cl.Snippet("intprontype_1_1")
 intprontype_1_1.request = '''pattern {
-\tWH[lemma="comment"|"combien", upos="ADV"]}'''
+\tWH[lemma="comment"|"combien"|"quid", upos="ADV"]}'''
 
 # pourquoi
 intprontype_1_2 = cl.Snippet("intprontype_1_2")
