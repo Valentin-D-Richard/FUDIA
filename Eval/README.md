@@ -57,7 +57,7 @@ Categories:
     - xiii. finite adverbial clause: pulled clause head :heavy_check_mark: (It was actually an issue in the heuristics of `cl_head_pull`, which was solved by considering *par exemple* as a cue for quoted segments.)
    
   - c. FUDIA heuristic
-    - i. aborted relative construction: IntClause="Yes" added (Pr) :heavy_check_mark:
+    - i. aborted relative construction: `PronType="Int"` added (Pr) :heavy_check_mark:
     - ii. relative clause: `PronType="Int"` added (Cl) :heavy_check_mark:
     - iii. speech-reporting subject-verb inversion: `IntClause` added (Cl) :heavy_check_mark:
     - iv. fixed *ne + être + -ce que*: `IntClause` added (Cl) :heavy_check_mark:
@@ -93,8 +93,5 @@ Remaining weak heuristics for missing `PronType=Exc`
  * 86 sentences were ill-annotated due to a FUDIA mistake
  * 66 sentences were excluded (mistake category 3)
 
-The accurracy of FUDIA before fix is computed as #{sent. of cat. 0} / #{sent. of cat. 0 + 2}, which is 0.8507.
-
 Most mistakes of category 2 were actually easily fixable. Only mistakes 2cv, 2cvi and 2cvii were not fixed because they go beyond the limits of our heuristic approach.
 
-The **accurracy of FUDIA** after fix is estimated as #{sent. of cat. 0 + 2a + 2b + 2ci-2civ} / #{sent. of cat. 0 + 2}, which is **0.9931**.

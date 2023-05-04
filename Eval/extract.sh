@@ -1,6 +1,6 @@
 #! /bin/bash
 
-USAGE='annotate_int [-a] [-g GRS_FILE] -c CORPUS [REQ_FILES]
+USAGE='extract.sh [-g GRS_FILE] -c CORPUS [REQ_FILES]
 Creates a file with transformations given by the main strategy of the grs file.
 Extracts the sentences of CORPUS having pattern given in REQ_FILES
   in a directory DIR per request file (erases the previous one).
@@ -16,23 +16,35 @@ Options:
 
 ### Handling parameters
 
-GRS="fudia.grs" # grs default file name
+GRS="../fudia.grs" # grs default file name
+SUF="Annotated"
 REQ="extract_Int_1.req"
 REQ2="extract_Int_2.req"
 REQ3="extract_Int_3.req"
+FIRST_REQ=true
 REQ_FILES=("$REQ" "$REQ2" "$REQ3") # Default request files
-ANNOTATE_ONLY=false
 
 while (( $# > 0 )) ; do
     case "$1" in
 	"--help" | "-h" )     echo "$USAGE" ; exit ;;
-	"--annotate" | "-a")  ANNOTATE_ONLY=true ;;
 	"--grs" | "-g" )      GRS="$2" ; shift ;;
 	"--corpus" | "-c" )   CORPUS="$2" ; shift ;;
-	* )                   REQ_FILES+=("$1") ;; #Adding request file to a list
+	* )
+	    if [[ $FIRST_REQ ]] ; then
+		REQ_FILES=("$1") # Reinitializing REQ_FILES
+		FIRST_REQ=false   
+	    else
+		REQ_FILES+=("$1") #Adding request file to a list
+	    fi
+	    ;;
     esac
     shift
 done
+
+if [[ "$GRS" != "../fudia.grs" ]] ; then
+    SUF="${GRS##*/}"
+    SUF="${SUF%.*}" # Name of the GRS file
+fi
 
 # Testing if the files exist
 if [[ ! -f "$CORPUS" ]] ; then
@@ -53,16 +65,8 @@ for FILE in "${REQ_FILES[@]}" ; do
 done
 
 
-##### Annotation
-
 CDIR="${CORPUS%/*}" # Directory of Corpus
-OUTFILE="${CORPUS%.*}_Annotated.${CORPUS##*.}" # name of annotated output file
-
-[[ -f "$OUTFILE" ]] && rm "$OUTFILE"
-
-grew transform -grs "$GRS" -i "$CORPUS" -o "$OUTFILE" -strat "main"
-
-if $ANNOTATE_ONLY ; then exit ; fi
+OUTFILE="${CORPUS%.*}_${SUF}.${CORPUS##*.}" # name of annotated output file
 
 ###### Extraction
 
@@ -104,4 +108,3 @@ for DIR in $(ls -d */ | grep -E "$PREF""_Int_[0-9]+/") ; do
     dep2png
     cd ..
 done
-
