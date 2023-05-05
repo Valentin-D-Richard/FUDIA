@@ -15,8 +15,8 @@ def get_list(filename:str) -> list:
 
 CORPUS_DIR = "/home/varichar/Documents/PhD/Corpus/"
 FUDIA_EVAL_DIR = "/home/varichar/Documents/PhD/FUDIA/Eval/"
-baseline_ids_filenames =  [CORPUS_DIR + "FUDIA-eval/baseline1/positive_ids"]
-baseline_ids_filenames += [CORPUS_DIR + "FUDIA-eval/baseline2/positive_ids"]
+baseline_ids_filenames =  [CORPUS_DIR + "FUDIA-eval/baseline1/positive_ids"] # QUECQC?
+baseline_ids_filenames += [CORPUS_DIR + "FUDIA-eval/baseline2/positive_ids"] # SimpleFUDIC
 
 eval_ids_filename = FUDIA_EVAL_DIR + "eval_set_ids"
 all_target_positive_ids_filename = FUDIA_EVAL_DIR + "all_target_positive_ids"
@@ -51,7 +51,7 @@ for i in range(len(baseline_positives)):
     print("True positives: ", tp)
     print("True negatives: ", tn)
     print("False positives: ", fp)
-    print("False negatives: ", fn)
+    print("False negatives: ", fn, false_negatives)
     print("Accuracy: ", accuracy)
     print("Precision: ", precision)
     print("Recall: ", recall)
