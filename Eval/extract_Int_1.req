@@ -1,1 +1,1 @@
-pattern { CL_HEAD[ClauseType="Int"] }
+with { CL_HEAD[ClauseType="Int"] }
