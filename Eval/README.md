@@ -1,11 +1,19 @@
 # Evaluation of the FUDIA annotator
 
-## Evaluation method
+## Quantitative evaluation
 
-For each corpus and each set, we extract, from the FUDIA-annotated corpus, 3 mutually non-intersecting subsets:
- * Cl: Sentences having a `IntClause="Yes"` feature
- * Phr: Sentences having a `IntPhrase="Yes"` feature but no `IntClause="Yes"` feature
- * Pr: Sentences having a `PronType="Int"` feature but no `IntClause="Yes"` or `IntPhrase="Yes"` feature
+We fist evaluatied FUDIA as a binary classifier. THe evalaution corpus is the set of train subsets + PUD. We report the accuracy, precision and recall of FUDIA before and after fix in the file `stats.ods`.
+
+We compare FUDIA with two rule-based baselines. The first one, QUECQ?, detects QU-words, *est-ce que* trigrams and interrogation marks. The second, SimpleFUDIC, detects *est-ce que* trigrams, interrogation marks, nodes bearing `PronType=Int` and non-imperative subject-verb inversion.
+
+See the respective grs files.
+
+## Qualitative evaluation
+
+For each part of the evaluation corpus, we extract, after FUDIA annotation, 3 mutually non-intersecting subsets:
+ * Cl: Sentences having a `ClauseType=Int` feature
+ * Phr: Sentences having a `PhraseType=Int` feature but no `ClauseType=Int` feature
+ * Pr: Sentences having a `PronType="Int"` feature but no `ClauseType=Int` or `PhraseType=Int` feature
 
 A priori, sentences of type Phr are not considered well-annotated. Except fixed expressions like `n'importe + WH`, sentences of type Pr are not considered well-annotated.
 
