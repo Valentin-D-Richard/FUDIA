@@ -132,9 +132,7 @@ si.add_snippets([si_2_0, si_2_1, si_2_2, si_2_3], si_0_0)
 # Root
 spp_0_0 = cl.Snippet("spp_0_0")
 spp_0_0.request = '''pattern { S[upos="PRON"] ;
-\tS[lemma="ce"|"je"|"tu"|"il"|"elle"|"on"|"nous"|"vous"|"ils"|"elles"|
-\t"-ce"|"-je"|"-tu"|"-il"|"-elle"|"-on"|"-nous"|"-vous"|"-ils"|"-elles"|
-\t"t-il"|"t-elle"|"t-ils"|"t-elles"|"-t-il"|"-t-elle"|"-t-ils"|"-t-elles"] ;
+\tS[] ;
 \ts: CL_HEAD -[1=expl|nsubj]-> S ; }
 % Negative filtering
 without { CL_HEAD -[1=parataxis]-> G ; G[Quoted="Yes"] } % no verb-reporting stylistic inversion
@@ -150,6 +148,21 @@ spp_0_0.command = '''CL_HEAD.IntClause = "Yes" ;
 add_edge CL_HEAD -[cue:mark]-> S ;'''
 
 spp = cl.DisjRule("spp", root=spp_0_0)
+
+# Subject identified by its lemma: 1st case
+spp_00_0 = cl.Snippet("spp_00_0")
+spp_00_0.request = ''' pattern {
+\t[lemma="ce"|"je"|"tu"|"il"|"elle"|"on"|"nous"|"vous"|"ils"|"elles"|
+\t"-ce"|"-je"|"-tu"|"-il"|"-elle"|"-on"|"-nous"|"-vous"|"-ils"|"-elles"|
+\t"t-il"|"t-elle"|"t-ils"|"t-elles"|"-t-il"|"-t-elle"|"-t-ils"|"-t-elles"] }
+'''
+
+# Subject identified by its lemma: 2nd case
+spp_00_1 = cl.Snippet("spp_00_1")
+spp_00_1.request = ''' pattern {
+\t[lemma="moi"|"toi"|"lui"|"elle"|"on"|"nous"|"vous"|"eux"|"elles",
+\tPronType="Prs"] }
+'''
 
 # Inverted subject wrt. verbal finite CL_HEAD
 spp_1_0 = cl.Snippet("spp_1_0")
@@ -203,6 +216,7 @@ spp_3_2.request = '''pattern { ANCHOR -[1=parataxis]-> CL_HEAD ;
 \tU -[1=obj|obl|ccomp]-> W }
 without { U -[obl:mod]-> W }'''
 
+spp.add_snippets([spp_00_0, spp_00_1], spp_0_0)
 spp.add_snippets([spp_1_0, spp_1_1], spp_0_0)
 spp.add_snippets([spp_2_0, spp_2_1, spp_2_2], spp_0_0)
 spp.add_snippets([spp_3_0, spp_3_1, spp_3_2], spp_2_2)
