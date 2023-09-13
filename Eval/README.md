@@ -5,9 +5,9 @@ List of commands used to create the corpus files, example with `written`:
 
 ```bash
 # Adding origin metadata and formatting into csv
-python3 add_metadata.py -o annodis.txt > annodis.csv
-python3 add_metadata.py -o ten_novels.txt > ten_novels.csv
-python3 add_metadata.py -o defrancq_written.txt > defrancq_written.csv
+python3 add_metadata.py -o Sentences/annodis.txt > annodis.csv
+python3 add_metadata.py -o Sentences/ten_novels.txt > ten_novels.csv
+python3 add_metadata.py -o Sentences/defrancq_written.txt > defrancq_written.csv
 # Merging and suffling
 (cat annodis.csv ; cat ten_novels.csv ; cat defrancq_written.csv ) | shuf > written.txt
 # Adding unique id
@@ -19,7 +19,7 @@ cut written.csv -d',' -f3- | sed -e 's/^.//' -e 's/.$//' | sed 's/\\"/"/g' > wri
 python3 tokenizer.py written_buffer.txt > written_tokenized.txt
 ```
 
-The sequence is similar for `spoken`, but with files `maya`, `ofrom` and `defrancq_spoken`.
+The sequence is similar for `spoken`, but with files `maya`, `ofrom` and `defrancq_spoken`. The temporary files have been removed.
 
 List of commands used to extract the list of positives of FUDIA / a baseline, case with FUDIA and corpus `written`:
 
