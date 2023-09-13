@@ -6,7 +6,6 @@ Extracts the sentences of CORPUS having pattern given in REQ_FILES
 Converts every .dep file in DIR to a png file with transparent background.
 
 Options:
-    -a            Only proceeds to the annotation phase
     -g GRS_FILE   Overwrites the input grs file. Default is fudia.grs
     -h, --help    Displays this help
     --no-png	  Does not creates dep and png files
@@ -18,7 +17,7 @@ Options:
 
 GRS="../fudia.grs" # grs default file name
 SUF="Annotated"
-REQ="extract_Int_1.req"
+REQ="extract_Int.req"
 FIRST_REQ=true
 REQ_FILES=("$REQ") # Default request files
 PNG=true

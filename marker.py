@@ -152,15 +152,15 @@ spp = cl.DisjRule("spp", root=spp_0_0)
 # Subject identified by its lemma: 1st case
 spp_00_0 = cl.Snippet("spp_00_0")
 spp_00_0.request = ''' pattern {
-\t[lemma="ce"|"je"|"tu"|"il"|"elle"|"on"|"nous"|"vous"|"ils"|"elles"|
+\tS[lemma="ce"|"je"|"tu"|"il"|"elle"|"on"|"nous"|"vous"|"ils"|"elles"|
 \t"-ce"|"-je"|"-tu"|"-il"|"-elle"|"-on"|"-nous"|"-vous"|"-ils"|"-elles"|
 \t"t-il"|"t-elle"|"t-ils"|"t-elles"|"-t-il"|"-t-elle"|"-t-ils"|"-t-elles"] }
 '''
 
-# Subject identified by its lemma: 2nd case
+# Subject identified by its lemma: 2nd case (GSD and Sequoia)
 spp_00_1 = cl.Snippet("spp_00_1")
 spp_00_1.request = ''' pattern {
-\t[lemma="moi"|"toi"|"lui"|"elle"|"on"|"nous"|"vous"|"eux"|"elles",
+\tS[lemma="moi"|"toi"|"lui"|"elle"|"on"|"nous"|"vous"|"eux"|"elles",
 \tPronType="Prs"] }
 '''
 
