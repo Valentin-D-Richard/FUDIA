@@ -1,3 +1,0 @@
-pattern { CL_HEAD[PhraseType="Int"] }
-without { CL_HEAD[ClauseType="Int"] }
-without { OTHER[ClauseType="Int"] }

@@ -19,10 +19,8 @@ Options:
 GRS="../fudia.grs" # grs default file name
 SUF="Annotated"
 REQ="extract_Int_1.req"
-REQ2="extract_Int_2.req"
-REQ3="extract_Int_3.req"
 FIRST_REQ=true
-REQ_FILES=("$REQ" "$REQ2" "$REQ3") # Default request files
+REQ_FILES=("$REQ") # Default request files
 PNG=true
 
 while (( $# > 0 )) ; do

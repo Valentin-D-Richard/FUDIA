@@ -518,7 +518,7 @@ We detect a form *-ti* or *-tu* (or without dash) and its governer. Either:
  * the relation between them is the expected `mark`
  * or the relation is (expletive) subject. In this case, we only add an edge if the form is *ti* or *-ti* because the *tu* / *-tu* form should have already been annotated by `spp`.
 
-### final
+### `final`
 
 Finishing the programme.
 
