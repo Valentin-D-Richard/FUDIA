@@ -1,12 +1,17 @@
+Fleiss's kappa: 0.9891159424233354
+Cohen kappa matrix:
+[[1.         0.98911624]
+ [0.         1.        ]]
+
 ##### Program fudia
 ### On written:
 True positives:  21
-True negatives:  64
+True negatives:  65
 False positives:  3
-False negatives:  12
-Accuracy:  0.85
+False negatives:  11
+Accuracy:  0.86
 Precision:  0.875
-Recall:  0.6363636363636364
+Recall:  0.65625
 ### On spoken:
 True positives:  33
 True negatives:  59
@@ -17,24 +22,24 @@ Precision:  0.9428571428571428
 Recall:  0.8461538461538461
 ### Total:
 True positives:  54
-True negatives:  123
+True negatives:  124
 False positives:  5
 	 ['written__41', 'written__54', 'written__75', 'spoken__46', 'spoken__77']
-False negatives:  18
-	 ['written__1', 'written__7', 'written__17', 'written__22', 'written__23', 'written__26', 'written__37', 'written__50', 'written__51', 'written__57', 'written__64', 'written__74', 'spoken__1', 'spoken__25', 'spoken__39', 'spoken__43', 'spoken__66', 'spoken__89']
-Accuracy:  0.885
+False negatives:  17
+	 ['written__7', 'written__17', 'written__22', 'written__23', 'written__26', 'written__37', 'written__50', 'written__51', 'written__57', 'written__64', 'written__74', 'spoken__1', 'spoken__25', 'spoken__39', 'spoken__43', 'spoken__66', 'spoken__89']
+Accuracy:  0.89
 Precision:  0.9152542372881356
-Recall:  0.75
+Recall:  0.7605633802816901
 
 ##### Program quecq
 ### On written:
-True positives:  29
+True positives:  28
 True negatives:  37
-False positives:  30
+False positives:  31
 False negatives:  4
-Accuracy:  0.66
-Precision:  0.4915254237288136
-Recall:  0.8787878787878788
+Accuracy:  0.65
+Precision:  0.4745762711864407
+Recall:  0.875
 ### On spoken:
 True positives:  35
 True negatives:  29
@@ -44,23 +49,23 @@ Accuracy:  0.64
 Precision:  0.5223880597014925
 Recall:  0.8974358974358975
 ### Total:
-True positives:  64
+True positives:  63
 True negatives:  66
-False positives:  62
+False positives:  63
 False negatives:  8
-Accuracy:  0.65
-Precision:  0.5079365079365079
-Recall:  0.8888888888888888
+Accuracy:  0.645
+Precision:  0.5
+Recall:  0.8873239436619719
 
 ##### Program simplefudic
 ### On written:
 True positives:  18
-True negatives:  52
+True negatives:  53
 False positives:  15
-False negatives:  15
-Accuracy:  0.7
+False negatives:  14
+Accuracy:  0.71
 Precision:  0.5454545454545454
-Recall:  0.5454545454545454
+Recall:  0.5625
 ### On spoken:
 True positives:  29
 True negatives:  48
@@ -71,10 +76,10 @@ Precision:  0.6904761904761905
 Recall:  0.7435897435897436
 ### Total:
 True positives:  47
-True negatives:  100
+True negatives:  101
 False positives:  28
-False negatives:  25
-Accuracy:  0.735
+False negatives:  24
+Accuracy:  0.74
 Precision:  0.6266666666666667
-Recall:  0.6527777777777778
+Recall:  0.6619718309859155
 

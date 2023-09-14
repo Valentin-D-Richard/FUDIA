@@ -1,4 +1,8 @@
+import pandas as pd
 import csv
+import numpy as np
+from statsmodels.stats.inter_rater import fleiss_kappa, aggregate_raters
+from sklearn.metrics import cohen_kappa_score
 
 ##### utils
 
@@ -12,21 +16,15 @@ def scores(tp:int, fp:int, tn: int, fn:int) -> tuple:
 ##### Loading annotations and predictions
 
 programs = ["fudia", "quecq", "simplefudic"]
-results_file = open("results.csv")
-results = csv.reader(results_file)
+results = pd.read_csv("results.csv")
 
 preds = {name:{} for name in programs}
-gold = {}
-header = True
+gold = {} # list of gold category
+number_ann = results.shape[1] - 4 # Number of annotators
 
-for row in results:
-    id = row[0]
-    annotations = row[4:]
-
-    # Ignoring header
-    if header:
-        header = False
-        continue
+for row in results.iterrows():
+    id = row[1][0]
+    annotations = [row[1][4+i] for i in range(number_ann)]
 
     # Taking the most occurring element as gold
     gold[id] = int(max(set(annotations), 
@@ -34,9 +32,28 @@ for row in results:
     
     # Loading predictions
     for i, name in enumerate(programs):
-        preds[name][id] = int(row[i+1])
+        preds[name][id] = int(row[1][i+1])
 
-results_file.close()
+
+##### Compiting inter-annotator agreement
+anns = [list(results["ann"+str(1+i)]) 
+        for i in range(number_ann)]
+
+anns = np.array(anns)
+matrix = aggregate_raters(anns.T)[0]
+fleiss = fleiss_kappa(matrix)
+print("Fleiss's kappa:", fleiss)
+
+cohen_table = np.zeros((number_ann, number_ann), 
+                       dtype=float)
+for i in range(number_ann):
+    for j in range(number_ann - i):
+        cohen_table[i][i+j] = \
+            cohen_kappa_score(anns[i], anns[i+j])
+
+print("Cohen kappa matrix:")
+print(cohen_table)
+print()       
 
 ##### Writing gold labels in a file
 
@@ -47,7 +64,6 @@ for id in gold.keys():
     gold_output.writerow([id, gold[id]])
 
 gold_file.close()
-
 
 ##### Computing scores
 

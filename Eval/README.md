@@ -24,7 +24,7 @@ We asked ... French native speakers to annotate the 200 sentences of `Eval` acco
 
 We are concerned witj syntatic interrogatives, i.e. the clauses (or infinitival or elliptic phrases) containing an interrogative marker: an interrogative word or another marker specific to French (e.g. *est-ce que*, *si*, subject-verb inversion,...).
 
-We take the majority judgement as gold standard (see `gold.csv`).
+We take the majority judgement as gold standard (see `gold.csv`). The inter-annotator agreement table is printed in `report.txt`.
 
 ## Prediction computation
 
