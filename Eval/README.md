@@ -24,13 +24,13 @@ We asked ... French native speakers to annotate the 200 sentences of `Eval` acco
 
 We are concerned witj syntatic interrogatives, i.e. the clauses (or infinitival or elliptic phrases) containing an interrogative marker: an interrogative word or another marker specific to French (e.g. *est-ce que*, *si*, subject-verb inversion,...).
 
-We take the majority judgement as gold standard.
+We take the majority judgement as gold standard (see `gold.csv`).
 
 ## Prediction computation
 
 We parsed `Eval` with ArboratorGrew. To ensure an efficient parsing on the corpus, we selected French UD corpora close to target data genres to fine-tune a pretrained parser. The subcorpus `written` was parsed using a training on GSD `dev` (1476 sentences, obtaining LAS=0.922), and `spoken` using a training on Rhapsodie `train` + ParisStories `train` (total: 2675 sentences, LAS=0.818).
 
-We run FUDIA and the two baselines QUECQ? and SimpleFUDIC on the parsed subcorpora. We retrieved the sentences having a node with label `ClauseType=Int`. We compute the accuracy, precision and recall of the programs using `baseline_score.py`.
+We run FUDIA and the two baselines QUECQ? and SimpleFUDIC on the parsed subcorpora. We retrieved the sentences having a node with label `ClauseType=Int`. We compute the accuracy, precision and recall of the programs using `compute_scores.py`. The scores are available in `report.txt`.
 
 ## Appendix
 
@@ -83,4 +83,8 @@ Adding the results to a csv file:
 python3 add_results.py
 ```
 
-Then we can copy and paste each annotators' judgment into `results.csv`.
+Then we copy and paste each annotators' judgment into `results.csv` and run
+
+```bash
+python3 compute_scores.py
+```

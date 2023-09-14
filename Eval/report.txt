@@ -1,0 +1,80 @@
+##### Program fudia
+### On written:
+True positives:  21
+True negatives:  64
+False positives:  3
+False negatives:  12
+Accuracy:  0.85
+Precision:  0.875
+Recall:  0.6363636363636364
+### On spoken:
+True positives:  33
+True negatives:  59
+False positives:  2
+False negatives:  6
+Accuracy:  0.92
+Precision:  0.9428571428571428
+Recall:  0.8461538461538461
+### Total:
+True positives:  54
+True negatives:  123
+False positives:  5
+	 ['written__41', 'written__54', 'written__75', 'spoken__46', 'spoken__77']
+False negatives:  18
+	 ['written__1', 'written__7', 'written__17', 'written__22', 'written__23', 'written__26', 'written__37', 'written__50', 'written__51', 'written__57', 'written__64', 'written__74', 'spoken__1', 'spoken__25', 'spoken__39', 'spoken__43', 'spoken__66', 'spoken__89']
+Accuracy:  0.885
+Precision:  0.9152542372881356
+Recall:  0.75
+
+##### Program quecq
+### On written:
+True positives:  29
+True negatives:  37
+False positives:  30
+False negatives:  4
+Accuracy:  0.66
+Precision:  0.4915254237288136
+Recall:  0.8787878787878788
+### On spoken:
+True positives:  35
+True negatives:  29
+False positives:  32
+False negatives:  4
+Accuracy:  0.64
+Precision:  0.5223880597014925
+Recall:  0.8974358974358975
+### Total:
+True positives:  64
+True negatives:  66
+False positives:  62
+False negatives:  8
+Accuracy:  0.65
+Precision:  0.5079365079365079
+Recall:  0.8888888888888888
+
+##### Program simplefudic
+### On written:
+True positives:  18
+True negatives:  52
+False positives:  15
+False negatives:  15
+Accuracy:  0.7
+Precision:  0.5454545454545454
+Recall:  0.5454545454545454
+### On spoken:
+True positives:  29
+True negatives:  48
+False positives:  13
+False negatives:  10
+Accuracy:  0.77
+Precision:  0.6904761904761905
+Recall:  0.7435897435897436
+### Total:
+True positives:  47
+True negatives:  100
+False positives:  28
+False negatives:  25
+Accuracy:  0.735
+Precision:  0.6266666666666667
+Recall:  0.6527777777777778
+
