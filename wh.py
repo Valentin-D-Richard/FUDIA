@@ -278,9 +278,10 @@ CL_HEAD.IntClause = "Yes" ; add_edge CL_HEAD -[cue:wh]-> HEAD ;'''
 
 # HEAD is PH_HEAD
 cleft_1_1 = cl.Snippet("cleft_1_1")
-cleft_1_1.request = '''pattern { HEAD[IntClause="Yes"] }'''
+cleft_1_1.request = '''pattern { HEAD[IntPhrase="Yes"] ;
+\tHEAD -[cue:wh]-> WH }'''
 # Adding IntClause and cue relation
 cleft_1_1.command = '''CL_HEAD.IntClause = "Yes" ;
-add_edge CL_HEAD -[cue:wh]-> HEAD ;'''
+add_edge CL_HEAD -[cue:wh]-> WH ;'''
 
 cleft.add_snippets([cleft_1_0, cleft_1_1], cleft_0_0)
