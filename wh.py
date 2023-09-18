@@ -263,7 +263,7 @@ cleft_0_0.request = '''pattern { C[lemma="ce"] ; E[lemma="être"] ;
 \tQ[lemma="que"|"qui"|"dont", upos="SCONJ"] ; 
 \tHEAD -[1=advcl|acl|csubj|ccomp]-> CL_HEAD ;
 \tHEAD -[cop]-> E ; HEAD -[1=expl|nsubj]-> C ;
-\tC < E ; E << HEAD ; HEAD << Q ; Q << CL_HEAD }
+\tQ << CL_HEAD }
 without { CL_HEAD -[cue:wh]-> HEAD } % no loop'''
 
 cleft = cl.DisjRule("cleft", root=cleft_0_0)
@@ -284,4 +284,13 @@ cleft_1_1.request = '''pattern { HEAD[IntPhrase="Yes"] ;
 cleft_1_1.command = '''CL_HEAD.IntClause = "Yes" ;
 add_edge CL_HEAD -[cue:wh]-> WH ;'''
 
+# not fronted, i.e. c'est WH que...
+cleft_2_0 = cl.Snippet("cleft_2_0")
+cleft_2_0.request = '''pattern { C < E ; E << HEAD ; HEAD << Q }'''
+
+# fronted, i.e. WH c'est que...
+cleft_2_1 = cl.Snippet("cleft_2_1")
+cleft_2_1.request = '''pattern { HEAD << C ; C < E ; E << Q }'''
+
 cleft.add_snippets([cleft_1_0, cleft_1_1], cleft_0_0)
+cleft.add_snippets([cleft_2_0, cleft_2_1], cleft_0_0)
