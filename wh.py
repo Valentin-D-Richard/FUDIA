@@ -89,7 +89,8 @@ ph_edge_b = cl.DisjRule("ph_edge_b", root=ph_edge_b_0_0)
 ph_edge_b_1_0 = cl.Snippet("ph_edge_b_1_0")
 ph_edge_b_1_0.request = '''pattern {
 \tf : CL_HEAD -[1=obl|nmod|nsubj|obj|advmod|xcomp]-> PH_HEAD }
-without { CL_HEAD -[cue:wh]-> WH } % no loop'''
+without { CL_HEAD -[cue:wh]-> WH } % no loop
+without { CL_HEAD[lemma="savoir"|"demander"] }'''  # alone embedded phrase
 # Adding IntClause and cue
 ph_edge_b_1_0.command = '''CL_HEAD.IntClause = "Yes" ;
 \tadd_edge CL_HEAD -[cue:wh]-> WH'''

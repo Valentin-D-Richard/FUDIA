@@ -1,85 +1,97 @@
-Fleiss's kappa: 0.9891159424233354
+Fleiss's kappa: 0.794137236076152
 Cohen kappa matrix:
-[[1.         0.98911624]
- [0.         1.        ]]
+[[1.         0.87954446 0.92381367 0.68559838 0.84157161 0.88100389
+  0.83773258]
+ [0.         1.         0.84617075 0.63433215 0.80873446 0.84721161
+  0.84721161]
+ [0.         0.         1.         0.695586   0.85183617 0.86980579
+  0.80470869]
+ [0.         0.         0.         1.         0.73750631 0.67562088
+  0.63507349]
+ [0.         0.         0.         0.         1.         0.81026668
+  0.7891852 ]
+ [0.         0.         0.         0.         0.         1.
+  0.82741883]
+ [0.         0.         0.         0.         0.         0.
+  1.        ]]
 
 ##### Program fudia
 ### On written:
-True positives:  21
+True positives:  22
 True negatives:  65
-False positives:  3
-False negatives:  11
-Accuracy:  0.86
-Precision:  0.875
-Recall:  0.65625
-### On spoken:
-True positives:  33
-True negatives:  59
 False positives:  2
-False negatives:  6
-Accuracy:  0.92
-Precision:  0.9428571428571428
-Recall:  0.8461538461538461
+False negatives:  11
+Accuracy:  0.87
+Precision:  0.9166666666666666
+Recall:  0.6666666666666666
+### On spoken:
+True positives:  35
+True negatives:  60
+False positives:  0
+False negatives:  5
+Accuracy:  0.95
+Precision:  1.0
+Recall:  0.875
 ### Total:
-True positives:  54
-True negatives:  124
-False positives:  5
-	 ['written__41', 'written__54', 'written__75', 'spoken__46', 'spoken__77']
-False negatives:  17
-	 ['written__7', 'written__17', 'written__22', 'written__23', 'written__26', 'written__37', 'written__50', 'written__51', 'written__57', 'written__64', 'written__74', 'spoken__1', 'spoken__25', 'spoken__39', 'spoken__43', 'spoken__66', 'spoken__89']
-Accuracy:  0.89
-Precision:  0.9152542372881356
-Recall:  0.7605633802816901
+True positives:  57
+True negatives:  125
+False positives:  2
+	 ['written__54', 'written__75']
+False negatives:  16
+	 ['written__1', 'written__7', 'written__22', 'written__23', 'written__26', 'written__37', 'written__50', 'written__51', 'written__57', 'written__64', 'written__74', 'spoken__1', 'spoken__25', 'spoken__43', 'spoken__66', 'spoken__89']
+Accuracy:  0.91
+Precision:  0.9661016949152542
+Recall:  0.7808219178082192
 
 ##### Program quecq
 ### On written:
-True positives:  28
+True positives:  29
 True negatives:  37
+False positives:  30
+False negatives:  4
+Accuracy:  0.66
+Precision:  0.4915254237288136
+Recall:  0.8787878787878788
+### On spoken:
+True positives:  36
+True negatives:  29
 False positives:  31
 False negatives:  4
 Accuracy:  0.65
-Precision:  0.4745762711864407
-Recall:  0.875
-### On spoken:
-True positives:  35
-True negatives:  29
-False positives:  32
-False negatives:  4
-Accuracy:  0.64
-Precision:  0.5223880597014925
-Recall:  0.8974358974358975
+Precision:  0.5373134328358209
+Recall:  0.9
 ### Total:
-True positives:  63
+True positives:  65
 True negatives:  66
-False positives:  63
+False positives:  61
 False negatives:  8
-Accuracy:  0.645
-Precision:  0.5
-Recall:  0.8873239436619719
+Accuracy:  0.655
+Precision:  0.5158730158730159
+Recall:  0.8904109589041096
 
 ##### Program simplefudic
 ### On written:
-True positives:  18
+True positives:  19
 True negatives:  53
-False positives:  15
+False positives:  14
 False negatives:  14
-Accuracy:  0.71
-Precision:  0.5454545454545454
-Recall:  0.5625
+Accuracy:  0.72
+Precision:  0.5757575757575758
+Recall:  0.5757575757575758
 ### On spoken:
-True positives:  29
-True negatives:  48
-False positives:  13
-False negatives:  10
-Accuracy:  0.77
-Precision:  0.6904761904761905
-Recall:  0.7435897435897436
+True positives:  31
+True negatives:  49
+False positives:  11
+False negatives:  9
+Accuracy:  0.8
+Precision:  0.7380952380952381
+Recall:  0.775
 ### Total:
-True positives:  47
-True negatives:  101
-False positives:  28
-False negatives:  24
-Accuracy:  0.74
-Precision:  0.6266666666666667
-Recall:  0.6619718309859155
+True positives:  50
+True negatives:  102
+False positives:  25
+False negatives:  23
+Accuracy:  0.76
+Precision:  0.6666666666666666
+Recall:  0.684931506849315
 
