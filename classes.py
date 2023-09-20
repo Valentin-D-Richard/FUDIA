@@ -88,13 +88,14 @@ class DisjRule(nx.DiGraph):
             for node in proj:
                 self.add_edge(node, snippet)
 
-    def gen_branches(self, output="rule", group_by_trace=False) -> list:
+    def gen_branches(self, output="rule", group_by_trace=False,
+                     keep_trace=False) -> list:
         """Generates all rules corresponding to the concatenation
         of the requests and command excerps of all branches of self.
         If output = rule, returns rules as strings
         If output = request, return requests only
         'group_by_trace' : if True, requests having the same trace are
-            merged. The trace of a branch is the concatenation of the names
+            grouped in a list. The trace of a branch is the concatenation of the names
             of its snippets"""
         result = []
         
@@ -135,13 +136,17 @@ class DisjRule(nx.DiGraph):
                 result.append((trace, rule + "}\n\t}"))
 
         # Formatting output
-        if group_by_trace == False:
+        if not group_by_trace:
+            if keep_trace:
+                return result
             return [elt for (_,elt) in result]
         
         else:
             dict = {trace:[] for (trace,_) in result}
             for (trace, elt) in result: # Grouping by trace
                 dict[trace].append(elt)
+            if keep_trace:
+                return [(trace, dict[trace]) for trace in dict.keys()]
             return [dict[trace] for trace in dict.keys()]
 
     def draw(self):
