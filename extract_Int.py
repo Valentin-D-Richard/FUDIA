@@ -9,6 +9,8 @@ def prefix_conll(conll, corpus_name):
     """Adds the prefix 'corpus_name' to the sent_id of the conll 'conll'"""
     split_conll = conll.split("\n")
     sent_line   = split_conll[0].split("=")
+    if sent_line[0].strip() != "sent_id":
+        sent_line   = split_conll[1].split("=")
     new_sent_id = " " + corpus_name + "_" + sent_line[1].strip()
     split_conll[0] = sent_line[0] + "=" + new_sent_id
     return "\n".join(split_conll)
