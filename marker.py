@@ -161,8 +161,7 @@ spp_00_0.request = ''' pattern {
 spp_00_1 = cl.Snippet("spp_00_1")
 spp_00_1.request = ''' pattern {
 \tS[lemma="moi"|"toi"|"lui"|"elle"|"on"|"nous"|"vous"|"eux"|"elles",
-\tPronType="Prs"] }
-'''
+\tPronType="Prs"] }'''
 
 # Inverted subject wrt. verbal finite CL_HEAD
 spp_1_0 = cl.Snippet("spp_1_0")

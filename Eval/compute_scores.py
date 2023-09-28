@@ -47,13 +47,20 @@ print("Fleiss's kappa:", fleiss)
 cohen_table = np.zeros((number_ann, number_ann), 
                        dtype=float)
 for i in range(number_ann):
-    for j in range(number_ann - i):
-        cohen_table[i][i+j] = \
-            cohen_kappa_score(anns[i], anns[i+j])
+    for j in range(1,number_ann - i):
+        kappa = cohen_kappa_score(anns[i], anns[i+j])
+        cohen_table[i][i+j] = kappa     
 
 print("Cohen kappa matrix:")
 print(cohen_table)
-print()       
+masked_cohen_table = np.ma.masked_array(cohen_table,
+                              mask=cohen_table==float(0))
+print("Minimum, Maximum, mean, standard deviation:")
+print(masked_cohen_table.min(), masked_cohen_table.max(),
+      masked_cohen_table.mean(), masked_cohen_table.std())
+print()
+
+  
 
 ##### Writing gold labels in a file
 
