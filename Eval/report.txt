@@ -27,6 +27,11 @@ Cohen kappa matrix:
 Minimum, Maximum, mean, standard deviation:
 0.6132315521628499 0.9238136700043535 0.7812944420627359 0.06480959891258477
 
+Gold labels different from the labels of annotator 1:
+['written__41', 'spoken__39', 'spoken__46', 'spoken__77']
+Annotations with the highest standard derivation:
+['written__2', 'written__17', 'written__18', 'written__26', 'written__39', 'written__41', 'written__75', 'written__99', 'written__100', 'spoken__9', 'spoken__80']
+
 ##### Program fudia
 ### On written:
 True positives:  22

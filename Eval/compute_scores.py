@@ -20,22 +20,27 @@ results = pd.read_csv("results.csv")
 
 preds = {name:{} for name in programs}
 gold = {} # list of gold category
+std = {} # list of standard derivations
+div = [] # list of sentences where the gold annotation differs from the labe of annotator 1
 number_ann = results.shape[1] - 4 # Number of annotators
 
 for row in results.iterrows():
     id = row[1][0]
-    annotations = [row[1][4+i] for i in range(number_ann)]
+    annotations = [int(row[1][4+i]) for i in range(number_ann)]
 
     # Taking the most occurring element as gold
-    gold[id] = int(max(set(annotations), 
-                   key = annotations.count))
+    gold[id] = max(set(annotations), 
+                   key = annotations.count)
+    std[id] = np.std(annotations)
+    if gold[id] != annotations[0]:
+        div.append(id)
     
     # Loading predictions
     for i, name in enumerate(programs):
         preds[name][id] = int(row[1][i+1])
 
 
-##### Compiting inter-annotator agreement
+##### Computing inter-annotator agreement
 anns = [list(results["ann"+str(1+i)]) 
         for i in range(number_ann)]
 
@@ -62,15 +67,20 @@ print()
 
   
 
-##### Writing gold labels in a file
+##### Writing gold labels in a file, + std per line
 
 gold_file = open("gold.csv", "w")
 gold_output = csv.writer(gold_file)
 
 for id in gold.keys():
-    gold_output.writerow([id, gold[id]])
+    gold_output.writerow([id, gold[id], std[id]])
 
 gold_file.close()
+print("Gold labels different from the labels of annotator 1:")
+print(div)
+print("Annotations with the highest standard derivation:")
+print([id for id in std.keys() if std[id] > 0.47])
+print()
 
 ##### Computing scores
 
