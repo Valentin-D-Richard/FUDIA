@@ -17,14 +17,14 @@ Content of `Eval`
 
 ## Annotation task
 
-We asked ... French native speakers to annotate the 200 sentences of `Eval` according to the guidelines `fudia_task_guidelines.pdf` (in French). The two lables are
+We asked 12 French native speakers to annotate the 200 sentences of `Eval` according to the guidelines `fudia_task_guidelines.pdf` (in French). The two labels are
 
  * **0**: the sentence has no interrogative
  * **1**: the sentence has at least one interrogative (sub)clause
 
-We are concerned witj syntatic interrogatives, i.e. the clauses (or infinitival or elliptic phrases) containing an interrogative marker: an interrogative word or another marker specific to French (e.g. *est-ce que*, *si*, subject-verb inversion,...).
+We are concerned with syntatic interrogatives, i.e. the clauses (or infinitival or elliptic phrases) containing an interrogative marker: an interrogative word or another marker specific to French (e.g. *est-ce que*, *si*, subject-verb inversion,...).
 
-We take the majority judgement as gold standard (see `gold.csv`). The inter-annotator agreement table is printed in `report.txt`.
+We take the majority judgement as gold standard (see `gold.csv`). We add the standard derivation of annotations for each sentence as third column of `gold.csv`. The inter-annotator agreement table is printed in `report.txt`.
 
 ## Prediction computation
 

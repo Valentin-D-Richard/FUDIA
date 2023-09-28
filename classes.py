@@ -185,7 +185,7 @@ def gen_grs(seq:list, filename:str) -> ():
 
             main_strat += dr.rule_name + ","
             
-        all_names.add(dr.rule_name)
+            all_names.add(dr.rule_name)
 
         file.write(main_strat[:-1] + ") }")
 

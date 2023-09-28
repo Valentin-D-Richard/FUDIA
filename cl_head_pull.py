@@ -72,7 +72,7 @@ chp_2_6.request = '''pattern { CUR -[mark]-> Q ;
 \tQ[ExtPos="SCONJ"] ; CAND << Q ; Q << CUR }'''
 # e.g. Il sait que/si tu fais quoi ? ccomp(sait,fait)
 
-# In situ or fronted WH word with xcomp complement
+# In situ or fronted WH word with xcomp infinitive complement
 chp_2_7 = cl.Snippet("chp_2_7")
 chp_2_7.request = '''pattern { CAND << CUR ; a.label = xcomp ;
 \tCUR[VerbForm="Inf"] }
@@ -82,6 +82,12 @@ without { CAND << WH ; WH << CUR }'''
 # e.g. Elle est prête à les rejoindre où ? xcomp(prête, rejoindre)
 # e.g. Il sait qui fait quoi. : no pull
 
+# In situ or fronted WH word with xcomp complement and infinitival copula
+chp_2_8 = cl.Snippet("chp_2_8")
+chp_2_8.request = '''pattern { CAND << CUR ; a.label = xcomp ;
+\tCUR -[1=aux|cop]-> V ; V[VerbForm="Inf"] }
+without { CUR -[cue:wh]-> WH2 }
+without { CAND << WH ; WH << CUR }'''
 
 
 ### Nominal relations: nsubj, obj, (iobj,) obl, nmod, (det), advmod
@@ -99,6 +105,7 @@ without { CAND[lemma="savoir"] ; CAND -[obj|obl]-> CUR }'''
 
 cl_head_pull.add_snippets([chp_1_0, chp_1_1], chp_0_0)
 
-layer = [chp_2_0, chp_2_1, chp_2_2, chp_2_3, chp_2_4, chp_2_5, chp_2_6, chp_2_7]
+layer = [chp_2_0, chp_2_1, chp_2_2, chp_2_3, chp_2_4,
+         chp_2_5, chp_2_6, chp_2_7, chp_2_8]
 cl_head_pull.add_snippets(layer, chp_1_0)
 
