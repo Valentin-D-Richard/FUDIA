@@ -55,5 +55,5 @@ Fianlly, an evaluation phase was run to asses the potential flaws and weaknesses
 
 === Machine-readable metadata (DO NOT REMOVE!) ================================
 Data available since: Grew 1.11, grewpy 0.2.0
-License: CC-BY
+License: CC-BY 4.0
 ===============================================================================

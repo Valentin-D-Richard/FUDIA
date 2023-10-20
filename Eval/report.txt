@@ -81,7 +81,9 @@ Recall:  0.9
 True positives:  66
 True negatives:  66
 False positives:  60
+	 ['written__2', 'written__4', 'written__10', 'written__12', 'written__13', 'written__14', 'written__25', 'written__35', 'written__36', 'written__39', 'written__40', 'written__42', 'written__46', 'written__54', 'written__58', 'written__60', 'written__61', 'written__63', 'written__65', 'written__66', 'written__71', 'written__72', 'written__75', 'written__76', 'written__80', 'written__81', 'written__88', 'written__94', 'written__99', 'spoken__5', 'spoken__9', 'spoken__11', 'spoken__17', 'spoken__18', 'spoken__21', 'spoken__26', 'spoken__28', 'spoken__34', 'spoken__39', 'spoken__40', 'spoken__53', 'spoken__55', 'spoken__56', 'spoken__58', 'spoken__59', 'spoken__63', 'spoken__68', 'spoken__70', 'spoken__73', 'spoken__74', 'spoken__75', 'spoken__79', 'spoken__80', 'spoken__83', 'spoken__85', 'spoken__86', 'spoken__91', 'spoken__98', 'spoken__99', 'spoken__100']
 False negatives:  8
+	 ['written__18', 'written__20', 'written__91', 'written__100', 'spoken__3', 'spoken__27', 'spoken__32', 'spoken__89']
 Accuracy:  0.66
 Precision:  0.5238095238095238
 Recall:  0.8918918918918919
@@ -107,7 +109,9 @@ Recall:  0.775
 True positives:  50
 True negatives:  101
 False positives:  25
+	 ['written__2', 'written__10', 'written__13', 'written__39', 'written__40', 'written__46', 'written__58', 'written__61', 'written__65', 'written__66', 'written__75', 'written__76', 'written__88', 'written__99', 'spoken__9', 'spoken__11', 'spoken__17', 'spoken__18', 'spoken__40', 'spoken__53', 'spoken__74', 'spoken__80', 'spoken__85', 'spoken__99', 'spoken__100']
 False negatives:  24
+	 ['written__1', 'written__7', 'written__9', 'written__17', 'written__18', 'written__20', 'written__22', 'written__23', 'written__37', 'written__50', 'written__57', 'written__64', 'written__74', 'written__91', 'written__100', 'spoken__3', 'spoken__19', 'spoken__25', 'spoken__27', 'spoken__43', 'spoken__60', 'spoken__66', 'spoken__71', 'spoken__89']
 Accuracy:  0.755
 Precision:  0.6666666666666666
 Recall:  0.6756756756756757

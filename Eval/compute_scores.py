@@ -161,11 +161,9 @@ for name in programs:
     print("True positives: ", tp)
     print("True negatives: ", tn)
     print("False positives: ", fp)
-    if name == "fudia":
-        print("\t",false_pos_written+false_pos_spoken)
+    print("\t",false_pos_written+false_pos_spoken)
     print("False negatives: ", fn)
-    if name == "fudia":
-        print("\t",false_neg_written+false_neg_spoken)
+    print("\t",false_neg_written+false_neg_spoken)
     print("Accuracy: ", accuracy)
     print("Precision: ", precision)
     print("Recall: ", recall)
