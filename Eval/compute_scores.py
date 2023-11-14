@@ -11,7 +11,8 @@ def scores(tp:int, fp:int, tn: int, fn:int) -> tuple:
     accuracy = float(tp + tn) / float(tp + tn + fp + fn)
     precision = float(tp) / float(tp + fp)
     recall = float(tp) / float(tp + fn)
-    return accuracy, precision, recall
+    f1 = 2 * (precision * recall) / (precision + recall)
+    return accuracy, precision, recall, f1
 
 ##### Loading annotations and predictions
 
@@ -137,7 +138,7 @@ for name in programs:
 
     print("##### Program "+ name)
     print("### On written:")
-    accuracy, precision, recall = scores(tpw, fpw, tnw, fnw)
+    accuracy, precision, recall, f1 = scores(tpw, fpw, tnw, fnw)
     print("True positives: ", tpw)
     print("True negatives: ", tnw)
     print("False positives: ", fpw)
@@ -145,9 +146,10 @@ for name in programs:
     print("Accuracy: ", accuracy)
     print("Precision: ", precision)
     print("Recall: ", recall)
+    print("F1: ", f1)
 
     print("### On spoken:")
-    accuracy, precision, recall = scores(tps, fps, tns, fns)
+    accuracy, precision, recall, f1 = scores(tps, fps, tns, fns)
     print("True positives: ", tps)
     print("True negatives: ", tns)
     print("False positives: ", fps)
@@ -155,9 +157,10 @@ for name in programs:
     print("Accuracy: ", accuracy)
     print("Precision: ", precision)
     print("Recall: ", recall)
+    print("F1: ", f1)
 
     print("### Total:")
-    accuracy, precision, recall = scores(tp, fp, tn, fn)
+    accuracy, precision, recall, f1 = scores(tp, fp, tn, fn)
     print("True positives: ", tp)
     print("True negatives: ", tn)
     print("False positives: ", fp)
@@ -167,5 +170,6 @@ for name in programs:
     print("Accuracy: ", accuracy)
     print("Precision: ", precision)
     print("Recall: ", recall)
+    print("F1: ", f1)
     print()
 

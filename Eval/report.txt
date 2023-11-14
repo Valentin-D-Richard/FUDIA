@@ -41,6 +41,7 @@ False negatives:  12
 Accuracy:  0.86
 Precision:  0.9166666666666666
 Recall:  0.6470588235294118
+F1:  0.7586206896551724
 ### On spoken:
 True positives:  35
 True negatives:  60
@@ -49,6 +50,7 @@ False negatives:  5
 Accuracy:  0.95
 Precision:  1.0
 Recall:  0.875
+F1:  0.9333333333333333
 ### Total:
 True positives:  57
 True negatives:  124
@@ -59,6 +61,7 @@ False negatives:  17
 Accuracy:  0.905
 Precision:  0.9661016949152542
 Recall:  0.7702702702702703
+F1:  0.8571428571428571
 
 ##### Program quecq
 ### On written:
@@ -69,6 +72,7 @@ False negatives:  4
 Accuracy:  0.67
 Precision:  0.5084745762711864
 Recall:  0.8823529411764706
+F1:  0.6451612903225806
 ### On spoken:
 True positives:  36
 True negatives:  29
@@ -77,6 +81,7 @@ False negatives:  4
 Accuracy:  0.65
 Precision:  0.5373134328358209
 Recall:  0.9
+F1:  0.6728971962616822
 ### Total:
 True positives:  66
 True negatives:  66
@@ -87,6 +92,7 @@ False negatives:  8
 Accuracy:  0.66
 Precision:  0.5238095238095238
 Recall:  0.8918918918918919
+F1:  0.6599999999999999
 
 ##### Program simplefudic
 ### On written:
@@ -97,6 +103,7 @@ False negatives:  15
 Accuracy:  0.71
 Precision:  0.5757575757575758
 Recall:  0.5588235294117647
+F1:  0.5671641791044776
 ### On spoken:
 True positives:  31
 True negatives:  49
@@ -105,6 +112,7 @@ False negatives:  9
 Accuracy:  0.8
 Precision:  0.7380952380952381
 Recall:  0.775
+F1:  0.7560975609756099
 ### Total:
 True positives:  50
 True negatives:  101
@@ -115,4 +123,5 @@ False negatives:  24
 Accuracy:  0.755
 Precision:  0.6666666666666666
 Recall:  0.6756756756756757
+F1:  0.6711409395973154
 
