@@ -53,7 +53,12 @@ by extracting all the sentences having `ClauseType="Int"` and verifying that the
 
 Fianlly, an evaluation phase was run to asses the potential flaws and weaknesses of this program. More in `Eval/READMED.md`
 
+## References
+
+> Valentin D. Richard. Est-ce que l'extraction des interrogatives du français peut-elle être automatisée ?. 5èmes journées du Groupement de Recherche CNRS « Linguistique Informatique, Formelle et de Terrain » (LIFT 2023), Nov 2023, Nancy, France. pp.69-76. [⟨hal-04359947⟩](https://hal.science/hal-04359947)
+
 === Machine-readable metadata (DO NOT REMOVE!) ================================
 Data available since: Grew 1.11, grewpy 0.2.0
 License: CC-BY 4.0
+COntributors: Richard, Valentin D.
 ===============================================================================
