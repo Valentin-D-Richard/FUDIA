@@ -75,7 +75,7 @@ relprontype.add_snippets(layer, relprontype_2_0)
 # Root
 intprontype_0_0 = cl.Snippet("intprontype_0_0")
 intprontype_0_0.request = '''pattern {
-\tWH[lemma="qui"|"que"|"quoi"|"comment"|"où"|"quand"|"combien"|"pourquoi"|"lequel"|"quel"|"quid",!PronType]}
+\tWH[lemma="qui"|"que"|"quoi"|"comment"|"où"|"quand"|"combien"|"pourquoi"|"lequel"|"quel"|"quid"]}
 without { ANCHOR -[reparandum]-> WH ; ANCHOR[PronType<>"Int"] }
 without { ANCHOR -[reparandum]-> WH ; ANCHOR[!PronType] }
 without { ANCHOR -[dep]-> WH } % uncomplete constructions
@@ -85,13 +85,23 @@ without { ANCHOR -[reparandum]-> N ; N -> WH }'''
 intprontype_0_0.command = '''WH.PronType="Int"'''
 
 
-
 intprontype = cl.DisjRule("intprontype", root=intprontype_0_0)
 
 
-# quel
+# no PronType
 intprontype_1_0 = cl.Snippet("intprontype_1_0")
-intprontype_1_0.request = '''pattern {
+intprontype_1_0.request = '''pattern {WH[!PronType]}'''
+
+# PronType=Rel, but followed by "est-ce que/qui"
+intprontype_1_1 = cl.Snippet("intprontype_1_1")
+intprontype_1_1.request = '''pattern {WH[PronType="Rel"] ;
+\tXE[lemma="être"] ; XC[lemma="ce"] ; XQ[lemma="que"|"qui"] ;
+\tWH < XE ; XE < XC ; XC < XQ}'''
+
+
+# quel
+intprontype_2_0 = cl.Snippet("intprontype_2_0")
+intprontype_2_0.request = '''pattern {
 \tWH [lemma="quel",upos="ADJ"|"DET"|"PRON"] }
 \twithout { Q [lemma="que"] ; WH < Q }
 \twithout { A [lemma="ne"] ; B[form="importe"|"IMPORTE"] ; A < B ; B < WH }
@@ -99,35 +109,35 @@ intprontype_1_0.request = '''pattern {
 \twithout { E[lemma="!"] }'''
 
 # Only-interrogative adverbs: comment,  combien & quid (if not exclamative)
-intprontype_1_1 = cl.Snippet("intprontype_1_1")
-intprontype_1_1.request = '''pattern {
+intprontype_2_1 = cl.Snippet("intprontype_2_1")
+intprontype_2_1.request = '''pattern {
 \tWH[lemma="comment"|"combien"|"quid", upos="ADV"]}'''
 
 # pourquoi
-intprontype_1_2 = cl.Snippet("intprontype_1_2")
-intprontype_1_2.request = '''pattern { WH[lemma="pourquoi", upos="ADV"]}
+intprontype_2_2 = cl.Snippet("intprontype_2_2")
+intprontype_2_2.request = '''pattern { WH[lemma="pourquoi", upos="ADV"]}
 without { C[lemma="ce"] ; E[lemma="être"] ; C < E ; E < WH } % not "c'est pourquoi"
 without { C[lemma="ce"] ; C < WH } % not "ce pourquoi"'''
 
 # quand
-intprontype_1_3 = cl.Snippet("intprontype_1_3")
-intprontype_1_3.request = '''pattern { WH[lemma="quand", upos="ADV"]}
+intprontype_2_3 = cl.Snippet("intprontype_2_3")
+intprontype_2_3.request = '''pattern { WH[lemma="quand", upos="ADV"]}
 without { M[lemma="même"] ; WH < M } % not "quand même"
 without { B[lemma="bien"] ; M[lemma="même"] ; WH < B ; B < M } % not "quand bien même"
 without { G -[mark]-> WH } %% bad annotation of "quand" which should be SCONJ'''
 
 # où
-intprontype_1_4 = cl.Snippet("intprontype_1_4")
-intprontype_1_4.request = '''pattern { WH[lemma="où", upos="ADV"]}
+intprontype_2_4 = cl.Snippet("intprontype_2_4")
+intprontype_2_4.request = '''pattern { WH[lemma="où", upos="ADV"]}
 without { WH -[ccomp]-> V } % badly annotated relative clause'''
 
 # lequel and related
-intprontype_1_5 = cl.Snippet("intprontype_1_5")
-intprontype_1_5.request = '''pattern { WH[lemma="lequel", upos="PRON"]}'''
+intprontype_2_5 = cl.Snippet("intprontype_2_5")
+intprontype_2_5.request = '''pattern { WH[lemma="lequel", upos="PRON"]}'''
 
 # que, qui and quoi
-intprontype_1_6 = cl.Snippet("intprontype_1_6")
-intprontype_1_6.request = '''pattern {
+intprontype_2_6 = cl.Snippet("intprontype_2_6")
+intprontype_2_6.request = '''pattern {
 \tWH[lemma="qui"|"que"|"quoi", upos="PRON"] }
 without { C[lemma="ce"] ; WH[lemma="que"] ; C < WH } % no "ce que"
 without { G -[discourse]-> WH ; WH[lemma="quoi"] } % no interjection "quoi" (should be INTJ)
@@ -138,10 +148,13 @@ without { E[lemma="!"] } % Not exclamative'''
 # \tWH < N1 ; N1 < N2; N2 < N3; } % no "qui/quoi que ce soit"
 
 # Reparadum of a PronType="Int"
-intprontype_1_7 = cl.Snippet("intprontype_1_7")
-intprontype_1_7.request = '''pattern { ANCHOR -[reparandum]-> WH ;
+intprontype_2_7 = cl.Snippet("intprontype_2_7")
+intprontype_2_7.request = '''pattern { ANCHOR -[reparandum]-> WH ;
 \tANCHOR[PronType="Int"] }'''
 
-layer =  [intprontype_1_0, intprontype_1_1, intprontype_1_2, intprontype_1_3]
-layer += [intprontype_1_4, intprontype_1_5, intprontype_1_6, intprontype_1_7]
+
+intprontype.add_snippets([intprontype_1_0, intprontype_1_1], intprontype_0_0)
+
+layer =  [intprontype_2_0, intprontype_2_1, intprontype_2_2, intprontype_2_3]
+layer += [intprontype_2_4, intprontype_2_5, intprontype_2_6, intprontype_2_7]
 intprontype.add_snippets(layer, intprontype_0_0)
