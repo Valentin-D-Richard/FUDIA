@@ -13,11 +13,11 @@ relprontype = cl.DisjRule("relprontype", root=relprontype_0_0)
 
 # Pronouns
 relprontype_1_0 = cl.Snippet("relprontype_1_0")
-relprontype_1_0.request = '''pattern { WH[lemma="qui"|"que"|"quoi"|"où"|"lequel", upos="PRON"] }'''
+relprontype_1_0.request = '''pattern { WH[lemma="qui"|"que"|"quoi"|"lequel", upos="PRON"] }'''
 
 # Adverb
 relprontype_1_1 = cl.Snippet("relprontype_1_1")
-relprontype_1_1.request = '''pattern { WH[lemma="où", upos="ADV"] }'''
+relprontype_1_1.request = '''pattern { WH[lemma="où", upos="ADV"|"PRON"] }'''
 
 # Adjective
 relprontype_1_2 = cl.Snippet("relprontype_1_2")
@@ -128,7 +128,7 @@ without { G -[mark]-> WH } %% bad annotation of "quand" which should be SCONJ'''
 
 # où
 intprontype_2_4 = cl.Snippet("intprontype_2_4")
-intprontype_2_4.request = '''pattern { WH[lemma="où", upos="ADV"]}
+intprontype_2_4.request = '''pattern { WH[lemma="où", upos="ADV"|"PRON"]}
 without { WH -[ccomp]-> V } % badly annotated relative clause'''
 
 # lequel and related
