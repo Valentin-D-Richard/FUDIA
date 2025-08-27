@@ -92,9 +92,9 @@ intprontype = cl.DisjRule("intprontype", root=intprontype_0_0)
 intprontype_1_0 = cl.Snippet("intprontype_1_0")
 intprontype_1_0.request = '''pattern {WH[!PronType]}'''
 
-# PronType=Rel, but followed by "est-ce que/qui"
+# PronType=Rel or Ind, but followed by "est-ce que/qui"
 intprontype_1_1 = cl.Snippet("intprontype_1_1")
-intprontype_1_1.request = '''pattern {WH[PronType="Rel"] ;
+intprontype_1_1.request = '''pattern {WH[PronType="Rel"|"Ind"] ;
 \tXE[lemma="être"] ; XC[lemma="ce"] ; XQ[lemma="que"|"qui"] ;
 \tWH < XE ; XE < XC ; XC < XQ}'''
 
